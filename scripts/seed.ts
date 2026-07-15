@@ -7,6 +7,7 @@
  */
 import Database from 'better-sqlite3'
 import { drizzle } from 'drizzle-orm/better-sqlite3'
+import { eq, sql } from 'drizzle-orm'
 import { mkdirSync, realpathSync, existsSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { pathToFileURL } from 'node:url'
@@ -66,7 +67,17 @@ async function main() {
       passwordHash: demoHash,
       phone: '6281234567890'
     }
-  ]).onConflictDoNothing()
+  ]).onConflictDoUpdate({
+    target: schema.users.id,
+    set: {
+      email: sql`excluded.email`,
+      name: sql`excluded.name`,
+      role: sql`excluded.role`,
+      passwordHash: sql`excluded.password_hash`,
+      phone: sql`excluded.phone`,
+      updatedAt: now
+    }
+  })
 
   await db.insert(schema.promoCodes).values({
     id: 'promo_websitejuara',
@@ -131,9 +142,12 @@ async function main() {
     }
   ]).onConflictDoNothing()
 
+  // Drop accidental rename from earlier seed (slug spice-border)
+  await db.delete(schema.templates).where(eq(schema.templates.slug, 'spice-border'))
+
   const tpls = [
     ['coconut-briquettes', 'Coconut Briquettes Export', 'export'],
-    ['spice-border', 'Spice Exporter Pro', 'export'],
+    ['spice-exporter', 'Spice Exporter Pro', 'export'],
     ['seafood-export', 'Seafood Export', 'export'],
     ['furniture-rattan', 'Furniture & Rotan', 'export'],
     ['umkm-local', 'UMKM Lokal SEO', 'umkm'],
