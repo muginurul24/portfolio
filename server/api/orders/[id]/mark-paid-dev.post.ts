@@ -6,9 +6,8 @@ export default defineEventHandler(async (event) => {
   if (!import.meta.dev) {
     throw createError({ statusCode: 404, statusMessage: 'Not found' })
   }
-  const session = await getUserSession(event)
-  if (!session.user) throw createError({ statusCode: 401, statusMessage: 'Unauthorized' })
-  const user = session.user as { id: string, role?: string, email?: string }
+  const session = await requireUserSession(event)
+  const user = sessionUser(session)
   const id = getRouterParam(event, 'id')
   if (!id) throw createError({ statusCode: 400, statusMessage: 'ID wajib' })
   const db = useDb()
@@ -19,9 +18,8 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, statusMessage: 'Order terminal - tidak bisa mark paid' })
   }
 
-  const isStaff = user.role === 'admin' || user.role === 'cs'
   const email = user.email?.toLowerCase().trim()
-  if (!isStaff && order.userId !== user.id && order.customerEmail !== email) {
+  if (!isStaffRole(user.role) && order.userId !== user.id && order.customerEmail !== email) {
     throw createError({ statusCode: 403, statusMessage: 'Akses ditolak' })
   }
 

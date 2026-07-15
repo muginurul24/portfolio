@@ -2,12 +2,11 @@ import { eq, or } from 'drizzle-orm'
 import { orders } from '../../database/schema'
 
 export default defineEventHandler(async (event) => {
-  const session = await getUserSession(event)
-  if (!session.user) throw createError({ statusCode: 401, statusMessage: 'Unauthorized' })
-  const user = session.user as { id: string, role: string, email?: string }
+  const session = await requireUserSession(event)
+  const user = sessionUser(session)
   const db = useDb()
 
-  if (user.role === 'admin' || user.role === 'cs') {
+  if (isStaffRole(user.role)) {
     const data = await db.query.orders.findMany({
       orderBy: (o, { desc: d }) => [d(o.createdAt)],
       limit: 100

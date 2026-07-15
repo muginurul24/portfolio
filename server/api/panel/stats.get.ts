@@ -2,8 +2,7 @@ import { eq, or } from 'drizzle-orm'
 import { sites, orders, courseProgress } from '../../database/schema'
 
 export default defineEventHandler(async (event) => {
-  const session = await getUserSession(event)
-  if (!session.user) throw createError({ statusCode: 401, statusMessage: 'Unauthorized' })
+  const session = await requireUserSession(event)
   const user = session.user as { id: string, email?: string }
   const db = useDb()
   const userSites = await db.query.sites.findMany({ where: eq(sites.userId, user.id) })
