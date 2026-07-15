@@ -1,4 +1,4 @@
-import { and, count, desc, eq, like, or, sql } from 'drizzle-orm'
+import { and, count, desc, like, or, sql } from 'drizzle-orm'
 import { courses } from '../../../database/schema'
 
 export default defineEventHandler(async (event) => {
