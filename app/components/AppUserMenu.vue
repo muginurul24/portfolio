@@ -33,27 +33,46 @@ const showDevConsole = computed(() => {
 
 const isCustomer = computed(() => !role.value || role.value === 'customer')
 
+const devConsolePath = computed(() => {
+  if (role.value === 'cs') return localePath('/dev/orders')
+  return localePath('/dev')
+})
+
+const roleBadgeLabel = computed(() => {
+  if (role.value === 'dev') return t('auth.roleBadgeDev')
+  if (role.value === 'admin') return t('auth.roleBadgeAdmin')
+  if (role.value === 'cs') return t('auth.roleBadgeCs')
+  return ''
+})
+
+const roleBadgeColor = computed(() => {
+  if (role.value === 'dev') return 'primary' as const
+  if (role.value === 'admin') return 'warning' as const
+  if (role.value === 'cs') return 'neutral' as const
+  return 'neutral' as const
+})
+
 async function logout() {
   await clear()
   await navigateTo(localePath('/login'))
 }
 
 const menuItems = computed((): DropdownMenuItem[][] => {
-  const main: DropdownMenuItem[] = [
-    {
-      label: t('auth.myPanel'),
-      icon: 'i-lucide-layout-dashboard',
-      to: localePath('/panel')
-    }
-  ]
+  const main: DropdownMenuItem[] = []
 
   if (showDevConsole.value) {
-    main.unshift({
+    main.push({
       label: t('auth.devConsole'),
       icon: 'i-lucide-terminal',
-      to: localePath('/dev')
+      to: devConsolePath.value
     })
   }
+
+  main.push({
+    label: t('auth.myPanel'),
+    icon: 'i-lucide-layout-dashboard',
+    to: localePath('/panel')
+  })
 
   if (isCustomer.value) {
     main.push(
@@ -76,14 +95,16 @@ const menuItems = computed((): DropdownMenuItem[][] => {
     to: localePath('/panel/settings')
   })
 
+  const labelRow: DropdownMenuItem[] = [
+    {
+      label: displayName.value,
+      type: 'label' as const,
+      icon: 'i-lucide-user'
+    }
+  ]
+
   return [
-    [
-      {
-        label: displayName.value,
-        type: 'label' as const,
-        icon: 'i-lucide-user'
-      }
-    ],
+    labelRow,
     main,
     [
       {
@@ -104,7 +125,7 @@ const mobileLinks = computed(() => {
   if (showDevConsole.value) {
     links.push({
       label: t('auth.devConsole'),
-      to: localePath('/dev'),
+      to: devConsolePath.value,
       icon: 'i-lucide-terminal'
     })
   }
@@ -141,14 +162,23 @@ const mobileLinks = computed(() => {
 </script>
 
 <template>
-  <div v-if="mobile" class="flex flex-col gap-2">
-    <p class="px-1 text-sm font-medium text-highlighted truncate">
-      {{ displayName }}
-      <span
-        v-if="role"
-        class="ms-1 text-xs font-normal text-muted"
-      >({{ role }})</span>
-    </p>
+  <div
+    v-if="mobile"
+    class="flex flex-col gap-2"
+  >
+    <div class="px-1 flex flex-wrap items-center gap-2">
+      <p class="text-sm font-medium text-highlighted truncate">
+        {{ displayName }}
+      </p>
+      <UBadge
+        v-if="roleBadgeLabel"
+        :color="roleBadgeColor"
+        variant="subtle"
+        size="sm"
+      >
+        {{ roleBadgeLabel }}
+      </UBadge>
+    </div>
     <UButton
       v-for="link in mobileLinks"
       :key="link.to"
@@ -157,6 +187,7 @@ const mobileLinks = computed(() => {
       color="neutral"
       variant="outline"
       block
+      class="min-h-11 justify-start"
     >
       {{ link.label }}
     </UButton>
@@ -165,6 +196,7 @@ const mobileLinks = computed(() => {
       variant="soft"
       icon="i-lucide-log-out"
       block
+      class="min-h-11 justify-start"
       @click="logout"
     >
       {{ t('auth.logout') }}
@@ -181,10 +213,19 @@ const mobileLinks = computed(() => {
       color="neutral"
       variant="ghost"
       trailing-icon="i-lucide-chevron-down"
-      class="hidden sm:inline-flex max-w-[12rem]"
+      class="hidden sm:inline-flex max-w-[14rem] min-h-11"
       :aria-label="displayName"
     >
       <span class="truncate">{{ displayName }}</span>
+      <UBadge
+        v-if="roleBadgeLabel"
+        :color="roleBadgeColor"
+        variant="subtle"
+        size="sm"
+        class="ms-1 shrink-0"
+      >
+        {{ roleBadgeLabel }}
+      </UBadge>
     </UButton>
   </UDropdownMenu>
 </template>

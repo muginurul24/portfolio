@@ -528,7 +528,10 @@
     "goPanel": "Ke panel saya",
     "goDevConsole": "Ke konsol dev",
     "myPanel": "Panel saya",
-    "devConsole": "Konsol Dev"
+    "devConsole": "Konsol Dev",
+    "roleBadgeDev": "DEV",
+    "roleBadgeAdmin": "ADMIN",
+    "roleBadgeCs": "CS"
   },
   "panel": {
     "dashboard": "Dasbor",

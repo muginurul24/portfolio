@@ -528,7 +528,10 @@
     "goPanel": "Go to my panel",
     "goDevConsole": "Go to dev console",
     "myPanel": "My panel",
-    "devConsole": "Dev Console"
+    "devConsole": "Dev Console",
+    "roleBadgeDev": "DEV",
+    "roleBadgeAdmin": "ADMIN",
+    "roleBadgeCs": "CS"
   },
   "panel": {
     "dashboard": "Dashboard",
