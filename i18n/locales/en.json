@@ -143,7 +143,18 @@
     "orderId": "Order ID",
     "goToPanel": "Open panel",
     "contactSupport": "WhatsApp support",
-    "backHome": "Back to home"
+    "backHome": "Back to home",
+    "domainPriceFrom": "Domain price from",
+    "paymentUnavailable": "Payment is not available yet for order {order}. Contact support or try again shortly.",
+    "loginRecommendedTitle": "Login recommended",
+    "loginRecommendedDesc": "Sign in or register so orders and sites show in your panel. Guests can still checkout; use the same email when you register.",
+    "successTitlePaid": "Payment successful",
+    "successDescPaid": "Payment confirmed. Your site is being prepared. Check the panel for provisioning status.",
+    "successTitlePending": "Order awaiting payment",
+    "successDescPending": "Order recorded with pending payment status. Complete payment via the gateway or contact support.",
+    "successDescGuestPending": "Order recorded. Log in with the same email to view status. Do not treat this as paid until status is paid.",
+    "successDescUnknown": "Order recorded. Status could not be verified here — log in or contact support.",
+    "statusLabel": "Status"
   },
   "auth": {
     "login": "Log in",

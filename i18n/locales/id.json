@@ -143,7 +143,18 @@
     "orderId": "ID pesanan",
     "goToPanel": "Buka panel",
     "contactSupport": "Chat WhatsApp CS",
-    "backHome": "Kembali ke beranda"
+    "backHome": "Kembali ke beranda",
+    "domainPriceFrom": "Harga domain dari",
+    "paymentUnavailable": "Pembayaran belum tersedia untuk pesanan {order}. Hubungi support atau coba lagi sebentar.",
+    "loginRecommendedTitle": "Login disarankan",
+    "loginRecommendedDesc": "Masuk atau daftar dulu agar pesanan dan website muncul di panel. Guest tetap bisa checkout; gunakan email yang sama saat daftar.",
+    "successTitlePaid": "Pembayaran berhasil",
+    "successDescPaid": "Pembayaran terkonfirmasi. Website sedang disiapkan. Cek panel untuk status provisioning.",
+    "successTitlePending": "Pesanan menunggu pembayaran",
+    "successDescPending": "Pesanan tercatat dengan status menunggu pembayaran. Selesaikan bayar via gateway atau hubungi CS.",
+    "successDescGuestPending": "Pesanan tercatat. Login dengan email yang sama untuk melihat status. Jangan anggap sudah lunas sebelum status paid.",
+    "successDescUnknown": "Pesanan tercatat. Status belum bisa diverifikasi di sini — login atau hubungi CS.",
+    "statusLabel": "Status"
   },
   "auth": {
     "login": "Masuk",

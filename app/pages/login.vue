@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const { t } = useI18n()
+const route = useRoute()
 const localePath = useLocalePath()
 const { loggedIn, fetch: refreshSession } = useUserSession()
 
@@ -14,8 +15,15 @@ const password = ref('')
 const error = ref('')
 const loading = ref(false)
 
+/** Only allow same-origin relative paths (open-redirect safe). */
+function safeRedirect(): string {
+  const raw = String(route.query.redirect || '')
+  if (raw.startsWith('/') && !raw.startsWith('//')) return raw
+  return localePath('/panel')
+}
+
 if (import.meta.client && loggedIn.value) {
-  await navigateTo(localePath('/panel'))
+  await navigateTo(safeRedirect())
 }
 
 async function onSubmit() {
@@ -27,7 +35,7 @@ async function onSubmit() {
       body: { email: email.value, password: password.value }
     })
     await refreshSession()
-    await navigateTo(localePath('/panel'))
+    await navigateTo(safeRedirect())
   } catch (e: unknown) {
     const err = e as { data?: { message?: string }, statusMessage?: string }
     error.value = err?.data?.message || err?.statusMessage || t('common.error')

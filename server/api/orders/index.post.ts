@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { and, eq } from 'drizzle-orm'
-import { orders, packages, domainTlds, promoCodes, templates, payments } from '../../database/schema'
+import { orders, packages, domainTlds, promoCodes, templates, payments, users } from '../../database/schema'
 import { createId, createOrderNumber } from '../../utils/id'
 import { computeOrderTotals } from '../../utils/pricing'
 
@@ -44,7 +44,8 @@ export default defineEventHandler(async (event) => {
     const tpl = await db.query.templates.findFirst({
       where: and(eq(templates.slug, body.templateSlug), eq(templates.isActive, true))
     })
-    templateId = tpl?.id ?? null
+    if (!tpl) throw createError({ statusCode: 400, statusMessage: 'Template tidak valid' })
+    templateId = tpl.id
   }
 
   let promo: { discountIdr?: number | null, discountPercent?: number | null } | null = null
@@ -80,11 +81,23 @@ export default defineEventHandler(async (event) => {
   // Always take first label then strip to hostname-safe chars (no dots/credentials).
   const rawDomain = body.domainName.toLowerCase().replace(/\.$/, '')
   const domainName = (rawDomain.split('.')[0] ?? '').replace(/[^a-z0-9-]/g, '')
+  if (domainName.length < 3) {
+    throw createError({ statusCode: 400, statusMessage: 'Nama domain minimal 3 karakter' })
+  }
 
   const orderId = createId('ord')
   const orderNumber = createOrderNumber()
   const paymentId = createId('pay')
-  const userId = (session.user as { id?: string } | undefined)?.id ?? null
+  const customerEmail = body.customerEmail.toLowerCase().trim()
+  let userId = (session.user as { id?: string } | undefined)?.id ?? null
+  // Guest checkout: if email already registered, attach that user
+  if (!userId) {
+    const existing = await db.query.users.findFirst({ where: eq(users.email, customerEmail) })
+    if (existing) userId = existing.id
+  }
+
+  // Free orders skip payment gateway
+  const isFree = totals.totalIdr <= 0
 
   // better-sqlite3: sync transaction — order + payment atomic
   db.transaction((tx) => {
@@ -101,26 +114,43 @@ export default defineEventHandler(async (event) => {
       discountIdr: totals.discountIdr,
       totalIdr: totals.totalIdr,
       promoCode,
-      status: 'pending_payment',
+      status: isFree ? 'paid' : 'pending_payment',
       customerName: body.customerName.trim(),
-      customerEmail: body.customerEmail.toLowerCase().trim(),
-      customerPhone: body.customerPhone?.trim() || null
+      customerEmail,
+      customerPhone: body.customerPhone?.trim() || null,
+      ...(isFree ? { paidAt: new Date() } : {})
     }).run()
 
     tx.insert(payments).values({
       id: paymentId,
       orderId,
       amountIdr: totals.totalIdr,
-      status: 'pending'
+      status: isFree ? 'paid' : 'pending',
+      ...(isFree ? { paidAt: new Date() } : {})
     }).run()
   })
+
+  if (isFree) {
+    return {
+      data: {
+        id: orderId,
+        orderNumber,
+        status: 'paid' as const,
+        subtotalIdr: totals.subtotalIdr,
+        discountIdr: totals.discountIdr,
+        totalIdr: totals.totalIdr,
+        paymentId,
+        paymentUrl: null
+      }
+    }
+  }
 
   const config = useRuntimeConfig()
   const siteUrl = config.public.siteUrl as string
   const invoice = await createXenditInvoice({
     externalId: orderNumber,
     amount: totals.totalIdr,
-    email: body.customerEmail.toLowerCase().trim(),
+    email: customerEmail,
     description: `MugiewDev ${orderNumber} — ${domainName}.${tld}`,
     successRedirectUrl: `${siteUrl}/order/success?order=${orderId}`,
     failureRedirectUrl: `${siteUrl}/order/checkout?failed=1`

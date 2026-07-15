@@ -195,8 +195,10 @@ async function submit() {
     const res = await $fetch<{
       data: {
         id: string
+        orderNumber?: string
         paymentUrl: string | null
         totalIdr: number
+        status?: string
       }
     }>('/api/orders', {
       method: 'POST',
@@ -213,14 +215,25 @@ async function submit() {
       }
     })
 
-    if (res.data.paymentUrl) {
-      await navigateTo(res.data.paymentUrl, { external: true })
-    } else {
-      await navigateTo({
-        path: localePath('/order/success'),
-        query: { order: res.data.id }
-      })
+    const totalIdr = res.data.totalIdr ?? 0
+    const paymentUrl = res.data.paymentUrl
+
+    // Paid path: must have gateway URL. Free (0) may go success without URL.
+    if (paymentUrl) {
+      await navigateTo(paymentUrl, { external: true })
+      return
     }
+
+    if (totalIdr > 0) {
+      const ref = res.data.orderNumber || res.data.id
+      error.value = t('order.paymentUnavailable', { order: ref })
+      return
+    }
+
+    await navigateTo({
+      path: localePath('/order/success'),
+      query: { order: res.data.id }
+    })
   } catch (e: unknown) {
     const err = e as { data?: { message?: string, statusMessage?: string }, statusMessage?: string }
     error.value = err?.data?.message || err?.data?.statusMessage || err?.statusMessage || t('common.error')
@@ -248,6 +261,27 @@ const waHref = computed(() => link(t('whatsapp.orderHelp')))
         <h2 class="font-semibold mb-4">
           {{ t('order.personalData') }}
         </h2>
+        <UAlert
+          v-if="!loggedIn"
+          color="warning"
+          variant="subtle"
+          class="mb-4"
+          icon="i-lucide-user-round"
+          :title="t('order.loginRecommendedTitle')"
+          :description="t('order.loginRecommendedDesc')"
+        >
+          <template #actions>
+            <UButton
+              :to="localePath({ path: '/login', query: { redirect: route.fullPath } })"
+              color="warning"
+              variant="soft"
+              size="sm"
+            >
+              {{ t('auth.login') }}
+            </UButton>
+          </template>
+        </UAlert>
+
         <form class="space-y-4" @submit.prevent="submit">
           <UFormField :label="t('auth.name')" required>
             <UInput v-model="form.name" size="lg" class="w-full" required autocomplete="name" />

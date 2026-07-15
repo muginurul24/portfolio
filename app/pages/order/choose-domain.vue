@@ -170,7 +170,7 @@ function continueOrder() {
           class="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
         >
           <p class="text-sm text-muted">
-            {{ t('order.packageFrom') }}
+            {{ t('order.domainPriceFrom') }}
             <span class="font-semibold text-highlighted tabular-nums">
               {{ formatIdr(displayPrice) }}{{ t('order.perYear') }}
             </span>

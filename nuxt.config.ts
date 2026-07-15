@@ -94,9 +94,7 @@ export default defineNuxtConfig({
     '/order/**': { ssr: true },
     // Auth + panel
     '/login': { ssr: true },
-    '/panel/**': { ssr: true },
-    // API
-    '/api/**': { cors: true }
+    '/panel/**': { ssr: true }
   },
 
   experimental: {
