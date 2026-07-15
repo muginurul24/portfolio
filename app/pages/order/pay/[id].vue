@@ -106,7 +106,8 @@ const payTips = computed(() => [
 ])
 
 async function checkStatus(navigateOnPaid = true) {
-  if (!orderId.value || isExpired.value) return
+  // Always allow manual re-check after client expiry (late settle / clock skew)
+  if (!orderId.value) return
   checking.value = true
   try {
     const res = await $fetch<{
@@ -362,11 +363,12 @@ onBeforeUnmount(() => {
         <!-- Actions -->
         <div class="flex flex-col gap-2">
           <UButton
-            v-if="!isExpired"
-            color="primary"
+            :color="isExpired ? 'neutral' : 'primary'"
+            :variant="isExpired ? 'outline' : 'solid'"
             size="lg"
             block
-            class="min-h-12 shadow-glow-sky"
+            class="min-h-12"
+            :class="isExpired ? '' : 'shadow-glow-sky'"
             :loading="checking"
             icon="i-lucide-refresh-cw"
             @click="checkStatus(true)"
