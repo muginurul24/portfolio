@@ -26,8 +26,11 @@ const { data: tldsRes, status: tldsStatus } = await useFetch<{ data: DomainTld[]
 
 const tlds = computed(() => tldsRes.value?.data ?? [])
 
-const name = ref(orderStore.domainName || '')
-const selectedTld = ref(orderStore.domainTld || 'com')
+const queryName = typeof route.query.name === 'string' ? route.query.name : ''
+const queryTld = typeof route.query.tld === 'string' ? route.query.tld : ''
+
+const name = ref(queryName || orderStore.domainName || '')
+const selectedTld = ref(queryTld || orderStore.domainTld || 'com')
 const checking = ref(false)
 const available = ref<boolean | null>(null)
 const checkError = ref('')
@@ -161,7 +164,7 @@ function continueOrder() {
           variant="subtle"
           :title="available
             ? t('order.domainAvailable', { domain: fullDomain })
-            : t('order.domainUnavailable', { domain: fullDomain })"
+            : `${fullDomain} — ${t('order.domainUnavailable')}`"
           :icon="available ? 'i-lucide-check-circle' : 'i-lucide-x-circle'"
         />
 
