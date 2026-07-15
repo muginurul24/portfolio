@@ -25,7 +25,10 @@
 **Nuxt UI mapping** (`app.config.ts`):
 - `primary: 'sky'`
 - `neutral: 'slate'`
-- Default color mode: **light** (dark supported, not default)
+- Color mode: default **light**, full **dark** supported (`classSuffix: ''` → class `dark` on `<html>`, storage `mugiew-color-mode`)
+- Surfaces use semantic tokens (`bg-default`, `text-highlighted`, `text-muted`, `ring-default`, `bg-elevated`)
+- Custom chrome (`.bg-mesh-hero`, `.glass-panel`, soft shadows) has **paired light + dark** rules in `main.css`
+- Toggle: `UColorModeButton` in header; never ship light-only hardcodes
 
 ## Typography
 
@@ -114,7 +117,8 @@ Sidebar nav (desktop) · top bar mobile · dense cards · tabular stats.
 
 ## Anti-patterns
 
-- ❌ Dark mode default
+- ❌ Light-only hardcode that breaks dark (`bg-white`, fixed mesh without `.dark` pair)
+- ❌ Pure invert “night mode” — use desaturated surfaces + sky accent
 - ❌ Excessive animation / GSAP bloat on marketing unless justified
 - ❌ Marketplace search-as-primary (kita jual website, bukan listing barang)
 - ❌ Emoji icons

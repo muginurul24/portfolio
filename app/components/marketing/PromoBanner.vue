@@ -18,7 +18,7 @@ const discount = computed(() => formatIdr(appConfig.mugiew?.promoDiscountIdr || 
         size="xs"
         color="neutral"
         variant="solid"
-        class="bg-white text-primary hover:bg-white/90"
+        class="bg-default text-primary hover:bg-elevated"
       >
         {{ t('promo.bannerCta') }}
       </UButton>

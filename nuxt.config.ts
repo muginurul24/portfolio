@@ -46,11 +46,12 @@ export default defineNuxtConfig({
     defaultLocale: 'id'
   },
 
-  // Soft UI Evolution — navy + sky accent (see DESIGN.md)
+  // Soft Glass Trust — light default; full dark via class `dark` + UColorModeButton
   colorMode: {
     preference: 'light',
     fallback: 'light',
-    classSuffix: ''
+    classSuffix: '',
+    storageKey: 'mugiew-color-mode'
   },
 
   content: {

@@ -32,7 +32,7 @@
 | Destructive | `#DC2626` | `--color-destructive` |
 | Ring | `#0F172A` | `--color-ring` |
 
-**Color Notes:** Professional navy headings + sky CTA (`#0369A1`). Soft mesh + glass on light surfaces.
+**Color Notes:** Professional navy headings + sky CTA (`#0369A1`). Soft mesh + glass with **light + dark** pairs (`.dark .bg-mesh-hero`, `.dark .glass-panel`). Prefer Nuxt UI semantic surfaces over raw hex.
 
 ### Typography
 
