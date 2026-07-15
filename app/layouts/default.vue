@@ -114,9 +114,8 @@ const waHref = computed(() => link())
 
     <UHeader :ui="{ root: 'sticky top-0 z-40 border-b border-default/70 glass-panel' }">
       <template #left>
-        <NuxtLink :to="localePath('/')" class="flex items-center gap-2 cursor-pointer">
+        <NuxtLink :to="localePath('/')" class="inline-flex items-center cursor-pointer" :aria-label="t('brand.name')">
           <AppLogo class="h-6 w-auto shrink-0" />
-          <span class="font-semibold tracking-tight text-highlighted hidden sm:inline">{{ t('brand.name') }}</span>
         </NuxtLink>
       </template>
 
@@ -195,10 +194,9 @@ const waHref = computed(() => link())
         <div class="max-w-[90rem] mx-auto w-full px-4 sm:px-6 lg:px-10 xl:px-12 py-12 md:py-16 lg:py-20">
           <div class="grid gap-12 lg:grid-cols-12 lg:gap-x-10 xl:gap-x-14">
             <div class="lg:col-span-3 space-y-4 min-w-0">
-              <div class="flex items-center gap-2">
+              <NuxtLink :to="localePath('/')" class="inline-flex items-center cursor-pointer w-fit" :aria-label="t('brand.name')">
                 <AppLogo class="h-7 w-auto shrink-0" />
-                <span class="font-semibold text-lg tracking-tight text-highlighted">{{ t('brand.name') }}</span>
-              </div>
+              </NuxtLink>
               <p class="text-sm text-muted leading-relaxed">
                 {{ t('footer.blurb') }}
               </p>

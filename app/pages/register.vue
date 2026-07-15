@@ -48,9 +48,8 @@ async function onSubmit() {
   <div class="min-h-dvh flex items-center justify-center bg-muted/40 p-4">
     <UCard class="w-full max-w-md shadow-soft-lg">
       <div class="text-center mb-6">
-        <NuxtLink :to="localePath('/')" class="inline-flex items-center gap-2 cursor-pointer">
+        <NuxtLink :to="localePath('/')" class="inline-flex items-center cursor-pointer" :aria-label="t('brand.name')">
           <AppLogo class="h-7 w-auto" />
-          <span class="font-semibold text-lg">MugiewDev</span>
         </NuxtLink>
         <h1 class="mt-4 text-xl font-semibold text-highlighted">
           {{ t('auth.register') }}

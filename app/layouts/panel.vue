@@ -34,9 +34,8 @@ watchEffect(() => {
   <div class="min-h-dvh flex bg-muted/40">
     <aside class="hidden md:flex w-64 flex-col border-r border-default bg-default shadow-soft-sm">
       <div class="p-4 border-b border-default">
-        <NuxtLink :to="localePath('/')" class="flex items-center gap-2 cursor-pointer">
+        <NuxtLink :to="localePath('/')" class="inline-flex items-center cursor-pointer" :aria-label="t('brand.name')">
           <AppLogo class="h-6 w-auto" />
-          <span class="font-semibold tracking-tight text-highlighted">MugiewDev</span>
         </NuxtLink>
       </div>
       <UNavigationMenu
@@ -68,7 +67,9 @@ watchEffect(() => {
 
     <div class="flex-1 flex flex-col min-w-0">
       <header class="md:hidden flex items-center justify-between p-4 border-b border-default glass-panel">
-        <AppLogo class="h-6 w-auto" />
+        <NuxtLink :to="localePath('/')" class="inline-flex items-center cursor-pointer" :aria-label="t('brand.name')">
+          <AppLogo class="h-6 w-auto" />
+        </NuxtLink>
         <UButton icon="i-lucide-menu" color="neutral" variant="ghost" aria-label="Menu" />
       </header>
       <main id="main" class="flex-1 p-4 md:p-8">
