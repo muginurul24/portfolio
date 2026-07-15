@@ -3,7 +3,7 @@ const { t } = useI18n()
 
 const items = computed(() => [
   { icon: 'i-lucide-shield-check', label: t('home.trust.ssl') },
-  { icon: 'i-lucide-credit-card', label: t('home.trust.xendit') },
+  { icon: 'i-lucide-qr-code', label: t('home.trust.qris') },
   { icon: 'i-lucide-smartphone', label: t('home.trust.responsive') },
   { icon: 'i-lucide-search', label: t('home.trust.seo') },
   { icon: 'i-lucide-server', label: t('home.trust.hosting') },
