@@ -538,7 +538,15 @@
     "countdownExpired": "QRIS kedaluwarsa",
     "countdownExpiredDesc": "Buat order baru atau hubungi CS via WhatsApp.",
     "payHelpWa": "Butuh bantuan bayar?",
-    "pollingHint": "Kami cek status otomatis tiap 5 detik"
+    "pollingHint": "Kami cek status otomatis tiap 5 detik",
+    "nextStepsTitle": "Langkah selanjutnya",
+    "nextPaid": "Pembayaran diterima",
+    "nextProvision": "Tim siapkan website & domain",
+    "nextProvisionEta": "Estimasi 1–2×24 jam kerja",
+    "nextLive": "Website live & akses panel",
+    "openPanel": "Buka panel saya",
+    "orderAgain": "Pesan website lain",
+    "saveOrderNumber": "Simpan nomor order untuk CS"
   },
   "auth": {
     "login": "Masuk",

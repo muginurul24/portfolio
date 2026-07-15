@@ -538,7 +538,15 @@
     "countdownExpired": "QRIS expired",
     "countdownExpiredDesc": "Place a new order or contact support on WhatsApp.",
     "payHelpWa": "Need help paying?",
-    "pollingHint": "We check payment status every 5 seconds"
+    "pollingHint": "We check payment status every 5 seconds",
+    "nextStepsTitle": "Next steps",
+    "nextPaid": "Payment received",
+    "nextProvision": "We prepare your site & domain",
+    "nextProvisionEta": "ETA 1–2 business days",
+    "nextLive": "Site live & panel access",
+    "openPanel": "Open my panel",
+    "orderAgain": "Order another website",
+    "saveOrderNumber": "Save this order number for support"
   },
   "auth": {
     "login": "Log in",
