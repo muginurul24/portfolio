@@ -1,16 +1,25 @@
 <script setup lang="ts">
 import type { UserRole } from '~/utils/roles'
-import { canAccessDevConsole, canManageCatalog, canManageUsers, isDev } from '~/utils/roles'
+import {
+  canAccessDevConsole,
+  canAccessSystem,
+  canManageCatalog,
+  canManageContent,
+  canManageInquiries,
+  canManageOrders,
+  canManagePayments,
+  canManageSites,
+  canManageUsers
+} from '~/utils/roles'
 
 const { t } = useI18n()
 const localePath = useLocalePath()
 const route = useRoute()
-const { loggedIn, user, clear } = useUserSession()
+const { user, clear } = useUserSession()
 
 const mobileOpen = ref(false)
 
 const role = computed(() => (user.value as { role?: UserRole } | null)?.role)
-
 const email = computed(() => (user.value as { email?: string } | null)?.email ?? '')
 
 type NavItem = {
@@ -18,109 +27,99 @@ type NavItem = {
   to: string
   icon: string
   exact?: boolean
-  show: boolean
 }
 
-const items = computed((): NavItem[] => {
+type NavGroup = {
+  key: string
+  label: string
+  items: NavItem[]
+}
+
+const roleBadge = computed(() => {
+  if (role.value === 'dev') return { label: t('auth.roleBadgeDev'), color: 'primary' as const }
+  if (role.value === 'admin') return { label: t('auth.roleBadgeAdmin'), color: 'warning' as const }
+  if (role.value === 'cs') return { label: t('auth.roleBadgeCs'), color: 'neutral' as const }
+  return { label: 'STAFF', color: 'neutral' as const }
+})
+
+const navGroups = computed((): NavGroup[] => {
   const r = role.value
   if (!r) return []
 
-  const full = canAccessDevConsole(r)
-  const catalog = canManageCatalog(r)
-  const users = canManageUsers(r)
-  const staffOps = true // layout only reached via staff middleware
+  const groups: NavGroup[] = []
 
-  return [
+  const platform: NavItem[] = [
     {
       label: t('dev.nav.overview'),
       to: localePath('/dev'),
       icon: 'i-lucide-layout-dashboard',
-      exact: true,
-      show: staffOps
-    },
-    {
+      exact: true
+    }
+  ]
+  if (canManageUsers(r)) {
+    platform.push({
       label: t('dev.nav.users'),
       to: localePath('/dev/users'),
-      icon: 'i-lucide-users',
-      show: users
-    },
-    {
-      label: t('dev.nav.templates'),
-      to: localePath('/dev/templates'),
-      icon: 'i-lucide-layout-template',
-      show: catalog
-    },
-    {
-      label: t('dev.nav.packages'),
-      to: localePath('/dev/packages'),
-      icon: 'i-lucide-package',
-      show: catalog
-    },
-    {
-      label: t('dev.nav.domains'),
-      to: localePath('/dev/domains'),
-      icon: 'i-lucide-globe-2',
-      show: catalog
-    },
-    {
-      label: t('dev.nav.promos'),
-      to: localePath('/dev/promos'),
-      icon: 'i-lucide-ticket-percent',
-      show: catalog
-    },
-    {
-      label: t('dev.nav.orders'),
-      to: localePath('/dev/orders'),
-      icon: 'i-lucide-receipt',
-      show: staffOps
-    },
-    {
-      label: t('dev.nav.payments'),
-      to: localePath('/dev/payments'),
-      icon: 'i-lucide-credit-card',
-      show: staffOps
-    },
-    {
-      label: t('dev.nav.sites'),
-      to: localePath('/dev/sites'),
-      icon: 'i-lucide-globe',
-      show: staffOps
-    },
-    {
-      label: t('dev.nav.inquiries'),
-      to: localePath('/dev/inquiries'),
-      icon: 'i-lucide-inbox',
-      show: staffOps
-    },
-    {
-      label: t('dev.nav.academy'),
-      to: localePath('/dev/academy'),
-      icon: 'i-lucide-graduation-cap',
-      show: full
-    },
-    {
-      label: t('dev.nav.testimonials'),
-      to: localePath('/dev/testimonials'),
-      icon: 'i-lucide-quote',
-      show: full
-    },
-    {
-      label: t('dev.nav.system'),
-      to: localePath('/dev/system'),
-      icon: 'i-lucide-activity',
-      show: full || isDev(r)
-    }
-  ].filter(item => item.show)
+      icon: 'i-lucide-users'
+    })
+  }
+  groups.push({ key: 'platform', label: t('dev.navGroup.platform'), items: platform })
+
+  if (canManageCatalog(r)) {
+    groups.push({
+      key: 'catalog',
+      label: t('dev.navGroup.catalog'),
+      items: [
+        { label: t('dev.nav.templates'), to: localePath('/dev/templates'), icon: 'i-lucide-layout-template' },
+        { label: t('dev.nav.packages'), to: localePath('/dev/packages'), icon: 'i-lucide-package' },
+        { label: t('dev.nav.domains'), to: localePath('/dev/domains'), icon: 'i-lucide-globe-2' },
+        { label: t('dev.nav.promos'), to: localePath('/dev/promos'), icon: 'i-lucide-ticket-percent' }
+      ]
+    })
+  }
+
+  const commerce: NavItem[] = []
+  if (canManageOrders(r)) {
+    commerce.push({ label: t('dev.nav.orders'), to: localePath('/dev/orders'), icon: 'i-lucide-receipt' })
+  }
+  if (canManagePayments(r)) {
+    commerce.push({ label: t('dev.nav.payments'), to: localePath('/dev/payments'), icon: 'i-lucide-credit-card' })
+  }
+  if (canManageSites(r)) {
+    commerce.push({ label: t('dev.nav.sites'), to: localePath('/dev/sites'), icon: 'i-lucide-globe' })
+  }
+  if (commerce.length) {
+    groups.push({ key: 'commerce', label: t('dev.navGroup.commerce'), items: commerce })
+  }
+
+  const content: NavItem[] = []
+  if (canManageInquiries(r)) {
+    content.push({ label: t('dev.nav.inquiries'), to: localePath('/dev/inquiries'), icon: 'i-lucide-inbox' })
+  }
+  if (canManageContent(r)) {
+    content.push(
+      { label: t('dev.nav.academy'), to: localePath('/dev/academy'), icon: 'i-lucide-graduation-cap' },
+      { label: t('dev.nav.testimonials'), to: localePath('/dev/testimonials'), icon: 'i-lucide-quote' }
+    )
+  }
+  if (content.length) {
+    groups.push({ key: 'content', label: t('dev.navGroup.content'), items: content })
+  }
+
+  if (canAccessSystem(r) || canAccessDevConsole(r)) {
+    groups.push({
+      key: 'system',
+      label: t('dev.navGroup.system'),
+      items: [
+        { label: t('dev.nav.system'), to: localePath('/dev/system'), icon: 'i-lucide-activity' }
+      ]
+    })
+  }
+
+  return groups
 })
 
-const navMenuItems = computed(() =>
-  items.value.map(({ label, to, icon, exact }) => ({
-    label,
-    to,
-    icon,
-    exact
-  }))
-)
+const flatItems = computed(() => navGroups.value.flatMap(g => g.items))
 
 function isActive(item: { to: string, exact?: boolean }) {
   const path = route.path
@@ -142,12 +141,6 @@ watch(
     mobileOpen.value = false
   }
 )
-
-watchEffect(() => {
-  if (import.meta.client && !loggedIn.value) {
-    navigateTo(localePath('/login'))
-  }
-})
 </script>
 
 <template>
@@ -162,11 +155,11 @@ watchEffect(() => {
           <AppLogo class="h-6 w-auto" />
         </NuxtLink>
         <UBadge
-          color="primary"
+          :color="roleBadge.color"
           variant="subtle"
           size="sm"
         >
-          {{ role === 'dev' ? 'DEV' : role === 'admin' ? 'ADMIN' : 'STAFF' }}
+          {{ roleBadge.label }}
         </UBadge>
       </div>
 
@@ -176,17 +169,34 @@ watchEffect(() => {
         </p>
       </div>
 
-      <UNavigationMenu
-        :items="navMenuItems"
-        orientation="vertical"
-        highlight
-        highlight-color="primary"
-        class="flex-1 p-3 overflow-y-auto"
-        :ui="{
-          link: 'rounded-lg',
-          linkLeadingIcon: 'size-4'
-        }"
-      />
+      <nav class="flex-1 overflow-y-auto p-3 space-y-4">
+        <div
+          v-for="group in navGroups"
+          :key="group.key"
+        >
+          <p class="text-[11px] font-semibold uppercase tracking-wider text-muted px-2 mb-1.5">
+            {{ group.label }}
+          </p>
+          <div class="space-y-0.5">
+            <UButton
+              v-for="item in group.items"
+              :key="item.to"
+              :to="item.to"
+              :icon="item.icon"
+              color="neutral"
+              :variant="isActive(item) ? 'soft' : 'ghost'"
+              block
+              size="sm"
+              class="justify-start min-h-10"
+              :ui="{
+                leadingIcon: 'size-4'
+              }"
+            >
+              {{ item.label }}
+            </UButton>
+          </div>
+        </div>
+      </nav>
 
       <div class="p-3 border-t border-default space-y-2">
         <div
@@ -206,6 +216,7 @@ watchEffect(() => {
           variant="ghost"
           icon="i-lucide-layout-dashboard"
           block
+          class="min-h-10"
         >
           {{ t('auth.goPanel') }}
         </UButton>
@@ -214,6 +225,7 @@ watchEffect(() => {
           variant="ghost"
           icon="i-lucide-log-out"
           block
+          class="min-h-10"
           @click="logout"
         >
           {{ t('auth.logout') }}
@@ -232,16 +244,17 @@ watchEffect(() => {
         </NuxtLink>
         <div class="flex items-center gap-2">
           <UBadge
-            color="primary"
+            :color="roleBadge.color"
             variant="subtle"
             size="sm"
           >
-            {{ role === 'dev' ? 'DEV' : role === 'admin' ? 'ADMIN' : 'STAFF' }}
+            {{ roleBadge.label }}
           </UBadge>
           <UButton
             icon="i-lucide-menu"
             color="neutral"
             variant="ghost"
+            class="min-h-11 min-w-11"
             :aria-label="t('dev.openMenu')"
             @click="mobileOpen = true"
           />
@@ -268,25 +281,36 @@ watchEffect(() => {
                 icon="i-lucide-x"
                 color="neutral"
                 variant="ghost"
+                class="min-h-11 min-w-11"
                 :aria-label="t('common.cancel')"
                 @click="mobileOpen = false"
               />
             </div>
 
-            <nav class="flex-1 overflow-y-auto p-3 space-y-1">
-              <UButton
-                v-for="item in items"
-                :key="item.to"
-                :to="item.to"
-                :icon="item.icon"
-                color="neutral"
-                :variant="isActive(item) ? 'soft' : 'ghost'"
-                block
-                class="justify-start"
-                @click="mobileOpen = false"
+            <nav class="flex-1 overflow-y-auto p-3 space-y-4">
+              <div
+                v-for="group in navGroups"
+                :key="group.key"
               >
-                {{ item.label }}
-              </UButton>
+                <p class="text-[11px] font-semibold uppercase tracking-wider text-muted px-2 mb-1.5">
+                  {{ group.label }}
+                </p>
+                <div class="space-y-0.5">
+                  <UButton
+                    v-for="item in group.items"
+                    :key="item.to"
+                    :to="item.to"
+                    :icon="item.icon"
+                    color="neutral"
+                    :variant="isActive(item) ? 'soft' : 'ghost'"
+                    block
+                    class="justify-start min-h-11"
+                    @click="mobileOpen = false"
+                  >
+                    {{ item.label }}
+                  </UButton>
+                </div>
+              </div>
             </nav>
 
             <div class="p-3 border-t border-default space-y-2">
@@ -307,6 +331,7 @@ watchEffect(() => {
                 variant="outline"
                 icon="i-lucide-layout-dashboard"
                 block
+                class="min-h-11"
                 @click="mobileOpen = false"
               >
                 {{ t('auth.goPanel') }}
@@ -316,6 +341,7 @@ watchEffect(() => {
                 variant="soft"
                 icon="i-lucide-log-out"
                 block
+                class="min-h-11"
                 @click="logout"
               >
                 {{ t('auth.logout') }}

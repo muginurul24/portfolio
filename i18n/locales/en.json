@@ -309,6 +309,13 @@
       "testimonials": "Testimonials",
       "system": "System"
     },
+    "navGroup": {
+      "platform": "Platform",
+      "catalog": "Catalog",
+      "commerce": "Commerce",
+      "content": "Content",
+      "system": "System"
+    },
     "roleCs": "CS",
     "roleDev": "Dev",
     "users": {
