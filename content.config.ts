@@ -24,7 +24,8 @@ export default defineContentConfig({
       source: 'tutorial/**/*.md',
       schema: z.object({
         title: z.string(),
-        description: z.string().optional()
+        description: z.string().optional(),
+        date: z.string().optional()
       })
     })
   }
