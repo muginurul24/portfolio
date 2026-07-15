@@ -6,7 +6,8 @@ export default defineEventHandler(async (event) => {
   if (!import.meta.dev) {
     throw createError({ statusCode: 404, statusMessage: 'Not found' })
   }
-  const session = await requireUserSession(event)
+  // Dev-environment only + role dev (not customer/cs/admin self-serve)
+  const session = await requireRole(event, ['dev'])
   const user = sessionUser(session)
   const id = getRouterParam(event, 'id')
   if (!id) throw createError({ statusCode: 400, statusMessage: 'ID wajib' })
@@ -16,11 +17,6 @@ export default defineEventHandler(async (event) => {
 
   if (order.status === 'cancelled' || order.status === 'expired') {
     throw createError({ statusCode: 400, statusMessage: 'Order terminal - tidak bisa mark paid' })
-  }
-
-  const email = user.email?.toLowerCase().trim()
-  if (!isStaffRole(user.role) && order.userId !== user.id && order.customerEmail !== email) {
-    throw createError({ statusCode: 403, statusMessage: 'Akses ditolak' })
   }
 
   const now = new Date()
