@@ -660,7 +660,7 @@
     "name": "Nama",
     "namePlaceholder": "Nama lengkap Anda",
     "email": "Email",
-    "emailPlaceholder": "nama@bisnis.com",
+    "emailPlaceholder": "nama{'@'}bisnis.com",
     "phone": "WhatsApp",
     "phonePlaceholder": "08xxxxxxxxxx",
     "phoneHint": "Opsional, tapi mempercepat balasan",

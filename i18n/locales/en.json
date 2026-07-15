@@ -660,7 +660,7 @@
     "name": "Name",
     "namePlaceholder": "Your full name",
     "email": "Email",
-    "emailPlaceholder": "name@business.com",
+    "emailPlaceholder": "name{'@'}business.com",
     "phone": "WhatsApp",
     "phonePlaceholder": "+62…",
     "phoneHint": "Optional, but speeds up replies",
