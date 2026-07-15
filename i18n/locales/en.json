@@ -178,7 +178,11 @@
       "umkmDesc": "Local SEO, WhatsApp forms, easy admin edits. Transparent pricing — live within 2×24 business hours.",
       "ecomBadge": "Online Store",
       "ecomTitle": "Sell online with full checkout.",
-      "ecomDesc": "Catalog, cart, VA/QRIS/e-wallet. Year-one domain & hosting included."
+      "ecomDesc": "Catalog, cart, VA/QRIS/e-wallet. Year-one domain & hosting included.",
+      "slideRole": "slide",
+      "slideOf": "Slide {current} of {total}",
+      "paused": "Autoplay paused",
+      "hint": "Swipe, arrows, or dots — auto-plays (pauses on hover)"
     },
     "trust": {
       "eyebrow": "Business trust",

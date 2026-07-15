@@ -138,6 +138,16 @@
   font-family: var(--font-display);
 }
 
+/* Hero carousel stage — soft mask so edges feel continuous */
+.hero-carousel-stage {
+  isolation: isolate;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-carousel-stage * {
+    scroll-behavior: auto !important;
+  }
+}
+
 .card-lift {
   transition: box-shadow 200ms ease, transform 200ms ease;
 }
