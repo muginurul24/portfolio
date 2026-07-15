@@ -1,6 +1,9 @@
 <script setup lang="ts">
 const { t } = useI18n()
 const localePath = useLocalePath()
+const { link } = useWhatsApp()
+
+const waHref = computed(() => link(t('whatsapp.consultDefault')))
 
 const benefits = computed(() => [
   {
@@ -71,15 +74,29 @@ const avatars = [
             </p>
           </div>
 
-          <UButton
-            :to="localePath('/komunitas')"
-            color="primary"
-            size="xl"
-            trailing-icon="i-lucide-arrow-right"
-            class="cursor-pointer"
-          >
-            {{ t('home.communityCta') }}
-          </UButton>
+          <div class="flex flex-wrap gap-3">
+            <UButton
+              :to="localePath('/komunitas')"
+              color="primary"
+              size="xl"
+              trailing-icon="i-lucide-arrow-right"
+              class="cursor-pointer"
+            >
+              {{ t('home.communityCta') }}
+            </UButton>
+            <UButton
+              :to="waHref"
+              target="_blank"
+              rel="noopener noreferrer"
+              color="neutral"
+              variant="outline"
+              size="xl"
+              icon="i-simple-icons-whatsapp"
+              class="cursor-pointer"
+            >
+              {{ t('home.communityWa') }}
+            </UButton>
+          </div>
         </div>
 
         <div class="grid gap-4 sm:grid-cols-2">
