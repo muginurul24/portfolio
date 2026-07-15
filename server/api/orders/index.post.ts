@@ -116,6 +116,24 @@ export default defineEventHandler(async (event) => {
     }).run()
   })
 
+  const config = useRuntimeConfig()
+  const siteUrl = config.public.siteUrl as string
+  const invoice = await createXenditInvoice({
+    externalId: orderNumber,
+    amount: totals.totalIdr,
+    email: body.customerEmail.toLowerCase().trim(),
+    description: `MugiewDev ${orderNumber} — ${domainName}.${tld}`,
+    successRedirectUrl: `${siteUrl}/order/success?order=${orderId}`,
+    failureRedirectUrl: `${siteUrl}/order/checkout?failed=1`
+  })
+
+  if (invoice?.id) {
+    await db.update(payments).set({
+      providerRef: invoice.id,
+      updatedAt: new Date()
+    }).where(eq(payments.id, paymentId))
+  }
+
   return {
     data: {
       id: orderId,
@@ -125,7 +143,7 @@ export default defineEventHandler(async (event) => {
       discountIdr: totals.discountIdr,
       totalIdr: totals.totalIdr,
       paymentId,
-      paymentUrl: null as string | null
+      paymentUrl: invoice?.invoiceUrl ?? null
     }
   }
 })
