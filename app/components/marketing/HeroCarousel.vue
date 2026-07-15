@@ -89,18 +89,26 @@ const autoplay = computed(() => {
   }
 })
 
+/** Perfect circle nav — fixed square box + centered icon */
 const navBtn = {
-  size: 'lg' as const,
+  size: 'md' as const,
   color: 'neutral' as const,
   variant: 'solid' as const,
   square: true,
-  class: [
-    'rounded-full shadow-soft-lg ring-1 ring-default/80',
-    'bg-default/95 backdrop-blur-md text-highlighted',
-    'hover:bg-elevated hover:text-primary',
-    'disabled:opacity-40 pointer-events-auto',
-    'size-11 sm:size-12'
-  ]
+  ui: {
+    base: [
+      'pointer-events-auto',
+      // force equal box (beat size token width/height drift)
+      '!size-11 sm:!size-12 !min-w-11 sm:!min-w-12 !p-0',
+      '!rounded-full aspect-square',
+      'inline-flex items-center justify-center',
+      'shadow-soft-lg ring-1 ring-default/80',
+      'bg-default/95 backdrop-blur-md text-highlighted',
+      'hover:bg-elevated hover:text-primary',
+      'disabled:opacity-40'
+    ].join(' '),
+    leadingIcon: 'size-5 shrink-0'
+  }
 }
 
 const carouselUi = {
@@ -108,10 +116,23 @@ const carouselUi = {
   viewport: 'overflow-hidden rounded-2xl',
   container: 'flex touch-pan-y ms-0',
   item: 'basis-full min-w-0 shrink-0 grow-0 ps-0',
+  // full stage overlay for absolute arrow centering
   controls: 'absolute inset-0 z-20 pointer-events-none',
-  arrows: 'contents',
-  prev: 'absolute start-3 sm:start-5 top-1/2 -translate-y-1/2',
-  next: 'absolute end-3 sm:end-5 top-1/2 -translate-y-1/2',
+  // don't use contents — keep positioning context on each arrow slot
+  arrows: 'absolute inset-0 pointer-events-none',
+  // exact vertical center of carousel stage (override theme sm:-start-12 etc.)
+  prev: [
+    '!absolute !start-3 sm:!start-5',
+    '!top-1/2 !-translate-y-1/2 !bottom-auto !left-auto',
+    'rtl:!end-3 rtl:sm:!end-5',
+    'z-30'
+  ].join(' '),
+  next: [
+    '!absolute !end-3 sm:!end-5',
+    '!top-1/2 !-translate-y-1/2 !bottom-auto !right-auto',
+    'rtl:!start-3 rtl:sm:!start-5',
+    'z-30'
+  ].join(' '),
   dots: [
     'absolute inset-x-0 bottom-4 sm:bottom-5 z-30',
     'flex flex-wrap items-center justify-center gap-2',
