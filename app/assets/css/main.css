@@ -77,6 +77,23 @@
     transition: none;
     transform: none;
   }
+
+  /* Kill leftover hover lifts / scale / rotate outside .card-lift */
+  .group:hover .group-hover\:translate-x-0\.5,
+  .group:hover .group-hover\:-translate-y-0\.5,
+  .hover\:-translate-y-0\.5:hover,
+  .hover\:translate-y-\[-2px\]:hover {
+    transform: none !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* Page transitions (respect reduced motion) */
@@ -102,6 +119,14 @@
   .layout-leave-active {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
+    transform: none !important;
+  }
+
+  .page-enter-from,
+  .page-leave-to,
+  .layout-enter-from,
+  .layout-leave-to {
+    transform: none !important;
   }
 }
 

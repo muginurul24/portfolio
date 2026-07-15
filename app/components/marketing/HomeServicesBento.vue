@@ -63,7 +63,7 @@ const services = computed(() => [
               {{ t('home.learnService') }}
               <UIcon
                 name="i-lucide-arrow-right"
-                class="size-4 transition-transform group-hover:translate-x-0.5"
+                class="size-4 transition-transform group-hover:translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0"
               />
             </span>
           </UCard>

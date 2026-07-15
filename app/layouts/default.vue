@@ -90,7 +90,7 @@ const waHref = computed(() => link())
             color="neutral"
             variant="ghost"
             icon="i-lucide-languages"
-            :aria-label="locale === 'id' ? 'Language' : 'Bahasa'"
+            :aria-label="t('common.switchLanguage')"
             size="sm"
           />
         </UDropdownMenu>

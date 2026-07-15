@@ -4,20 +4,20 @@ const localePath = useLocalePath()
 
 useSeoMeta({
   title: () => t('nav.templates'),
-  description: 'Ratusan template website siap pakai untuk ekspor, UMKM, toko online, dan perusahaan.'
+  description: () => t('templates.seoDesc')
 })
 
-const categories = [
-  { key: 'all', label: 'Semua' },
-  { key: 'export', label: 'Produk Ekspor' },
-  { key: 'agriculture', label: 'Agrikultur' },
-  { key: 'craft', label: 'Craft' },
-  { key: 'company', label: 'Company' },
-  { key: 'automotive', label: 'Otomotif' },
-  { key: 'restaurant', label: 'Restaurant' },
-  { key: 'service', label: 'Jasa' },
-  { key: 'ecommerce', label: 'Toko Online' }
-]
+const categories = computed(() => [
+  { key: 'all', label: t('templates.catAll') },
+  { key: 'export', label: t('templates.catExport') },
+  { key: 'agriculture', label: t('templates.catAgriculture') },
+  { key: 'craft', label: t('templates.catCraft') },
+  { key: 'company', label: t('templates.catCompany') },
+  { key: 'automotive', label: t('templates.catAutomotive') },
+  { key: 'restaurant', label: t('templates.catRestaurant') },
+  { key: 'service', label: t('templates.catService') },
+  { key: 'ecommerce', label: t('templates.catEcommerce') }
+])
 
 const activeCategory = ref('all')
 const search = ref('')
@@ -45,13 +45,13 @@ function resetFilters() {
       <UContainer class="section-y !pb-10 md:!pb-12">
         <div class="max-w-2xl">
           <p class="text-sm font-medium text-primary mb-3">
-            Template
+            {{ t('templates.eyebrow') }}
           </p>
           <h1 class="text-3xl md:text-4xl lg:text-5xl font-semibold text-highlighted tracking-tight text-display">
             {{ t('nav.templates') }}
           </h1>
           <p class="mt-4 text-muted text-lg leading-relaxed">
-            Ratusan design siap pakai. Ganti gratis kapan saja setelah aktif.
+            {{ t('templates.pageDesc') }}
           </p>
         </div>
       </UContainer>
@@ -127,7 +127,7 @@ function resetFilters() {
                 variant="outline"
                 color="neutral"
               >
-                Detail
+                {{ t('common.detail') }}
               </UButton>
             </div>
           </div>
@@ -145,11 +145,11 @@ function resetFilters() {
           {{ t('common.empty') }}
         </h2>
         <p class="mt-2 text-muted text-sm leading-relaxed">
-          Coba kata kunci lain atau reset filter kategori.
+          {{ t('templates.emptyHint') }}
         </p>
         <div class="mt-6 flex flex-wrap justify-center gap-3">
           <UButton color="primary" size="md" @click="resetFilters">
-            Reset filter
+            {{ t('common.resetFilter') }}
           </UButton>
           <UButton
             :to="localePath('/order/choose-domain')"

@@ -81,7 +81,7 @@ useSeoMeta({
 
 <template>
   <UContainer class="py-10 md:py-16">
-    <UAlert v-if="error" color="error" title="Template tidak ditemukan" />
+    <UAlert v-if="error" color="error" :title="t('templates.notFound')" />
     <template v-else-if="tpl">
       <div class="mb-6">
         <UButton
@@ -91,7 +91,7 @@ useSeoMeta({
           size="sm"
           icon="i-lucide-arrow-left"
         >
-          Semua template
+          {{ t('templates.backToList') }}
         </UButton>
       </div>
 
