@@ -3,6 +3,7 @@ import { orders, payments } from '../../../database/schema'
 import { qrisvipCheckStatus } from '../../../utils/qrisvip'
 import { fulfillPaidOrder } from '../../../utils/order-fulfillment'
 import { assertPayAccess } from '../../../utils/pay-token'
+import { expireOrderIfStale } from '../../../utils/order-expiry'
 
 /**
  * Poll endpoint for pay page.
@@ -14,7 +15,7 @@ export default defineEventHandler(async (event) => {
   if (!id) throw createError({ statusCode: 400, statusMessage: 'ID wajib' })
 
   const db = useDb()
-  const order = await db.query.orders.findFirst({ where: eq(orders.id, id) })
+  let order = await db.query.orders.findFirst({ where: eq(orders.id, id) })
   if (!order) throw createError({ statusCode: 404, statusMessage: 'Pesanan tidak ditemukan' })
 
   await assertPayAccess(event, {
@@ -23,7 +24,7 @@ export default defineEventHandler(async (event) => {
     customerEmail: order.customerEmail
   })
 
-  const payment = await db.query.payments.findFirst({
+  let payment = await db.query.payments.findFirst({
     where: eq(payments.orderId, id)
   })
   if (!payment) throw createError({ statusCode: 404, statusMessage: 'Pembayaran tidak ditemukan' })
@@ -39,6 +40,31 @@ export default defineEventHandler(async (event) => {
         orderStatus: order.status,
         paymentStatus: payment.status === 'paid' ? 'paid' : payment.status,
         paid: true
+      }
+    }
+  }
+
+  // Opportunistic: expire unpaid order past 48h before remote poll
+  if (await expireOrderIfStale(order)) {
+    order = await db.query.orders.findFirst({ where: eq(orders.id, id) }) || order
+    payment = await db.query.payments.findFirst({ where: eq(payments.orderId, id) }) || payment
+    return {
+      data: {
+        orderStatus: order.status,
+        paymentStatus: payment.status,
+        paid: false,
+        expired: true
+      }
+    }
+  }
+
+  if (order.status === 'expired' || payment.status === 'expired') {
+    return {
+      data: {
+        orderStatus: order.status,
+        paymentStatus: payment.status,
+        paid: false,
+        expired: true
       }
     }
   }

@@ -89,6 +89,8 @@ export default defineNuxtConfig({
     // Fail-closed webhook auth when true (also always in production NODE_ENV)
     qrisvipRequireWebhookSecret: process.env.NUXT_QRISVIP_REQUIRE_WEBHOOK_SECRET === 'true',
     qrisvipBaseUrl: process.env.NUXT_QRISVIP_BASE_URL || 'https://qris.otomatis.vip',
+    // Shared secret for POST /api/cron/* (header x-cron-secret or ?secret=)
+    cronSecret: process.env.NUXT_CRON_SECRET || '',
     public: {
       siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000',
       siteName: 'MugiewDev',
