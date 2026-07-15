@@ -22,6 +22,8 @@ const open = ref(false)
 const editing = ref<DevTld | null>(null)
 const saving = ref(false)
 const deletingId = ref<string | null>(null)
+const confirmOpen = ref(false)
+const pendingDelete = ref<{ id: string, label: string } | null>(null)
 
 const form = reactive({
   tld: '',
@@ -105,12 +107,19 @@ async function save() {
   }
 }
 
-async function remove(row: DevTld) {
-  if (!confirm(t('dev.catalog.confirmDeleteTld', { tld: row.tld }))) return
-  deletingId.value = row.id
+function askDelete(row: DevTld) {
+  pendingDelete.value = { id: row.id, label: String(row.tld) }
+  confirmOpen.value = true
+}
+
+async function doDelete() {
+  if (!pendingDelete.value) return
+  deletingId.value = pendingDelete.value.id
   try {
-    await $fetch(`/api/dev/domains/${row.id}`, { method: 'DELETE' })
+    await $fetch(`/api/dev/domains/${pendingDelete.value.id}`, { method: 'DELETE' })
     toast.add({ title: t('dev.catalog.tldDeleted'), color: 'success' })
+    confirmOpen.value = false
+    pendingDelete.value = null
     await refresh()
   } catch (e: unknown) {
     const err = e as { data?: { message?: string }, statusMessage?: string }
@@ -151,9 +160,7 @@ async function remove(row: DevTld) {
       />
     </div>
 
-    <div v-if="status === 'pending'" class="py-12 text-center text-muted">
-      {{ t('common.loading') }}
-    </div>
+    <DevSkeletonTable v-if="status === 'pending'" />
 
     <UAlert
       v-else-if="error"
@@ -209,7 +216,7 @@ async function remove(row: DevTld) {
                 variant="ghost"
                 icon="i-lucide-trash-2"
                 :loading="deletingId === row.id"
-                @click="remove(row)"
+                @click="askDelete(row)"
               />
             </td>
           </tr>
@@ -229,7 +236,15 @@ async function remove(row: DevTld) {
             <h2 class="font-semibold text-highlighted">
               {{ editing ? t('dev.catalog.editTld') : t('dev.catalog.addTld') }}
             </h2>
-          </template>
+          
+  <DevConfirmModal
+    v-model:open="confirmOpen"
+    :title="t('dev.catalog.confirmDeleteTld', { tld: pendingDelete?.label || '' })"
+    color="error"
+    :loading="!!deletingId"
+    @confirm="doDelete"
+  />
+</template>
 
           <form class="space-y-4" @submit.prevent="save">
             <UFormField label="TLD" required :hint="t('dev.catalog.tldHint')">
@@ -256,7 +271,5 @@ async function remove(row: DevTld) {
             </div>
           </form>
         </UCard>
-      </template>
-    </UModal>
-  </div>
-</template>
+      
+  

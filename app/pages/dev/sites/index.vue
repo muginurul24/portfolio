@@ -143,9 +143,7 @@ function statusColor(s: string) {
       <USelect v-model="statusFilter" :items="filterItems" size="lg" class="sm:w-48" />
     </div>
 
-    <div v-if="status === 'pending'" class="py-12 text-center text-muted">
-      {{ t('common.loading') }}
-    </div>
+    <DevSkeletonTable v-if="status === 'pending'" />
     <UAlert
       v-else-if="error"
       color="error"

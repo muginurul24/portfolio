@@ -37,6 +37,8 @@ const open = ref(false)
 const editing = ref<DevCourse | null>(null)
 const saving = ref(false)
 const deletingId = ref<string | null>(null)
+const confirmOpen = ref(false)
+const pendingDelete = ref<{ kind: 'course' | 'module', id: string, label: string } | null>(null)
 
 const modulesOpen = ref(false)
 const activeCourse = ref<DevCourse | null>(null)
@@ -136,13 +138,28 @@ async function save() {
   }
 }
 
-async function remove(row: DevCourse) {
-  if (!confirm(t('dev.content.confirmDeleteCourse', { title: row.title }))) return
-  deletingId.value = row.id
+function askDeleteCourse(row: DevCourse) {
+  pendingDelete.value = { kind: 'course', id: row.id, label: row.title }
+  confirmOpen.value = true
+}
+
+async function doDelete() {
+  if (!pendingDelete.value) return
+  const item = pendingDelete.value
+  deletingId.value = item.id
   try {
-    await $fetch(`/api/dev/courses/${row.id}`, { method: 'DELETE' })
-    toast.add({ title: t('dev.content.courseDeleted'), color: 'success' })
-    await refresh()
+    if (item.kind === 'course') {
+      await $fetch(`/api/dev/courses/${item.id}`, { method: 'DELETE' })
+      toast.add({ title: t('dev.content.courseDeleted'), color: 'success' })
+      await refresh()
+    } else {
+      await $fetch(`/api/dev/modules/${item.id}`, { method: 'DELETE' })
+      toast.add({ title: t('dev.content.moduleDeleted'), color: 'success' })
+      if (activeCourse.value) await openModules(activeCourse.value)
+      await refresh()
+    }
+    confirmOpen.value = false
+    pendingDelete.value = null
   } catch (e: unknown) {
     const err = e as { data?: { message?: string }, statusMessage?: string }
     toast.add({
@@ -233,21 +250,9 @@ async function saveModule() {
   }
 }
 
-async function removeModule(mod: DevModule) {
-  if (!activeCourse.value) return
-  if (!confirm(t('dev.content.confirmDeleteModule', { title: mod.title }))) return
-  try {
-    await $fetch(`/api/dev/modules/${mod.id}`, { method: 'DELETE' })
-    toast.add({ title: t('dev.content.moduleDeleted'), color: 'success' })
-    await openModules(activeCourse.value)
-    await refresh()
-  } catch (e: unknown) {
-    const err = e as { data?: { message?: string }, statusMessage?: string }
-    toast.add({
-      title: err?.data?.message || err?.statusMessage || t('common.error'),
-      color: 'error'
-    })
-  }
+function askDeleteModule(mod: DevModule) {
+  pendingDelete.value = { kind: 'module', id: mod.id, label: mod.title }
+  confirmOpen.value = true
 }
 </script>
 
@@ -278,9 +283,7 @@ async function removeModule(mod: DevModule) {
       />
     </div>
 
-    <div v-if="status === 'pending'" class="py-12 text-center text-muted">
-      {{ t('common.loading') }}
-    </div>
+    <DevSkeletonTable v-if="status === 'pending'" />
     <UAlert
       v-else-if="error"
       color="error"
@@ -347,7 +350,7 @@ async function removeModule(mod: DevModule) {
                 variant="ghost"
                 icon="i-lucide-trash-2"
                 :loading="deletingId === row.id"
-                @click="remove(row)"
+                @click="askDeleteCourse(row)"
               />
             </td>
           </tr>
@@ -367,7 +370,17 @@ async function removeModule(mod: DevModule) {
             <h2 class="font-semibold text-highlighted">
               {{ editing ? t('dev.content.editCourse') : t('dev.content.addCourse') }}
             </h2>
-          </template>
+          
+  <DevConfirmModal
+    v-model:open="confirmOpen"
+    :title="pendingDelete?.kind === 'module'
+      ? t('dev.content.confirmDeleteModule', { title: pendingDelete?.label || '' })
+      : t('dev.content.confirmDeleteCourse', { title: pendingDelete?.label || '' })"
+    color="error"
+    :loading="!!deletingId"
+    @confirm="doDelete"
+  />
+</template>
           <form class="space-y-4" @submit.prevent="save">
             <UFormField :label="t('dev.content.courseTitle')" required>
               <UInput v-model="form.title" class="w-full" required />
@@ -398,98 +411,5 @@ async function removeModule(mod: DevModule) {
             </div>
           </form>
         </UCard>
-      </template>
-    </UModal>
-
-    <UModal v-model:open="modulesOpen">
-      <template #content>
-        <UCard>
-          <template #header>
-            <div class="flex items-center justify-between gap-3">
-              <h2 class="font-semibold text-highlighted">
-                {{ t('dev.content.modules') }}
-                <span v-if="activeCourse" class="text-sm text-muted font-normal ml-2">{{ activeCourse.title }}</span>
-              </h2>
-              <UButton size="sm" color="primary" icon="i-lucide-plus" @click="openCreateModule">
-                {{ t('dev.content.addModule') }}
-              </UButton>
-            </div>
-          </template>
-
-          <div v-if="modulesLoading" class="py-8 text-center text-muted">
-            {{ t('common.loading') }}
-          </div>
-          <ul v-else class="divide-y divide-default">
-            <li
-              v-for="mod in modules"
-              :key="mod.id"
-              class="py-3 flex items-start justify-between gap-3"
-            >
-              <div>
-                <div class="font-medium text-highlighted">
-                  {{ mod.title }}
-                </div>
-                <div class="text-xs text-muted font-mono">
-                  {{ mod.slug }} · order {{ mod.sortOrder }}
-                </div>
-              </div>
-              <div class="space-x-1 shrink-0">
-                <UButton size="xs" color="neutral" variant="ghost" icon="i-lucide-pencil" @click="openEditModule(mod)" />
-                <UButton size="xs" color="error" variant="ghost" icon="i-lucide-trash-2" @click="removeModule(mod)" />
-              </div>
-            </li>
-            <li v-if="!modules.length" class="py-8 text-center text-muted">
-              {{ t('common.empty') }}
-            </li>
-          </ul>
-        </UCard>
-      </template>
-    </UModal>
-
-    <UModal v-model:open="moduleOpen">
-      <template #content>
-        <UCard>
-          <template #header>
-            <h2 class="font-semibold text-highlighted">
-              {{ editingModule ? t('dev.content.editModule') : t('dev.content.addModule') }}
-            </h2>
-          </template>
-          <form class="space-y-4 max-h-[70vh] overflow-y-auto" @submit.prevent="saveModule">
-            <UFormField :label="t('dev.content.courseTitle')" required>
-              <UInput v-model="moduleForm.title" class="w-full" required />
-            </UFormField>
-            <UFormField :label="t('dev.catalog.slug')" required>
-              <UInput v-model="moduleForm.slug" class="w-full font-mono" required />
-            </UFormField>
-            <UFormField label="Markdown">
-              <UTextarea v-model="moduleForm.contentMd" class="w-full font-mono text-xs" :rows="6" />
-            </UFormField>
-            <UFormField label="Video URL">
-              <UInput v-model="moduleForm.videoUrl" class="w-full" />
-            </UFormField>
-            <div class="grid grid-cols-2 gap-4">
-              <UFormField :label="t('dev.catalog.sortOrder')">
-                <UInput v-model.number="moduleForm.sortOrder" type="number" class="w-full" />
-              </UFormField>
-              <UFormField label="Duration (min)">
-                <UInput v-model.number="moduleForm.durationMinutes" type="number" min="0" class="w-full" />
-              </UFormField>
-            </div>
-            <label class="inline-flex items-center gap-2 text-sm cursor-pointer">
-              <input v-model="moduleForm.hasQuiz" type="checkbox" class="rounded border-default">
-              Quiz
-            </label>
-            <div class="flex justify-end gap-2 pt-2">
-              <UButton color="neutral" variant="ghost" type="button" @click="moduleOpen = false">
-                {{ t('common.cancel') }}
-              </UButton>
-              <UButton color="primary" type="submit" :loading="moduleSaving">
-                {{ t('common.save') }}
-              </UButton>
-            </div>
-          </form>
-        </UCard>
-      </template>
-    </UModal>
-  </div>
-</template>
+      
+  

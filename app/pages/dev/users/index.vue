@@ -30,6 +30,8 @@ const open = ref(false)
 const editing = ref<DevUser | null>(null)
 const saving = ref(false)
 const deletingId = ref<string | null>(null)
+const confirmOpen = ref(false)
+const pendingDelete = ref<{ id: string, label: string } | null>(null)
 
 const form = reactive({
   name: '',
@@ -143,12 +145,19 @@ async function save() {
   }
 }
 
-async function remove(row: DevUser) {
-  if (!confirm(t('dev.users.confirmDelete', { email: row.email }))) return
-  deletingId.value = row.id
+function askDelete(row: DevUser) {
+  pendingDelete.value = { id: row.id, label: String(row.email) }
+  confirmOpen.value = true
+}
+
+async function doDelete() {
+  if (!pendingDelete.value) return
+  deletingId.value = pendingDelete.value.id
   try {
-    await $fetch(`/api/dev/users/${row.id}`, { method: 'DELETE' })
+    await $fetch(`/api/dev/users/${pendingDelete.value.id}`, { method: 'DELETE' })
     toast.add({ title: t('dev.users.deleted'), color: 'success' })
+    confirmOpen.value = false
+    pendingDelete.value = null
     await refresh()
   } catch (e: unknown) {
     const err = e as { data?: { message?: string }, statusMessage?: string }
@@ -211,9 +220,7 @@ function formatDate(value: string | Date | null) {
       />
     </div>
 
-    <div v-if="status === 'pending'" class="py-12 text-center text-muted">
-      {{ t('common.loading') }}
-    </div>
+    <DevSkeletonTable v-if="status === 'pending'" />
 
     <UAlert
       v-else-if="error"
@@ -288,7 +295,7 @@ function formatDate(value: string | Date | null) {
                 variant="ghost"
                 icon="i-lucide-trash-2"
                 :loading="deletingId === row.id"
-                @click="remove(row)"
+                @click="askDelete(row)"
               />
             </td>
           </tr>
@@ -308,7 +315,15 @@ function formatDate(value: string | Date | null) {
             <h2 class="font-semibold text-highlighted">
               {{ editing ? t('dev.users.edit') : t('dev.users.add') }}
             </h2>
-          </template>
+          
+  <DevConfirmModal
+    v-model:open="confirmOpen"
+    :title="t('dev.users.confirmDelete', { email: pendingDelete?.label || '' })"
+    color="error"
+    :loading="!!deletingId"
+    @confirm="doDelete"
+  />
+</template>
 
           <form class="space-y-4" @submit.prevent="save">
             <UFormField :label="t('auth.name')" required>
@@ -346,7 +361,5 @@ function formatDate(value: string | Date | null) {
             </div>
           </form>
         </UCard>
-      </template>
-    </UModal>
-  </div>
-</template>
+      
+  

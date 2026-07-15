@@ -35,6 +35,8 @@ const open = ref(false)
 const editing = ref<DevPackage | null>(null)
 const saving = ref(false)
 const deletingId = ref<string | null>(null)
+const confirmOpen = ref(false)
+const pendingDelete = ref<{ id: string, label: string } | null>(null)
 
 const form = reactive({
   slug: '',
@@ -169,12 +171,19 @@ async function save() {
   }
 }
 
-async function remove(row: DevPackage) {
-  if (!confirm(t('dev.catalog.confirmDeletePackage', { name: row.name }))) return
-  deletingId.value = row.id
+function askDelete(row: DevPackage) {
+  pendingDelete.value = { id: row.id, label: String(row.name) }
+  confirmOpen.value = true
+}
+
+async function doDelete() {
+  if (!pendingDelete.value) return
+  deletingId.value = pendingDelete.value.id
   try {
-    await $fetch(`/api/dev/packages/${row.id}`, { method: 'DELETE' })
+    await $fetch(`/api/dev/packages/${pendingDelete.value.id}`, { method: 'DELETE' })
     toast.add({ title: t('dev.catalog.packageDeleted'), color: 'success' })
+    confirmOpen.value = false
+    pendingDelete.value = null
     await refresh()
   } catch (e: unknown) {
     const err = e as { data?: { message?: string }, statusMessage?: string }
@@ -216,9 +225,7 @@ async function remove(row: DevPackage) {
       <USelect v-model="typeFilter" :items="filterItems" size="lg" class="sm:w-48" />
     </div>
 
-    <div v-if="status === 'pending'" class="py-12 text-center text-muted">
-      {{ t('common.loading') }}
-    </div>
+    <DevSkeletonTable v-if="status === 'pending'" />
 
     <UAlert
       v-else-if="error"
@@ -279,7 +286,7 @@ async function remove(row: DevPackage) {
                 variant="ghost"
                 icon="i-lucide-trash-2"
                 :loading="deletingId === row.id"
-                @click="remove(row)"
+                @click="askDelete(row)"
               />
             </td>
           </tr>
@@ -299,7 +306,15 @@ async function remove(row: DevPackage) {
             <h2 class="font-semibold text-highlighted">
               {{ editing ? t('dev.catalog.editPackage') : t('dev.catalog.addPackage') }}
             </h2>
-          </template>
+          
+  <DevConfirmModal
+    v-model:open="confirmOpen"
+    :title="t('dev.catalog.confirmDeletePackage', { name: pendingDelete?.label || '' })"
+    color="error"
+    :loading="!!deletingId"
+    @confirm="doDelete"
+  />
+</template>
 
           <form class="space-y-4 max-h-[70vh] overflow-y-auto" @submit.prevent="save">
             <UFormField :label="t('dev.catalog.name')" required>
@@ -366,7 +381,5 @@ async function remove(row: DevPackage) {
             </div>
           </form>
         </UCard>
-      </template>
-    </UModal>
-  </div>
-</template>
+      
+  

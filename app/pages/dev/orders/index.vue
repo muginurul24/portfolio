@@ -31,6 +31,9 @@ const statusFilter = ref('all')
 const open = ref(false)
 const editing = ref<DevOrder | null>(null)
 const saving = ref(false)
+const confirmOpen = ref(false)
+const pendingMarkPaid = ref<DevOrder | null>(null)
+const markingPaid = ref(false)
 
 const form = reactive({
   status: 'pending_payment' as string,
@@ -118,11 +121,19 @@ async function save() {
   }
 }
 
-async function markPaidDev(row: DevOrder) {
-  if (!confirm(t('dev.commerce.confirmMarkPaid', { number: row.orderNumber }))) return
+function askMarkPaid(row: DevOrder) {
+  pendingMarkPaid.value = row
+  confirmOpen.value = true
+}
+
+async function doMarkPaid() {
+  if (!pendingMarkPaid.value) return
+  markingPaid.value = true
   try {
-    await $fetch(`/api/orders/${row.id}/mark-paid-dev`, { method: 'POST' })
+    await $fetch(`/api/orders/${pendingMarkPaid.value.id}/mark-paid-dev`, { method: 'POST' })
     toast.add({ title: t('dev.commerce.markedPaid'), color: 'success' })
+    confirmOpen.value = false
+    pendingMarkPaid.value = null
     await refresh()
   } catch (e: unknown) {
     const err = e as { data?: { message?: string }, statusMessage?: string }
@@ -130,6 +141,8 @@ async function markPaidDev(row: DevOrder) {
       title: err?.data?.message || err?.statusMessage || t('common.error'),
       color: 'error'
     })
+  } finally {
+    markingPaid.value = false
   }
 }
 
@@ -164,9 +177,7 @@ function statusColor(s: string) {
       <USelect v-model="statusFilter" :items="filterItems" size="lg" class="sm:w-52" />
     </div>
 
-    <div v-if="status === 'pending'" class="py-12 text-center text-muted">
-      {{ t('common.loading') }}
-    </div>
+    <DevSkeletonTable v-if="status === 'pending'" />
     <UAlert
       v-else-if="error"
       color="error"
@@ -239,7 +250,7 @@ function statusColor(s: string) {
                 variant="ghost"
                 icon="i-lucide-banknote"
                 :title="t('dev.commerce.markPaidDev')"
-                @click="markPaidDev(row)"
+                @click="askMarkPaid(row)"
               />
             </td>
           </tr>
@@ -260,7 +271,16 @@ function statusColor(s: string) {
               {{ t('dev.commerce.editOrder') }}
               <span v-if="editing" class="font-mono text-sm text-muted ml-2">{{ editing.orderNumber }}</span>
             </h2>
-          </template>
+          
+  <DevConfirmModal
+    v-model:open="confirmOpen"
+    :title="t('dev.commerce.confirmMarkPaid', { number: pendingMarkPaid?.orderNumber || '' })"
+    color="warning"
+    :loading="markingPaid"
+    :confirm-label="t('dev.commerce.markPaidDev')"
+    @confirm="doMarkPaid"
+  />
+</template>
           <form class="space-y-4" @submit.prevent="save">
             <UFormField :label="t('dev.catalog.status')" required>
               <USelect v-model="form.status" :items="statusItems" class="w-full" />
@@ -278,7 +298,5 @@ function statusColor(s: string) {
             </div>
           </form>
         </UCard>
-      </template>
-    </UModal>
-  </div>
-</template>
+      
+  

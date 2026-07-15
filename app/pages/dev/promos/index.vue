@@ -26,6 +26,8 @@ const open = ref(false)
 const editing = ref<DevPromo | null>(null)
 const saving = ref(false)
 const deletingId = ref<string | null>(null)
+const confirmOpen = ref(false)
+const pendingDelete = ref<{ id: string, label: string } | null>(null)
 
 const form = reactive({
   code: '',
@@ -138,12 +140,19 @@ async function save() {
   }
 }
 
-async function remove(row: DevPromo) {
-  if (!confirm(t('dev.commerce.confirmDeletePromo', { code: row.code }))) return
-  deletingId.value = row.id
+function askDelete(row: DevPromo) {
+  pendingDelete.value = { id: row.id, label: String(row.code) }
+  confirmOpen.value = true
+}
+
+async function doDelete() {
+  if (!pendingDelete.value) return
+  deletingId.value = pendingDelete.value.id
   try {
-    await $fetch(`/api/dev/promos/${row.id}`, { method: 'DELETE' })
+    await $fetch(`/api/dev/promos/${pendingDelete.value.id}`, { method: 'DELETE' })
     toast.add({ title: t('dev.commerce.promoDeleted'), color: 'success' })
+    confirmOpen.value = false
+    pendingDelete.value = null
     await refresh()
   } catch (e: unknown) {
     const err = e as { data?: { message?: string }, statusMessage?: string }
@@ -190,9 +199,7 @@ function discountLabel(row: DevPromo) {
       />
     </div>
 
-    <div v-if="status === 'pending'" class="py-12 text-center text-muted">
-      {{ t('common.loading') }}
-    </div>
+    <DevSkeletonTable v-if="status === 'pending'" />
     <UAlert
       v-else-if="error"
       color="error"
@@ -247,7 +254,7 @@ function discountLabel(row: DevPromo) {
                 variant="ghost"
                 icon="i-lucide-trash-2"
                 :loading="deletingId === row.id"
-                @click="remove(row)"
+                @click="askDelete(row)"
               />
             </td>
           </tr>
@@ -267,7 +274,15 @@ function discountLabel(row: DevPromo) {
             <h2 class="font-semibold text-highlighted">
               {{ editing ? t('dev.commerce.editPromo') : t('dev.commerce.addPromo') }}
             </h2>
-          </template>
+          
+  <DevConfirmModal
+    v-model:open="confirmOpen"
+    :title="t('dev.commerce.confirmDeletePromo', { code: pendingDelete?.label || '' })"
+    color="error"
+    :loading="!!deletingId"
+    @confirm="doDelete"
+  />
+</template>
           <form class="space-y-4" @submit.prevent="save">
             <UFormField :label="t('dev.commerce.code')" required>
               <UInput v-model="form.code" class="w-full font-mono uppercase" required />
@@ -305,7 +320,5 @@ function discountLabel(row: DevPromo) {
             </div>
           </form>
         </UCard>
-      </template>
-    </UModal>
-  </div>
-</template>
+      
+  

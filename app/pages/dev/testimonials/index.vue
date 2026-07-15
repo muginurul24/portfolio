@@ -27,6 +27,8 @@ const open = ref(false)
 const editing = ref<DevTestimonial | null>(null)
 const saving = ref(false)
 const deletingId = ref<string | null>(null)
+const confirmOpen = ref(false)
+const pendingDelete = ref<{ id: string, label: string } | null>(null)
 
 const form = reactive({
   name: '',
@@ -119,12 +121,19 @@ async function save() {
   }
 }
 
-async function remove(row: DevTestimonial) {
-  if (!confirm(t('dev.content.confirmDeleteTestimonial', { name: row.name }))) return
-  deletingId.value = row.id
+function askDelete(row: DevTestimonial) {
+  pendingDelete.value = { id: row.id, label: String(row.name) }
+  confirmOpen.value = true
+}
+
+async function doDelete() {
+  if (!pendingDelete.value) return
+  deletingId.value = pendingDelete.value.id
   try {
-    await $fetch(`/api/dev/testimonials/${row.id}`, { method: 'DELETE' })
+    await $fetch(`/api/dev/testimonials/${pendingDelete.value.id}`, { method: 'DELETE' })
     toast.add({ title: t('dev.content.testimonialDeleted'), color: 'success' })
+    confirmOpen.value = false
+    pendingDelete.value = null
     await refresh()
   } catch (e: unknown) {
     const err = e as { data?: { message?: string }, statusMessage?: string }
@@ -165,9 +174,7 @@ async function remove(row: DevTestimonial) {
       />
     </div>
 
-    <div v-if="status === 'pending'" class="py-12 text-center text-muted">
-      {{ t('common.loading') }}
-    </div>
+    <DevSkeletonTable v-if="status === 'pending'" />
     <UAlert
       v-else-if="error"
       color="error"
@@ -230,7 +237,7 @@ async function remove(row: DevTestimonial) {
                 variant="ghost"
                 icon="i-lucide-trash-2"
                 :loading="deletingId === row.id"
-                @click="remove(row)"
+                @click="askDelete(row)"
               />
             </td>
           </tr>
@@ -250,7 +257,15 @@ async function remove(row: DevTestimonial) {
             <h2 class="font-semibold text-highlighted">
               {{ editing ? t('dev.content.editTestimonial') : t('dev.content.addTestimonial') }}
             </h2>
-          </template>
+          
+  <DevConfirmModal
+    v-model:open="confirmOpen"
+    :title="t('dev.content.confirmDeleteTestimonial', { name: pendingDelete?.label || '' })"
+    color="error"
+    :loading="!!deletingId"
+    @confirm="doDelete"
+  />
+</template>
           <form class="space-y-4 max-h-[70vh] overflow-y-auto" @submit.prevent="save">
             <UFormField :label="t('auth.name')" required>
               <UInput v-model="form.name" class="w-full" required />
@@ -297,7 +312,5 @@ async function remove(row: DevTestimonial) {
             </div>
           </form>
         </UCard>
-      </template>
-    </UModal>
-  </div>
-</template>
+      
+  
