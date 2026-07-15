@@ -10,7 +10,7 @@ export const useOrderStore = defineStore('order', {
     promoCode: '' as string
   }),
   getters: {
-    fullDomain: (s) => (s.domainName ? `${s.domainName}.${s.domainTld}` : '')
+    fullDomain: s => (s.domainName ? `${s.domainName}.${s.domainTld}` : '')
   },
   actions: {
     setDomain(name: string, tld: string) {

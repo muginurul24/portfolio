@@ -24,9 +24,15 @@ useSeoMeta({
           <UIcon name="i-lucide-layout-template" class="size-16 text-muted" />
         </div>
         <div>
-          <UBadge class="mb-3">{{ tpl.category }}</UBadge>
-          <h1 class="text-3xl font-semibold tracking-tight text-highlighted">{{ tpl.name }}</h1>
-          <p v-if="tpl.description" class="mt-3 text-muted">{{ tpl.description }}</p>
+          <UBadge class="mb-3">
+            {{ tpl.category }}
+          </UBadge>
+          <h1 class="text-3xl font-semibold tracking-tight text-highlighted">
+            {{ tpl.name }}
+          </h1>
+          <p v-if="tpl.description" class="mt-3 text-muted">
+            {{ tpl.description }}
+          </p>
           <div class="mt-8 flex flex-wrap gap-3">
             <UButton
               color="primary"

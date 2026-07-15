@@ -2,7 +2,7 @@ export interface ComputeOrderInput {
   packagePriceYearlyIdr: number
   termYears: number
   domainPriceYearlyIdr: number
-  promo?: { discountIdr?: number | null; discountPercent?: number | null } | null
+  promo?: { discountIdr?: number | null, discountPercent?: number | null } | null
 }
 
 export function computeOrderTotals(input: ComputeOrderInput) {

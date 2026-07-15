@@ -20,51 +20,24 @@ export default defineNuxtConfig({
     enabled: true
   },
 
-  css: ['~/assets/css/main.css'],
-
-  // Soft UI Evolution — navy + sky accent (see DESIGN.md)
-  colorMode: {
-    preference: 'light',
-    fallback: 'light',
-    classSuffix: ''
-  },
-
-  fonts: {
-    families: [
-      { name: 'Plus Jakarta Sans', provider: 'google', weights: [300, 400, 500, 600, 700] }
-    ]
-  },
-
-  image: {
-    quality: 80,
-    format: ['webp', 'avif'],
-    screens: {
-      xs: 320,
-      sm: 640,
-      md: 768,
-      lg: 1024,
-      xl: 1280,
-      xxl: 1536
-    }
-  },
-
-  i18n: {
-    locales: [
-      { code: 'id', language: 'id-ID', name: 'Bahasa Indonesia', file: 'id.json' },
-      { code: 'en', language: 'en-US', name: 'English', file: 'en.json' }
-    ],
-    defaultLocale: 'id',
-    lazy: true,
-    langDir: 'locales',
-    strategy: 'prefix_except_default',
-    detectBrowserLanguage: {
-      useCookie: true,
-      cookieKey: 'mugiew_locale',
-      redirectOn: 'root',
-      alwaysRedirect: false
+  app: {
+    head: {
+      htmlAttrs: { lang: 'id' },
+      titleTemplate: '%s · MugiewDev',
+      meta: [
+        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+        { name: 'theme-color', content: '#0F172A' },
+        { name: 'format-detection', content: 'telephone=no' }
+      ],
+      link: [
+        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+      ]
     },
-    baseUrl: process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+    pageTransition: { name: 'page', mode: 'out-in' },
+    layoutTransition: { name: 'layout', mode: 'out-in' }
   },
+
+  css: ['~/assets/css/main.css'],
 
   site: {
     url: process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000',
@@ -73,18 +46,15 @@ export default defineNuxtConfig({
     defaultLocale: 'id'
   },
 
-  sitemap: {
-    autoLastmod: true
+  // Soft UI Evolution — navy + sky accent (see DESIGN.md)
+  colorMode: {
+    preference: 'light',
+    fallback: 'light',
+    classSuffix: ''
   },
 
-  robots: {
-    groups: [
-      {
-        userAgent: ['*'],
-        allow: ['/'],
-        disallow: ['/panel']
-      }
-    ]
+  content: {
+    experimental: { nativeSqlite: true }
   },
 
   runtimeConfig: {
@@ -105,23 +75,6 @@ export default defineNuxtConfig({
       whatsappNumber: process.env.NUXT_PUBLIC_WHATSAPP_NUMBER || '6281280080275',
       xenditPublicKey: process.env.NUXT_PUBLIC_XENDIT_PUBLIC_KEY || ''
     }
-  },
-
-  app: {
-    head: {
-      htmlAttrs: { lang: 'id' },
-      titleTemplate: '%s · MugiewDev',
-      meta: [
-        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { name: 'theme-color', content: '#0F172A' },
-        { name: 'format-detection', content: 'telephone=no' }
-      ],
-      link: [
-        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
-      ]
-    },
-    pageTransition: { name: 'page', mode: 'out-in' },
-    layoutTransition: { name: 'layout', mode: 'out-in' }
   },
 
   routeRules: {
@@ -146,6 +99,13 @@ export default defineNuxtConfig({
     '/api/**': { cors: true }
   },
 
+  experimental: {
+    viewTransition: true,
+    payloadExtraction: true
+  },
+
+  compatibilityDate: '2026-06-30',
+
   nitro: {
     experimental: {
       openAPI: true
@@ -158,16 +118,10 @@ export default defineNuxtConfig({
     }
   },
 
-  content: {
-    experimental: { nativeSqlite: true }
+  typescript: {
+    strict: true,
+    typeCheck: false // enable in CI via `pnpm typecheck`
   },
-
-  // Nuxt 4 srcDir is `app/` — pinia resolves storesDirs from layer.app
-  pinia: {
-    storesDirs: ['./stores']
-  },
-
-  compatibilityDate: '2026-06-30',
 
   eslint: {
     config: {
@@ -178,13 +132,58 @@ export default defineNuxtConfig({
     }
   },
 
-  typescript: {
-    strict: true,
-    typeCheck: false // enable in CI via `pnpm typecheck`
+  fonts: {
+    families: [
+      { name: 'Plus Jakarta Sans', provider: 'google', weights: [300, 400, 500, 600, 700] }
+    ]
   },
 
-  experimental: {
-    viewTransition: true,
-    payloadExtraction: true
+  i18n: {
+    locales: [
+      { code: 'id', language: 'id-ID', name: 'Bahasa Indonesia', file: 'id.json' },
+      { code: 'en', language: 'en-US', name: 'English', file: 'en.json' }
+    ],
+    defaultLocale: 'id',
+    langDir: 'locales',
+    strategy: 'prefix_except_default',
+    detectBrowserLanguage: {
+      useCookie: true,
+      cookieKey: 'mugiew_locale',
+      redirectOn: 'root',
+      alwaysRedirect: false
+    },
+    baseUrl: process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+  },
+
+  image: {
+    quality: 80,
+    format: ['webp', 'avif'],
+    screens: {
+      xs: 320,
+      sm: 640,
+      md: 768,
+      lg: 1024,
+      xl: 1280,
+      xxl: 1536
+    }
+  },
+
+  // Nuxt 4 srcDir is `app/` — pinia resolves storesDirs from layer.app
+  pinia: {
+    storesDirs: ['./stores']
+  },
+
+  robots: {
+    groups: [
+      {
+        userAgent: ['*'],
+        allow: ['/'],
+        disallow: ['/panel']
+      }
+    ]
+  },
+
+  sitemap: {
+    autoLastmod: true
   }
 })

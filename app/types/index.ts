@@ -13,26 +13,26 @@ export interface ServicePackage {
   sortOrder?: number
 }
 
-export type TemplateCategory =
-  | 'export'
-  | 'umkm'
-  | 'ecommerce'
-  | 'company'
-  | 'agriculture'
-  | 'craft'
-  | 'automotive'
-  | 'restaurant'
-  | 'service'
-  | 'custom'
+export type TemplateCategory
+  = 'export'
+    | 'umkm'
+    | 'ecommerce'
+    | 'company'
+    | 'agriculture'
+    | 'craft'
+    | 'automotive'
+    | 'restaurant'
+    | 'service'
+    | 'custom'
 
-export type OrderStatus =
-  | 'draft'
-  | 'pending_payment'
-  | 'paid'
-  | 'provisioning'
-  | 'active'
-  | 'cancelled'
-  | 'expired'
+export type OrderStatus
+  = 'draft'
+    | 'pending_payment'
+    | 'paid'
+    | 'provisioning'
+    | 'active'
+    | 'cancelled'
+    | 'expired'
 
 export type UserRole = 'customer' | 'admin' | 'cs'
 

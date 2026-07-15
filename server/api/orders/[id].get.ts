@@ -4,7 +4,7 @@ import { orders } from '../../database/schema'
 export default defineEventHandler(async (event) => {
   const session = await getUserSession(event)
   if (!session.user) throw createError({ statusCode: 401, statusMessage: 'Unauthorized' })
-  const user = session.user as { id: string; role: string; email?: string }
+  const user = session.user as { id: string, role: string, email?: string }
   const id = getRouterParam(event, 'id')
   if (!id) throw createError({ statusCode: 400, statusMessage: 'ID wajib' })
   const db = useDb()
