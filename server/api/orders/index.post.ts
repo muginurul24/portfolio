@@ -33,8 +33,14 @@ export default defineEventHandler(async (event) => {
   })
   if (!tldRow) throw createError({ statusCode: 400, statusMessage: 'TLD tidak didukung' })
 
-  let templateId = body.templateId || null
-  if (!templateId && body.templateSlug) {
+  let templateId: string | null = null
+  if (body.templateId) {
+    const tpl = await db.query.templates.findFirst({
+      where: and(eq(templates.id, body.templateId), eq(templates.isActive, true))
+    })
+    if (!tpl) throw createError({ statusCode: 400, statusMessage: 'Template tidak valid' })
+    templateId = tpl.id
+  } else if (body.templateSlug) {
     const tpl = await db.query.templates.findFirst({
       where: and(eq(templates.slug, body.templateSlug), eq(templates.isActive, true))
     })
@@ -49,6 +55,16 @@ export default defineEventHandler(async (event) => {
       where: and(eq(promoCodes.code, code), eq(promoCodes.isActive, true))
     })
     if (!row) throw createError({ statusCode: 400, statusMessage: 'Kode promo tidak valid' })
+    if (row.maxUses != null && row.usedCount >= row.maxUses) {
+      throw createError({ statusCode: 400, statusMessage: 'Kode promo tidak valid' })
+    }
+    const now = new Date()
+    if (row.validFrom && row.validFrom > now) {
+      throw createError({ statusCode: 400, statusMessage: 'Kode promo tidak valid' })
+    }
+    if (row.validUntil && row.validUntil < now) {
+      throw createError({ statusCode: 400, statusMessage: 'Kode promo tidak valid' })
+    }
     promo = { discountIdr: row.discountIdr, discountPercent: row.discountPercent }
     promoCode = row.code
   }
@@ -68,33 +84,36 @@ export default defineEventHandler(async (event) => {
 
   const orderId = createId('ord')
   const orderNumber = createOrderNumber()
+  const paymentId = createId('pay')
   const userId = (session.user as { id?: string } | undefined)?.id ?? null
 
-  await db.insert(orders).values({
-    id: orderId,
-    orderNumber,
-    userId,
-    packageId: pkg.id,
-    templateId,
-    domainName,
-    domainTld: tld,
-    termYears: body.termYears,
-    subtotalIdr: totals.subtotalIdr,
-    discountIdr: totals.discountIdr,
-    totalIdr: totals.totalIdr,
-    promoCode,
-    status: 'pending_payment',
-    customerName: body.customerName.trim(),
-    customerEmail: body.customerEmail.toLowerCase().trim(),
-    customerPhone: body.customerPhone?.trim() || null
-  })
+  // better-sqlite3: sync transaction — order + payment atomic
+  db.transaction((tx) => {
+    tx.insert(orders).values({
+      id: orderId,
+      orderNumber,
+      userId,
+      packageId: pkg.id,
+      templateId,
+      domainName,
+      domainTld: tld,
+      termYears: body.termYears,
+      subtotalIdr: totals.subtotalIdr,
+      discountIdr: totals.discountIdr,
+      totalIdr: totals.totalIdr,
+      promoCode,
+      status: 'pending_payment',
+      customerName: body.customerName.trim(),
+      customerEmail: body.customerEmail.toLowerCase().trim(),
+      customerPhone: body.customerPhone?.trim() || null
+    }).run()
 
-  const paymentId = createId('pay')
-  await db.insert(payments).values({
-    id: paymentId,
-    orderId,
-    amountIdr: totals.totalIdr,
-    status: 'pending'
+    tx.insert(payments).values({
+      id: paymentId,
+      orderId,
+      amountIdr: totals.totalIdr,
+      status: 'pending'
+    }).run()
   })
 
   return {
