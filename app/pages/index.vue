@@ -55,7 +55,7 @@ const features = computed(() => [
 const steps = [
   { title: 'Pilih template', description: 'Ratusan design siap pakai. Ganti gratis kapan pun.' },
   { title: 'Cari domain', description: '.com / .id / .co.id + hosting + SSL dalam satu paket.' },
-  { title: 'Bayar & aktif', description: 'Xendit: VA, QRIS, e-wallet, kartu. Live max 2×24 jam.' }
+  { title: 'Bayar & aktif', description: 'QRIS via QrisVIP. Live max 2×24 jam.' }
 ]
 
 const waHref = computed(() => link(t('whatsapp.consultDefault')))

@@ -197,8 +197,11 @@ async function submit() {
         id: string
         orderNumber?: string
         paymentUrl: string | null
+        payPath?: string
         totalIdr: number
         status?: string
+        qrisReady?: boolean
+        qrisError?: string
       }
     }>('/api/orders', {
       method: 'POST',
@@ -216,24 +219,25 @@ async function submit() {
     })
 
     const totalIdr = res.data.totalIdr ?? 0
-    const paymentUrl = res.data.paymentUrl
+    const payPath = res.data.payPath
 
-    // Paid path: must have gateway URL. Free (0) may go success without URL.
-    if (paymentUrl) {
-      await navigateTo(paymentUrl, { external: true })
+    // Free order
+    if (totalIdr <= 0 || res.data.status === 'paid') {
+      await navigateTo({
+        path: localePath('/order/success'),
+        query: { order: res.data.id }
+      })
       return
     }
 
-    if (totalIdr > 0) {
-      const ref = res.data.orderNumber || res.data.id
-      error.value = t('order.paymentUnavailable', { order: ref })
+    // QRIS pay page (internal)
+    if (payPath) {
+      await navigateTo(localePath(payPath))
       return
     }
 
-    await navigateTo({
-      path: localePath('/order/success'),
-      query: { order: res.data.id }
-    })
+    const ref = res.data.orderNumber || res.data.id
+    error.value = res.data.qrisError || t('order.paymentUnavailable', { order: ref })
   } catch (e: unknown) {
     const err = e as { data?: { message?: string, statusMessage?: string }, statusMessage?: string }
     error.value = err?.data?.message || err?.data?.statusMessage || err?.statusMessage || t('common.error')

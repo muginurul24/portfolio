@@ -133,7 +133,7 @@
     "termYears": "{n} year(s)",
     "subtotal": "Subtotal",
     "discount": "Discount",
-    "total": "Total",
+    "total": "Total due",
     "promoInvalid": "Invalid promo code",
     "formIncomplete": "Fill in name, email, and WhatsApp",
     "paymentFailed": "Payment failed or was cancelled. Try again or contact support.",
@@ -154,7 +154,15 @@
     "successDescPending": "Order recorded with pending payment status. Complete payment via the gateway or contact support.",
     "successDescGuestPending": "Order recorded. Log in with the same email to view status. Do not treat this as paid until status is paid.",
     "successDescUnknown": "Order recorded. Status could not be verified here — log in or contact support.",
-    "statusLabel": "Status"
+    "statusLabel": "Status",
+    "payTitle": "Pay with QRIS",
+    "paySubtitle": "Scan with any bank or e-wallet app. Settlement runs through QrisVIP.",
+    "orderNumber": "Order no.",
+    "expiresAt": "Expires at",
+    "scanHint": "Open your payment app → choose QRIS → scan the code above.",
+    "iAlreadyPaid": "I already paid",
+    "qrisMissingTitle": "QRIS not available",
+    "qrisMissingDesc": "Order is saved but QR generation failed. Contact support with your order number, or place the order again."
   },
   "auth": {
     "login": "Log in",

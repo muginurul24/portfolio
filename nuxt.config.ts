@@ -64,16 +64,21 @@ export default defineNuxtConfig({
       password: process.env.NUXT_SESSION_PASSWORD || ''
     },
     databaseUrl: process.env.NUXT_DATABASE_URL || 'file:./.data/mugiew.sqlite',
-    xenditSecretKey: process.env.NUXT_XENDIT_SECRET_KEY || '',
-    xenditWebhookToken: process.env.NUXT_XENDIT_WEBHOOK_TOKEN || '',
     resendApiKey: process.env.NUXT_RESEND_API_KEY || '',
     whatsappNumber: process.env.NUXT_WHATSAPP_NUMBER || '6281280080275',
+    // QrisVIP / Otomatis VIP — QRIS only
+    qrisvipUuid: process.env.NUXT_QRISVIP_UUID || '',
+    qrisvipClient: process.env.NUXT_QRISVIP_CLIENT || '',
+    qrisvipClientKey: process.env.NUXT_QRISVIP_CLIENT_KEY || '',
+    qrisvipUsername: process.env.NUXT_QRISVIP_USERNAME || '',
+    qrisvipExpireSeconds: Number(process.env.NUXT_QRISVIP_EXPIRE_SECONDS || 1200),
+    qrisvipWebhookSecret: process.env.NUXT_QRISVIP_WEBHOOK_SECRET || '',
+    qrisvipBaseUrl: process.env.NUXT_QRISVIP_BASE_URL || 'https://qris.otomatis.vip',
     public: {
       siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000',
       siteName: 'MugiewDev',
       supportEmail: process.env.NUXT_PUBLIC_SUPPORT_EMAIL || 'support@mugiewdev.com',
-      whatsappNumber: process.env.NUXT_PUBLIC_WHATSAPP_NUMBER || '6281280080275',
-      xenditPublicKey: process.env.NUXT_PUBLIC_XENDIT_PUBLIC_KEY || ''
+      whatsappNumber: process.env.NUXT_PUBLIC_WHATSAPP_NUMBER || '6281280080275'
     }
   },
 

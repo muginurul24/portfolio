@@ -3,6 +3,11 @@ import { and, eq } from 'drizzle-orm'
 import { orders, packages, domainTlds, promoCodes, templates, payments, users } from '../../database/schema'
 import { createId, createOrderNumber } from '../../utils/id'
 import { computeOrderTotals } from '../../utils/pricing'
+import {
+  assertPayableAmountIdr,
+  qrisvipGenerate,
+  sanitizeCustomRef
+} from '../../utils/qrisvip'
 
 const bodySchema = z.object({
   packageId: z.string().min(1),
@@ -99,6 +104,15 @@ export default defineEventHandler(async (event) => {
   // Free orders skip payment gateway
   const isFree = totals.totalIdr <= 0
 
+  if (!isFree) {
+    try {
+      assertPayableAmountIdr(totals.totalIdr)
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : 'Jumlah tidak valid'
+      throw createError({ statusCode: 400, statusMessage: msg })
+    }
+  }
+
   // better-sqlite3: sync transaction — order + payment atomic
   db.transaction((tx) => {
     tx.insert(orders).values({
@@ -124,11 +138,15 @@ export default defineEventHandler(async (event) => {
     tx.insert(payments).values({
       id: paymentId,
       orderId,
+      provider: 'qrisvip',
+      method: isFree ? null : 'qris',
       amountIdr: totals.totalIdr,
       status: isFree ? 'paid' : 'pending',
       ...(isFree ? { paidAt: new Date() } : {})
     }).run()
   })
+
+  const payPath = `/order/pay/${orderId}`
 
   if (isFree) {
     return {
@@ -140,35 +158,36 @@ export default defineEventHandler(async (event) => {
         discountIdr: totals.discountIdr,
         totalIdr: totals.totalIdr,
         paymentId,
-        paymentUrl: null
+        paymentUrl: null,
+        payPath: `/order/success?order=${orderId}`,
+        qrisReady: false
       }
     }
   }
 
-  const config = useRuntimeConfig()
-  const siteUrl = config.public.siteUrl as string
-  const invoice = await createXenditInvoice({
-    externalId: orderNumber,
-    amount: totals.totalIdr,
-    email: customerEmail,
-    description: `MugiewDev ${orderNumber} — ${domainName}.${tld}`,
-    successRedirectUrl: `${siteUrl}/order/success?order=${orderId}`,
-    failureRedirectUrl: `${siteUrl}/order/checkout?failed=1`
-  }).catch((err) => {
-    // Order already committed; keep pending and return without payment URL.
-    console.error('[orders] createXenditInvoice failed', {
-      orderId,
-      orderNumber,
-      error: err instanceof Error ? err.message : err
-    })
-    return null
+  const generated = await qrisvipGenerate({
+    username: customerEmail,
+    amountIdr: totals.totalIdr,
+    customRef: sanitizeCustomRef(orderNumber)
   })
 
-  if (invoice?.id) {
+  if (generated.ok) {
+    const expireSec = generated.expiredAtSeconds
+      ?? Number(useRuntimeConfig().qrisvipExpireSeconds || 1200)
+    const expiresAt = new Date(Date.now() + expireSec * 1000)
     await db.update(payments).set({
-      providerRef: invoice.id,
+      providerRef: generated.trxId,
+      qrisPayload: generated.payload,
+      method: 'qris',
+      expiresAt,
       updatedAt: new Date()
     }).where(eq(payments.id, paymentId))
+  } else {
+    console.error('[orders] qrisvipGenerate failed', {
+      orderId,
+      orderNumber,
+      error: generated.error
+    })
   }
 
   return {
@@ -180,7 +199,10 @@ export default defineEventHandler(async (event) => {
       discountIdr: totals.discountIdr,
       totalIdr: totals.totalIdr,
       paymentId,
-      paymentUrl: invoice?.invoiceUrl ?? null
+      paymentUrl: null,
+      payPath,
+      qrisReady: generated.ok,
+      qrisError: generated.ok ? undefined : generated.error
     }
   }
 })

@@ -106,15 +106,17 @@ export const orders = sqliteTable('orders', {
 export const payments = sqliteTable('payments', {
   id: text('id').primaryKey(),
   orderId: text('order_id').notNull().references(() => orders.id),
-  provider: text('provider', { enum: ['xendit'] }).notNull().default('xendit'),
-  providerRef: text('provider_ref'), // Xendit invoice/payment id
-  method: text('method'), // va_bca, qris, ewallet, card, paylater
+  provider: text('provider', { enum: ['qrisvip', 'xendit'] }).notNull().default('qrisvip'),
+  providerRef: text('provider_ref'), // QrisVIP trx_id
+  method: text('method'), // qris
   amountIdr: integer('amount_idr').notNull(),
   status: text('status', {
     enum: ['pending', 'paid', 'failed', 'expired', 'refunded']
   }).notNull().default('pending'),
   paidAt: integer('paid_at', { mode: 'timestamp' }),
   rawPayload: text('raw_payload', { mode: 'json' }),
+  qrisPayload: text('qris_payload'), // EMV QR string for display
+  expiresAt: integer('expires_at', { mode: 'timestamp' }),
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
   updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`)
 }, table => [

@@ -46,7 +46,7 @@ useSeoMeta({
         <p>
           Harga ditampilkan dalam Rupiah (IDR). Total final dihitung ulang di
           server saat checkout (paket, domain, durasi, promo). Pembayaran
-          diproses lewat gateway mitra (Xendit). Pesanan yang belum dibayar
+          diproses lewat gateway mitra QRIS (QrisVIP). Pesanan yang belum dibayar
           dibatalkan otomatis dalam <strong>2×24 jam</strong>.
         </p>
       </section>

@@ -57,7 +57,7 @@ const features = [
 const steps = [
   { title: 'Pilih template UMKM', description: 'Design siap pakai untuk toko, jasa, F&B, dan kerajinan.' },
   { title: 'Domain + paket', description: 'Domain .com / .id + hosting + SSL dalam satu tagihan.' },
-  { title: 'Bayar & live', description: 'Xendit VA/QRIS/e-wallet. Situs aktif max 2×24 jam kerja.' }
+  { title: 'Bayar & live', description: 'QRIS via QrisVIP. Situs aktif max 2×24 jam kerja.' }
 ]
 
 const waHref = computed(() => link(t('whatsapp.consultUmkm')))

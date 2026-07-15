@@ -55,14 +55,14 @@ const data = await $fetch('/api/templates')
 
 When adding tables: update schema, push, seed if needed. Keep IDR as integer.
 
-## Payments (Xendit)
+## Payments (QrisVIP QRIS)
 
 1. Create order server-side with recomputed totals  
-2. Create Xendit invoice  
-3. Webhook verifies token → mark payment + order paid  
-4. Trigger provisioning status  
+2. Generate QRIS via QrisVIP (`server/utils/qrisvip.ts`)  
+3. Customer pays on `/order/pay/:id` (poll Check Status V2)  
+4. Optional webhook re-checks status + amount → mark paid + provision  
 
-Never activate site on client-only success callback alone.
+Never activate site on client-only success alone. Min Rp 10.000 / max Rp 10.000.000.
 
 ## Testing expectations
 

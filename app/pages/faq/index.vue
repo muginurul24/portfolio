@@ -17,7 +17,7 @@ const items = [
   },
   {
     label: 'Metode pembayaran apa saja?',
-    content: 'VA bank, QRIS, e-wallet (OVO/DANA/LinkAja), kartu, dan Paylater via Xendit. Pesanan belum bayar auto-batal dalam 2×24 jam.'
+    content: 'QRIS via QrisVIP (bank & e-wallet apa pun yang support QRIS). Pesanan belum bayar auto-batal sesuai masa berlaku QR.'
   },
   {
     label: 'Bisa ganti template?',

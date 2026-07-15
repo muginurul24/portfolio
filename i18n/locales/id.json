@@ -133,7 +133,7 @@
     "termYears": "{n} tahun",
     "subtotal": "Subtotal",
     "discount": "Diskon",
-    "total": "Total",
+    "total": "Total bayar",
     "promoInvalid": "Kode promo tidak valid",
     "formIncomplete": "Lengkapi nama, email, dan WhatsApp",
     "paymentFailed": "Pembayaran gagal atau dibatalkan. Coba bayar lagi atau hubungi CS.",
@@ -154,7 +154,15 @@
     "successDescPending": "Pesanan tercatat dengan status menunggu pembayaran. Selesaikan bayar via gateway atau hubungi CS.",
     "successDescGuestPending": "Pesanan tercatat. Login dengan email yang sama untuk melihat status. Jangan anggap sudah lunas sebelum status paid.",
     "successDescUnknown": "Pesanan tercatat. Status belum bisa diverifikasi di sini — login atau hubungi CS.",
-    "statusLabel": "Status"
+    "statusLabel": "Status",
+    "payTitle": "Bayar dengan QRIS",
+    "paySubtitle": "Scan QR pakai aplikasi bank atau e-wallet apa pun. Pembayaran diproses lewat QrisVIP.",
+    "orderNumber": "No. pesanan",
+    "expiresAt": "Berlaku hingga",
+    "scanHint": "Buka aplikasi pembayaran → pilih QRIS → scan kode di atas.",
+    "iAlreadyPaid": "Saya sudah bayar",
+    "qrisMissingTitle": "QRIS belum tersedia",
+    "qrisMissingDesc": "Pesanan tercatat, tetapi QR gagal digenerate. Hubungi CS dengan nomor pesanan, atau coba buat pesanan lagi."
   },
   "auth": {
     "login": "Masuk",
