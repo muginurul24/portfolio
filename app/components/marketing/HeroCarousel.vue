@@ -328,9 +328,6 @@ function onSelect(index: number) {
         </p>
       </div>
 
-      <p class="mt-3 text-center text-xs text-muted">
-        {{ t('home.carousel.hint') }}
-      </p>
     </UContainer>
   </section>
 </template>
