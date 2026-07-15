@@ -239,11 +239,15 @@
     "blurb": "Professional website platform for Indonesian SMEs and exporters. Domain, hosting, templates, academy, and community — one package.",
     "products": "Products",
     "resources": "Resources",
+    "contact": "Contact",
     "legal": "Legal",
     "terms": "Terms of Service",
     "privacy": "Privacy Policy",
     "refund": "Refund Policy",
-    "copyright": "© {year} MugiewDev. All rights reserved."
+    "copyright": "© {year} MugiewDev. All rights reserved.",
+    "socialWhatsapp": "MugiewDev WhatsApp",
+    "socialInstagram": "MugiewDev Instagram",
+    "socialLinkedin": "MugiewDev LinkedIn"
   },
   "common": {
     "loading": "Loading…",

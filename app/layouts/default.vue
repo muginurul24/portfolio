@@ -1,7 +1,18 @@
 <script setup lang="ts">
 const { t, locale, locales, setLocale } = useI18n()
 const localePath = useLocalePath()
-const { link } = useWhatsApp()
+const config = useRuntimeConfig()
+const { number: waNumber, link } = useWhatsApp()
+
+const supportEmail = computed(() => String(config.public.supportEmail || 'support@mugiewdev.com'))
+
+function formatWaDisplay(raw: string) {
+  const digits = raw.replace(/\D/g, '')
+  if (digits.startsWith('62') && digits.length >= 11) {
+    return `+62 ${digits.slice(2, 5)}-${digits.slice(5, 9)}-${digits.slice(9)}`
+  }
+  return raw.startsWith('+') ? raw : `+${digits}`
+}
 
 const serviceItems = computed(() => [
   { label: t('services.export'), to: localePath('/jasa-pembuatan-website-ekspor'), icon: 'i-lucide-globe' },
@@ -44,6 +55,22 @@ const footerColumns = computed(() => [
       { label: t('nav.faq'), to: localePath('/faq') },
       { label: t('nav.academy'), to: localePath('/academy') },
       { label: t('nav.community'), to: localePath('/komunitas') }
+    ]
+  },
+  {
+    label: t('footer.contact'),
+    children: [
+      {
+        label: supportEmail.value,
+        to: `mailto:${supportEmail.value}`,
+        icon: 'i-lucide-mail'
+      },
+      {
+        label: formatWaDisplay(waNumber.value),
+        to: link(),
+        target: '_blank',
+        icon: 'i-simple-icons-whatsapp'
+      }
     ]
   },
   {
@@ -120,7 +147,13 @@ const waHref = computed(() => link())
           <UButton :to="localePath('/login')" color="neutral" variant="outline" block>
             {{ t('nav.login') }}
           </UButton>
-          <UButton :to="localePath('/order/choose-domain')" color="primary" block>
+          <UButton
+            :to="localePath('/order/choose-domain')"
+            color="primary"
+            trailing-icon="i-lucide-arrow-right"
+            block
+            class="shadow-glow-sky"
+          >
             {{ t('nav.order') }}
           </UButton>
         </div>
@@ -131,27 +164,38 @@ const waHref = computed(() => link())
       <slot />
     </UMain>
 
-    <UFooter :ui="{ root: 'border-t border-default mt-auto' }">
+    <UFooter :ui="{ root: 'border-t border-default/70 mt-auto bg-default' }">
       <template #top>
         <UContainer class="py-12 md:py-16">
           <div class="grid gap-10 lg:grid-cols-12">
             <div class="lg:col-span-4 space-y-4">
               <div class="flex items-center gap-2">
                 <AppLogo class="h-7 w-auto" />
-                <span class="font-semibold text-lg tracking-tight">{{ t('brand.name') }}</span>
+                <span class="font-semibold text-lg tracking-tight text-highlighted">{{ t('brand.name') }}</span>
               </div>
               <p class="text-sm text-muted leading-relaxed max-w-sm">
                 {{ t('footer.blurb') }}
               </p>
-              <UButton
-                :to="waHref"
-                target="_blank"
-                icon="i-simple-icons-whatsapp"
-                color="success"
-                variant="soft"
-              >
-                {{ t('cta.consult') }}
-              </UButton>
+              <div class="flex flex-wrap items-center gap-2">
+                <UButton
+                  :to="waHref"
+                  target="_blank"
+                  icon="i-simple-icons-whatsapp"
+                  color="success"
+                  variant="soft"
+                >
+                  {{ t('cta.consult') }}
+                </UButton>
+                <UButton
+                  :to="`mailto:${supportEmail}`"
+                  color="neutral"
+                  variant="ghost"
+                  icon="i-lucide-mail"
+                  class="text-muted"
+                >
+                  {{ supportEmail }}
+                </UButton>
+              </div>
             </div>
             <div class="lg:col-span-8">
               <UFooterColumns :columns="footerColumns" />
@@ -174,23 +218,23 @@ const waHref = computed(() => link())
             icon="i-simple-icons-whatsapp"
             color="neutral"
             variant="ghost"
-            aria-label="WhatsApp"
+            :aria-label="t('footer.socialWhatsapp')"
           />
           <UButton
-            to="https://instagram.com"
+            to="https://instagram.com/mugiewdev"
             target="_blank"
             icon="i-simple-icons-instagram"
             color="neutral"
             variant="ghost"
-            aria-label="Instagram"
+            :aria-label="t('footer.socialInstagram')"
           />
           <UButton
-            to="https://linkedin.com"
+            to="https://linkedin.com/company/mugiewdev"
             target="_blank"
             icon="i-simple-icons-linkedin"
             color="neutral"
             variant="ghost"
-            aria-label="LinkedIn"
+            :aria-label="t('footer.socialLinkedin')"
           />
         </div>
       </template>

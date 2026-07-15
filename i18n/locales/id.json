@@ -239,11 +239,15 @@
     "blurb": "Platform website profesional untuk UMKM dan eksportir Indonesia. Domain, hosting, template, akademi, dan komunitas — satu paket.",
     "products": "Produk",
     "resources": "Sumber Daya",
+    "contact": "Kontak",
     "legal": "Legal",
     "terms": "Syarat dan Ketentuan",
     "privacy": "Kebijakan Privasi",
     "refund": "Kebijakan Pengembalian",
-    "copyright": "© {year} MugiewDev. Seluruh hak cipta dilindungi."
+    "copyright": "© {year} MugiewDev. Seluruh hak cipta dilindungi.",
+    "socialWhatsapp": "WhatsApp MugiewDev",
+    "socialInstagram": "Instagram MugiewDev",
+    "socialLinkedin": "LinkedIn MugiewDev"
   },
   "common": {
     "loading": "Memuat…",
