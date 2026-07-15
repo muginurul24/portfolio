@@ -3,7 +3,7 @@ import {
   isDisbursementCallback,
   parseDepositCallback
 } from '../server/utils/qris-reconcile'
-import { sanitizeCustomRef, sanitizeQrisUsername } from '../server/utils/qrisvip'
+import { sanitizeCustomRef, sanitizeQrisUsername, QRIS_MAX_IDR } from '../server/utils/qrisvip'
 
 describe('qris webhook parse', () => {
   it('parses official deposit callback sample fields', () => {
@@ -29,6 +29,15 @@ describe('qris webhook parse', () => {
     expect(parsed.vendor).toBe('NOBU')
   })
 
+  it('parses null amount when field missing', () => {
+    const parsed = parseDepositCallback({
+      trx_id: 'abc',
+      status: 'success'
+    })
+    expect(parsed.amount).toBeNull()
+    expect(parsed.status).toBe('success')
+  })
+
   it('detects disbursement callbacks', () => {
     expect(isDisbursementCallback({
       amount: 25000,
@@ -48,5 +57,9 @@ describe('qris webhook parse', () => {
 
   it('username sanitize matches generate path', () => {
     expect(sanitizeQrisUsername('buyer@mail.com')).toBe('buyer')
+  })
+
+  it('QRIS_MAX_IDR is 10M', () => {
+    expect(QRIS_MAX_IDR).toBe(10_000_000)
   })
 })

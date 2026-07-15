@@ -122,25 +122,38 @@ async function main() {
       features: ['Domain', 'Hosting', 'SSL', 'SEO lokal', 'Form WA', 'Komunitas'],
       termYears: 1
     },
+    // QRIS max Rp 10.000.000 — ecom project packages above cap stay offline (invoice CS), not QRIS checkout
     {
       id: 'pkg_ecom_basic',
       slug: 'toko-online-basic',
       name: 'Toko Online Basic',
+      description: 'Paket project > batas QRIS. Checkout via invoice offline / CS, bukan QRIS self-serve.',
       serviceType: 'ecommerce',
       priceYearlyIdr: 15_000_000,
       features: ['≤300 SKU', 'Cart', 'Payment gateway', 'Shipping', 'Admin'],
-      termYears: 1
+      termYears: 1,
+      isActive: false
     },
     {
       id: 'pkg_ecom_standard',
       slug: 'toko-online-standard',
       name: 'Toko Online Standard',
+      description: 'Paket project > batas QRIS. Checkout via invoice offline / CS, bukan QRIS self-serve.',
       serviceType: 'ecommerce',
       priceYearlyIdr: 25_000_000,
       features: ['≤1000 SKU', 'Loyalty', 'Multi-warehouse', 'Wholesale'],
-      termYears: 1
+      termYears: 1,
+      isActive: false
     }
   ]).onConflictDoNothing()
+
+  // Re-seed: force deactivate >QRIS-max ecom packages even if rows already exist
+  for (const ecomId of ['pkg_ecom_basic', 'pkg_ecom_standard'] as const) {
+    await db.update(schema.packages).set({
+      isActive: false,
+      description: 'Paket project > batas QRIS. Checkout via invoice offline / CS, bukan QRIS self-serve.'
+    }).where(eq(schema.packages.id, ecomId))
+  }
 
   // Drop accidental rename from earlier seed (slug spice-border)
   await db.delete(schema.templates).where(eq(schema.templates.slug, 'spice-border'))

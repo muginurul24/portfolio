@@ -5,11 +5,13 @@ import { createId, createOrderNumber } from '../../utils/id'
 import { computeOrderTotals } from '../../utils/pricing'
 import {
   assertPayableAmountIdr,
+  QRIS_MAX_IDR,
   qrisvipGenerate,
   sanitizeCustomRef,
   sanitizeQrisUsername
 } from '../../utils/qrisvip'
 import { signPayToken } from '../../utils/pay-token'
+import { fulfillPaidOrder } from '../../utils/order-fulfillment'
 
 const bodySchema = z.object({
   packageId: z.string().min(1),
@@ -107,15 +109,29 @@ export default defineEventHandler(async (event) => {
   const isFree = totals.totalIdr <= 0
 
   if (!isFree) {
+    if (totals.totalIdr > QRIS_MAX_IDR) {
+      throw createError({
+        statusCode: 400,
+        statusMessage: `Total melebihi batas QRIS Rp${QRIS_MAX_IDR.toLocaleString('id-ID')}. Hubungi CS untuk paket project.`
+      })
+    }
     try {
       assertPayableAmountIdr(totals.totalIdr)
     } catch (e) {
       const msg = e instanceof Error ? e.message : 'Jumlah tidak valid'
       throw createError({ statusCode: 400, statusMessage: msg })
     }
+
+    // Fail before insert so we never create pending_payment without a tokenizable secret
+    const config = useRuntimeConfig()
+    const secret = String(config.payTokenSecret || config.session?.password || '')
+    if (secret.length < 32) {
+      throw createError({ statusCode: 500, statusMessage: 'Pay token secret not configured' })
+    }
   }
 
   // better-sqlite3: sync transaction - order + payment atomic
+  // Free path inserts pending then fulfillPaidOrder marks paid + provisions
   db.transaction((tx) => {
     tx.insert(orders).values({
       id: orderId,
@@ -130,25 +146,37 @@ export default defineEventHandler(async (event) => {
       discountIdr: totals.discountIdr,
       totalIdr: totals.totalIdr,
       promoCode,
-      status: isFree ? 'paid' : 'pending_payment',
+      status: 'pending_payment',
       customerName: body.customerName.trim(),
       customerEmail,
-      customerPhone: body.customerPhone?.trim() || null,
-      ...(isFree ? { paidAt: new Date() } : {})
+      customerPhone: body.customerPhone?.trim() || null
     }).run()
 
     tx.insert(payments).values({
       id: paymentId,
       orderId,
       provider: 'qrisvip',
-      method: isFree ? null : 'qris',
+      method: isFree ? 'free' : 'qris',
       amountIdr: totals.totalIdr,
-      status: isFree ? 'paid' : 'pending',
-      ...(isFree ? { paidAt: new Date() } : {})
+      status: 'pending'
     }).run()
   })
 
   if (isFree) {
+    const result = await fulfillPaidOrder({
+      orderId,
+      paymentId,
+      paidAmountIdr: 0,
+      method: 'free',
+      rawPayload: { source: 'free-order' }
+    })
+    if (!result.ok) {
+      throw createError({
+        statusCode: 500,
+        statusMessage: `Free order fulfill gagal: ${result.reason}`
+      })
+    }
+
     return {
       data: {
         id: orderId,
@@ -168,9 +196,6 @@ export default defineEventHandler(async (event) => {
 
   const config = useRuntimeConfig()
   const secret = String(config.payTokenSecret || config.session?.password || '')
-  if (secret.length < 32) {
-    throw createError({ statusCode: 500, statusMessage: 'Pay token secret not configured' })
-  }
   const payToken = signPayToken(orderId, secret)
   const payPath = `/order/pay/${orderId}?token=${encodeURIComponent(payToken)}`
 

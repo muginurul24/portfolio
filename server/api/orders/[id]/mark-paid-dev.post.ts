@@ -7,18 +7,7 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 404, statusMessage: 'Not found' })
   }
 
-  // Dev-only role when auth helpers present
-  let user: { id: string, role?: string, email?: string }
-  try {
-    const session = await requireRole(event, ['dev'])
-    user = sessionUser(session)
-  } catch (e: unknown) {
-    const err = e as { statusCode?: number }
-    if (err?.statusCode === 403) throw e
-    const session = await getUserSession(event)
-    if (!session.user) throw createError({ statusCode: 401, statusMessage: 'Unauthorized' })
-    user = session.user as { id: string, role?: string, email?: string }
-  }
+  await requireRole(event, ['dev'])
 
   const id = getRouterParam(event, 'id')
   if (!id) throw createError({ statusCode: 400, statusMessage: 'ID wajib' })
@@ -29,12 +18,6 @@ export default defineEventHandler(async (event) => {
 
   if (order.status === 'cancelled' || order.status === 'expired') {
     throw createError({ statusCode: 400, statusMessage: 'Order terminal - tidak bisa mark paid' })
-  }
-
-  const isStaff = user.role === 'admin' || user.role === 'cs' || user.role === 'dev'
-  const email = user.email?.toLowerCase().trim()
-  if (!isStaff && order.userId !== user.id && order.customerEmail !== email) {
-    throw createError({ statusCode: 403, statusMessage: 'Akses ditolak' })
   }
 
   const payment = await db.query.payments.findFirst({

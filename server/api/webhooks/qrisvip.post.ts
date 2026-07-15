@@ -17,17 +17,23 @@ import {
  * Disbursement callbacks (partner_ref_no) are ignored (out of scope).
  *
  * Security:
- * - Optional shared secret header when NUXT_QRISVIP_WEBHOOK_SECRET set
+ * - Fail-closed when secret empty in production or qrisvipRequireWebhookSecret
+ * - Shared secret header when NUXT_QRISVIP_WEBHOOK_SECRET set
  * - Always prefer Check Status V2 re-verify
  * - Fallback webhook proof only if amount + merchant_id match
+ * - Remote success with null amount requires webhook amount (amount_missing)
  * - Idempotent on already-paid
  *
  * Always returns 2xx for known payload shapes so provider does not retry forever
- * on business rejects (logged server-side). Auth failures still 401.
+ * on business rejects (logged server-side). Auth failures still 401/500.
  */
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig()
   const secret = String(config.qrisvipWebhookSecret || '')
+  const requireSecret = process.env.NODE_ENV === 'production' || Boolean(config.qrisvipRequireWebhookSecret)
+  if (requireSecret && !secret) {
+    throw createError({ statusCode: 500, statusMessage: 'Webhook secret not configured' })
+  }
   if (secret) {
     const header
       = getHeader(event, 'x-qrisvip-secret')
@@ -118,7 +124,11 @@ export default defineEventHandler(async (event) => {
     })
     // Business reject: still 200 + message so QrisVIP does not hammer retries;
     // amount mismatch is serious — return 422 so it surfaces in provider logs.
-    if (result.reason === 'amount_mismatch' || result.reason === 'merchant_mismatch') {
+    if (
+      result.reason === 'amount_mismatch'
+      || result.reason === 'amount_missing'
+      || result.reason === 'merchant_mismatch'
+    ) {
       throw createError({ statusCode: 422, statusMessage: result.reason })
     }
     return { ok: true, ignored: true, reason: result.reason, message: 'received' }

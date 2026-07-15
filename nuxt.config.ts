@@ -86,6 +86,8 @@ export default defineNuxtConfig({
     qrisvipUsername: process.env.NUXT_QRISVIP_USERNAME || '',
     qrisvipExpireSeconds: Number(process.env.NUXT_QRISVIP_EXPIRE_SECONDS || 1200),
     qrisvipWebhookSecret: process.env.NUXT_QRISVIP_WEBHOOK_SECRET || '',
+    // Fail-closed webhook auth when true (also always in production NODE_ENV)
+    qrisvipRequireWebhookSecret: process.env.NUXT_QRISVIP_REQUIRE_WEBHOOK_SECRET === 'true',
     qrisvipBaseUrl: process.env.NUXT_QRISVIP_BASE_URL || 'https://qris.otomatis.vip',
     public: {
       siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000',

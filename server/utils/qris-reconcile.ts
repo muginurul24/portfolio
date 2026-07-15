@@ -123,6 +123,25 @@ export async function reconcileQrisPayment(input: {
       })
       return { ok: false, reason: 'amount_mismatch' }
     }
+    // Remote success with null amount: require webhook amount match (fail closed)
+    if (check.amount == null) {
+      const whAmount = input.webhook?.amount
+      if (whAmount == null) {
+        console.error('[qris-reconcile] remote success but amount missing', {
+          expected,
+          trxId: input.trxId
+        })
+        return { ok: false, reason: 'amount_missing' }
+      }
+      if (whAmount !== expected) {
+        console.error('[qris-reconcile] webhook amount mismatch (remote amount null)', {
+          expected,
+          webhook: whAmount,
+          trxId: input.trxId
+        })
+        return { ok: false, reason: 'amount_mismatch' }
+      }
+    }
     const result = await fulfillPaidOrder({
       orderId: input.orderId,
       paymentId: input.paymentId,
