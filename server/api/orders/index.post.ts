@@ -77,10 +77,9 @@ export default defineEventHandler(async (event) => {
     promo
   })
 
+  // Always take first label then strip to hostname-safe chars (no dots/credentials).
   const rawDomain = body.domainName.toLowerCase().replace(/\.$/, '')
-  const domainName = rawDomain.includes('.')
-    ? rawDomain.split('.')[0]!
-    : rawDomain.replace(/[^a-z0-9-]/g, '')
+  const domainName = (rawDomain.split('.')[0] ?? '').replace(/[^a-z0-9-]/g, '')
 
   const orderId = createId('ord')
   const orderNumber = createOrderNumber()

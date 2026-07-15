@@ -59,6 +59,10 @@ function formatDate(value: string | Date | null) {
     year: 'numeric'
   }).format(d)
 }
+
+function siteHref(domain: string) {
+  return isSafeHttpHost(domain) ? `https://${domain}` : null
+}
 </script>
 
 <template>
@@ -143,7 +147,8 @@ function formatDate(value: string | Date | null) {
 
         <div class="mt-4 flex flex-wrap gap-2">
           <UButton
-            :to="`https://${site.domain}`"
+            v-if="siteHref(site.domain)"
+            :to="siteHref(site.domain)!"
             color="neutral"
             variant="outline"
             size="sm"
@@ -154,6 +159,12 @@ function formatDate(value: string | Date | null) {
           >
             {{ t('panel.domain') }}
           </UButton>
+          <span
+            v-else
+            class="inline-flex items-center text-sm text-muted"
+          >
+            {{ site.domain }}
+          </span>
           <UButton
             v-if="site.adminUrl"
             :to="site.adminUrl"

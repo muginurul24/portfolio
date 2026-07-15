@@ -18,11 +18,16 @@ const profile = computed(() => {
     phone?: string | null
     role?: string
   } | null
+  const roleKey = u?.role === 'admin'
+    ? 'panel.roleAdmin'
+    : u?.role === 'customer'
+      ? 'panel.roleCustomer'
+      : null
   return {
     name: u?.name || '—',
     email: u?.email || '—',
     phone: u?.phone || '—',
-    role: u?.role || '—'
+    role: roleKey ? t(roleKey) : (u?.role || '—')
   }
 })
 </script>

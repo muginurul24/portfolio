@@ -50,7 +50,13 @@ export default defineEventHandler(async (event) => {
   }
 
   await setUserSession(event, {
-    user: { id, email, name: body.name.trim(), role: 'customer' }
+    user: {
+      id,
+      email,
+      name: body.name.trim(),
+      phone: body.phone?.trim() || null,
+      role: 'customer'
+    }
   })
 
   return { ok: true }

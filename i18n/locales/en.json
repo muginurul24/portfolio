@@ -145,6 +145,8 @@
     "profile": "Profile",
     "profileReadonly": "Profile is read-only in v1. Contact support to update data.",
     "role": "Role",
+    "roleCustomer": "Customer",
+    "roleAdmin": "Admin",
     "statusDraft": "Draft",
     "statusPendingPayment": "Pending payment",
     "statusPaid": "Paid",

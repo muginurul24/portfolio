@@ -15,7 +15,8 @@ export default defineEventHandler(async (event) => {
 
   return {
     data: {
-      activeSites: userSites.filter(s => s.status === 'active' || s.status === 'provisioning').length,
+      activeSites: userSites.filter(s => s.status === 'active').length,
+      provisioningSites: userSites.filter(s => s.status === 'provisioning').length,
       orders: userOrders.length,
       newInquiries: inquiryCount,
       academyCompleted: progress.filter(p => p.completedAt).length
