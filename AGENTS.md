@@ -66,7 +66,7 @@ design-system/            # MASTER + page overrides
 3. **Validation:** Zod on every API body (`readValidatedBody`).
 4. **i18n:** User-facing strings via `$t` / `t()` — no hard-coded ID/EN in templates except brand names.
 5. **Money:** IDR integers (no floats). Format with `formatIdr()` from `app/utils/format.ts`.
-6. **Auth:** Protect `/panel/**` with `middleware: 'auth'`. Roles: `customer | admin | cs`.
+6. **Auth:** Protect `/panel/**` with `middleware: 'auth'`. Roles: `customer | cs | admin | dev`.
 7. **Payments:** Never trust client amounts — recompute server-side from package/domain/promo.
 8. **No secrets in client:** only `runtimeConfig.public.*`.
 9. **UI:** Nuxt UI components (`UButton`, `UCard`, …). Lucide icons. Soft shadows tokens. Light-first.
@@ -99,7 +99,7 @@ Follow `docs/research/webekspor-analysis.md` backlog:
 
 - REST under `/api/*`
 - Auth endpoints: `/api/auth/*`
-- Webhooks: `/api/webhooks/xendit`
+- Webhooks: `/api/webhooks/qrisvip`
 - Errors: `createError({ statusCode, statusMessage })`
 - Success: plain JSON objects
 

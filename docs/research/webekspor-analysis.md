@@ -47,10 +47,10 @@ Revenue: paket website + renew + project fee + upsell. **Zero take-rate / komisi
 
 ## Payment & SLA
 
-- Methods: VA (BCA, Mandiri, BRI, BNI, Permata), OVO/DANA/LinkAja, QRIS, card, Paylater
+- Methods (WebEkspor reference): VA (BCA, Mandiri, BRI, BNI, Permata), OVO/DANA/LinkAja, QRIS, card, Paylater
 - Unpaid auto-cancel: **2×24 jam**
 - Live setelah bayar: **1–2×24 jam kerja**
-- Provider target MugiewDev: **Xendit**
+- **Payment provider: QrisVIP QRIS-only (2026-07-15)** — pivot from Xendit; MugiewDev v1 = QRIS generate + poll Check Status V2 + webhook `/api/webhooks/qrisvip`
 
 ## Flow user
 
@@ -59,7 +59,7 @@ Browse /templates (kategori: Produk Ekspor, Agrikultur, Craft, Company, Otomotif
   → CTA "Buat Website" / Beli
   → /order/choose-domain
   → Wizard: Domain → Template → Data Diri → Paket & Bayar
-  → Payment Xendit
+  → Payment QrisVIP QRIS
   → Provisioning (team + dashboard)
   → panel.webekspor.com (login)
   → Komunitas auto-invite setelah site publish
@@ -79,7 +79,7 @@ Browse /templates (kategori: Produk Ekspor, Agrikultur, Craft, Company, Otomotif
 - Track pemula (12 modul): mindset, legalitas, HS code, dokumen, logistik, bayar, cari buyer
 - Lanjutan: brand, SEO, funnel, scale (member aktif)
 - Progress + kuis + sertifikat
-- Payment: Xendit (klaim marketing ~Rp989rb/thn; status "coming soon" di beberapa section)
+- Payment (WebEkspor claim): Xendit-class (~Rp989rb/thn; status "coming soon" di beberapa section). MugiewDev: QrisVIP when academy paid ships.
 
 ## SEO (confirmed vs marketing-only)
 
@@ -135,7 +135,7 @@ Browse /templates (kategori: Produk Ekspor, Agrikultur, Craft, Company, Otomotif
 | App type | Multi-SKU site-builder platform + ecom admin + community layer |
 | Bukan | Exporter–importer matching marketplace |
 | Auth | Session cookie (`nuxt-auth-utils`) + panel |
-| Payment | Xendit invoice/VA/QRIS/ewallet/card |
+| Payment | **QrisVIP QRIS-only (2026-07-15)** — not Xendit |
 | Content | Nuxt Content (blog, FAQ, tutorial) |
 | Catalog | Drizzle schema: templates, packages, orders, sites |
 | i18n | ID default + EN |
@@ -150,23 +150,23 @@ Browse /templates (kategori: Produk Ekspor, Agrikultur, Craft, Company, Otomotif
 - [x] i18n ID/EN
 - [x] Schema DB core
 - [x] Auth skeleton
-- [ ] Seed templates + packages
-- [ ] Order wizard (domain → template → data → bayar)
-- [ ] Xendit invoice + webhook
-- [ ] Panel: sites, orders
+- [x] Seed templates + packages (+ promo WEBSITEJUARA, domain TLDs)
+- [x] Order wizard (domain → template → data → bayar)
+- [x] QrisVIP QRIS + status poll + webhook `/api/webhooks/qrisvip` (was Xendit; pivoted 2026-07-15)
+- [x] Panel: sites, orders
 
 ### P1 — Marketing parity
-- [ ] Landing 4 layanan
-- [ ] Templates catalog + detail + filter
-- [ ] FAQ / Blog / Tutorial (Content)
-- [ ] Komunitas + Academy pages
-- [ ] Portofolio
-- [ ] Promo code engine
+- [x] Landing 4 layanan
+- [x] Templates catalog + detail + filter
+- [x] FAQ / Blog / Tutorial (Content)
+- [x] Komunitas + Academy pages
+- [x] Portofolio
+- [x] Promo code engine
 
 ### P2 — Product depth
 - [ ] Ecom project intake form
 - [ ] Academy modules + progress
-- [ ] Inquiry inbox di panel
+- [x] Inquiry inbox di panel
 - [ ] Domain availability check (registrar API)
 - [ ] Multi-year package
 
