@@ -116,6 +116,8 @@ export default defineNuxtConfig({
     appManifest: false
   },
 
+  // OG image signing: set NUXT_OG_IMAGE_SECRET in .env (see .env.example)
+
   compatibilityDate: '2026-06-30',
 
   nitro: {
@@ -127,6 +129,25 @@ export default defineNuxtConfig({
         driver: 'fs',
         base: './.data/storage'
       }
+    }
+  },
+
+  // pnpm nests @nuxtjs/mdc remark/* deps; Vite 7 cannot resolve "@nuxtjs/mdc > pkg"
+  // include entries. Prebundle bare package names instead (silences optimizeDeps warn).
+  vite: {
+    optimizeDeps: {
+      include: [
+        'remark-gfm',
+        'remark-emoji',
+        'remark-mdc',
+        'remark-rehype',
+        'rehype-raw',
+        'parse5',
+        'unist-util-visit',
+        'unified',
+        'debug',
+        'extend'
+      ]
     }
   },
 
