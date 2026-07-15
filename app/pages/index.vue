@@ -2,6 +2,7 @@
 const { t } = useI18n()
 const localePath = useLocalePath()
 const appConfig = useAppConfig()
+const { link } = useWhatsApp()
 
 useSeoMeta({
   title: () => t('brand.tagline'),
@@ -12,6 +13,10 @@ const priceLabel = computed(() =>
   t('hero.priceFrom', {
     price: new Intl.NumberFormat('id-ID').format(appConfig.mugiew?.startingPriceYearlyIdr || 1_000_000)
   })
+)
+
+const discountLabel = computed(() =>
+  formatIdr(appConfig.mugiew?.promoDiscountIdr || 500_000)
 )
 
 const features = computed(() => [
@@ -53,10 +58,7 @@ const steps = [
   { title: 'Bayar & aktif', description: 'Xendit: VA, QRIS, e-wallet, kartu. Live max 2×24 jam.' }
 ]
 
-const waHref = computed(() => {
-  const n = appConfig.mugiew?.supportWa || '6281280080275'
-  return `https://wa.me/${n}?text=${encodeURIComponent('Halo, saya ingin konsultasi website MugiewDev')}`
-})
+const waHref = computed(() => link(t('whatsapp.consultDefault')))
 </script>
 
 <template>
@@ -109,15 +111,15 @@ const waHref = computed(() => {
 
     <UPageSection
       id="layanan"
-      title="Layanan lengkap untuk UMKM & eksportir"
-      description="Dari website ekspor multi-bahasa sampai toko online dan custom enterprise — satu platform."
+      :title="t('home.servicesTitle')"
+      :description="t('home.servicesDesc')"
       :features="features"
     />
 
     <UPageSection
       id="cara-kerja"
-      title="Cara kerja"
-      description="Tiga langkah. Website live dalam 2×24 jam kerja."
+      :title="t('home.stepsTitle')"
+      :description="t('home.stepsDesc')"
     >
       <div class="grid gap-6 md:grid-cols-3">
         <UCard
@@ -144,8 +146,11 @@ const waHref = computed(() => {
 
     <UPageSection>
       <UPageCTA
-        title="Saatnya bisnismu capai pasar global."
-        description="Balas cepat · SEO siap pakai · Tanpa komitmen. Pakai kode promo WEBSITEJUARA potong Rp500.000."
+        :title="t('home.ctaTitle')"
+        :description="t('home.ctaDesc', {
+          code: appConfig.mugiew?.promoCode || 'WEBSITEJUARA',
+          discount: discountLabel
+        })"
         variant="subtle"
         :links="[
           {

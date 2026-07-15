@@ -40,6 +40,23 @@
     "viewTemplates": "View Templates",
     "learnMore": "Learn More"
   },
+  "whatsapp": {
+    "consultDefault": "Hi, I'd like a consultation about a MugiewDev website",
+    "consultExport": "Hi, I'd like a consultation about an export website",
+    "consultUmkm": "Hi, I'd like a consultation about an SME website",
+    "consultEcommerce": "Hi, I'd like a consultation about an online store",
+    "consultCustom": "Hi, I need a custom website/app build",
+    "orderHelp": "Hi MugiewDev, I need help with my order",
+    "orderHelpWithId": "Hi MugiewDev, I need help with order {orderId}"
+  },
+  "home": {
+    "servicesTitle": "Full services for SMEs & exporters",
+    "servicesDesc": "From multi-language export sites to online stores and custom enterprise builds — one platform.",
+    "stepsTitle": "How it works",
+    "stepsDesc": "Three steps. Site live within 2×24 business hours.",
+    "ctaTitle": "Time for your business to reach global markets.",
+    "ctaDesc": "Fast replies · SEO-ready · No lock-in. Use promo code {code} for {discount} off."
+  },
   "serviceLanding": {
     "proofTitle": "Trusted by SMEs & exporters",
     "proofDesc": "Real outcomes from businesses already running professional sites.",
@@ -51,8 +68,23 @@
     "pricingEmpty": "No packages yet. Contact support for a quote.",
     "popular": "Popular",
     "projectOneTime": "one-time project",
+    "customQuote": "Custom quote",
     "ctaTitle": "Time for a professional online presence.",
-    "ctaDesc": "Fast replies · SEO-ready · No lock-in. Use promo code {code} for Rp500,000 off."
+    "ctaDesc": "Fast replies · SEO-ready · No lock-in. Use promo code {code} for {discount} off.",
+    "exportCtaTitle": "Show up on Google. Get buyer inquiries.",
+    "exportCtaDesc": "SEO-ready · Multi-language · Inquiry form. Use promo {code} for {discount} off.",
+    "umkmCtaTitle": "Build an SME site ready for orders.",
+    "umkmCtaDesc": "Local SEO · WhatsApp forms · Transparent pricing. Use promo {code} for {discount} off.",
+    "ecomCtaTitle": "Ready to sell online with full checkout?",
+    "ecomCtaDesc": "{teaser} · Year-1 domain/hosting included. Chat first so we match your needs.",
+    "ecomPriceTeaser": "{basic} · {standard}",
+    "customCtaTitle": "Have a brief? Let's build it.",
+    "customCtaDesc": "Share your needs — we reply with scope & timeline. No commitment on the first chat.",
+    "customEmpty": "Custom packages are scoped per brief. Chat support for estimate and timeline.",
+    "ecomStepsTitle": "Online store project flow",
+    "ecomStepsDesc": "From brief to go-live — run by our team, not overnight DIY.",
+    "customStepsTitle": "Custom project flow",
+    "customStepsDesc": "From discovery to handover — milestone controlled."
   },
   "footer": {
     "products": "Products",

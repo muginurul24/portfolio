@@ -5,7 +5,7 @@ const { t } = useI18n()
 const route = useRoute()
 const localePath = useLocalePath()
 const orderStore = useOrderStore()
-const appConfig = useAppConfig()
+const { link } = useWhatsApp()
 const { user, loggedIn } = useUserSession()
 
 useSeoMeta({ title: () => t('order.checkout') })
@@ -229,9 +229,7 @@ async function submit() {
   }
 }
 
-const supportWa = computed(() =>
-  (appConfig.mugiew?.supportWa as string) || '6281280080275'
-)
+const waHref = computed(() => link(t('whatsapp.orderHelp')))
 </script>
 
 <template>
@@ -399,7 +397,7 @@ const supportWa = computed(() =>
           {{ t('common.back') }}
         </UButton>
         <UButton
-          :to="`https://wa.me/${supportWa}`"
+          :to="waHref"
           target="_blank"
           rel="noopener"
           color="neutral"

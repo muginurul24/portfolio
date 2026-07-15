@@ -4,6 +4,7 @@ import type { ServicePackage } from '~/types'
 const { t } = useI18n()
 const localePath = useLocalePath()
 const appConfig = useAppConfig()
+const { link } = useWhatsApp()
 
 useSeoMeta({
   title: () => t('services.export'),
@@ -59,10 +60,11 @@ const steps = [
   { title: 'Bayar & aktif', description: 'Xendit: VA, QRIS, e-wallet, kartu. Live max 2×24 jam kerja.' }
 ]
 
-const waHref = computed(() => {
-  const n = appConfig.mugiew?.supportWa || '6281280080275'
-  return `https://wa.me/${n}?text=${encodeURIComponent('Halo, saya ingin konsultasi website ekspor')}`
-})
+const waHref = computed(() => link(t('whatsapp.consultExport')))
+
+const discountLabel = computed(() =>
+  formatIdr(appConfig.mugiew?.promoDiscountIdr || 500_000)
+)
 
 const priceFrom = computed(() => {
   const min = packages.value.reduce<number | null>((acc, p) => {
@@ -119,8 +121,11 @@ const priceFrom = computed(() => {
     />
 
     <MarketingServiceCta
-      title="Tampil di Google. Dapat inquiry buyer."
-      :description="`SEO siap · Multi-bahasa · Form inquiry. Pakai promo ${appConfig.mugiew?.promoCode || 'WEBSITEJUARA'} potong Rp500.000.`"
+      :title="t('serviceLanding.exportCtaTitle')"
+      :description="t('serviceLanding.exportCtaDesc', {
+        code: appConfig.mugiew?.promoCode || 'WEBSITEJUARA',
+        discount: discountLabel
+      })"
       :secondary-to="waHref"
       secondary-external
     />

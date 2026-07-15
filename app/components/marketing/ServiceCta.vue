@@ -16,11 +16,13 @@ const props = withDefaults(defineProps<{
 const { t } = useI18n()
 const localePath = useLocalePath()
 const appConfig = useAppConfig()
+const { link } = useWhatsApp()
 
-const waHref = computed(() => {
-  const n = appConfig.mugiew?.supportWa || '6281280080275'
-  return `https://wa.me/${n}?text=${encodeURIComponent('Halo, saya ingin konsultasi website MugiewDev')}`
-})
+const discountLabel = computed(() =>
+  formatIdr(appConfig.mugiew?.promoDiscountIdr || 500_000)
+)
+
+const waHref = computed(() => link(t('whatsapp.consultDefault')))
 
 function isExternalUrl(to: string) {
   return /^https?:\/\//i.test(to)
@@ -54,7 +56,10 @@ const secondary = computed(() => {
   <UPageSection>
     <UPageCTA
       :title="title || t('serviceLanding.ctaTitle')"
-      :description="description || t('serviceLanding.ctaDesc', { code: appConfig.mugiew?.promoCode || 'WEBSITEJUARA' })"
+      :description="description || t('serviceLanding.ctaDesc', {
+        code: appConfig.mugiew?.promoCode || 'WEBSITEJUARA',
+        discount: discountLabel
+      })"
       variant="subtle"
       :links="[
         {

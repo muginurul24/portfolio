@@ -4,6 +4,7 @@ import type { ServicePackage } from '~/types'
 const { t } = useI18n()
 const localePath = useLocalePath()
 const appConfig = useAppConfig()
+const { link } = useWhatsApp()
 
 useSeoMeta({
   title: () => t('services.umkm'),
@@ -59,10 +60,11 @@ const steps = [
   { title: 'Bayar & live', description: 'Xendit VA/QRIS/e-wallet. Situs aktif max 2×24 jam kerja.' }
 ]
 
-const waHref = computed(() => {
-  const n = appConfig.mugiew?.supportWa || '6281280080275'
-  return `https://wa.me/${n}?text=${encodeURIComponent('Halo, saya ingin konsultasi website UMKM')}`
-})
+const waHref = computed(() => link(t('whatsapp.consultUmkm')))
+
+const discountLabel = computed(() =>
+  formatIdr(appConfig.mugiew?.promoDiscountIdr || 500_000)
+)
 
 const priceFrom = computed(() => {
   const min = packages.value.reduce<number | null>((acc, p) => {
@@ -121,8 +123,11 @@ const priceFrom = computed(() => {
     />
 
     <MarketingServiceCta
-      title="Bikin website UMKM yang siap dapat order."
-      description="SEO lokal · Form WA · Harga transparan. Pakai promo WEBSITEJUARA potong Rp500.000."
+      :title="t('serviceLanding.umkmCtaTitle')"
+      :description="t('serviceLanding.umkmCtaDesc', {
+        code: appConfig.mugiew?.promoCode || 'WEBSITEJUARA',
+        discount: discountLabel
+      })"
     />
   </div>
 </template>

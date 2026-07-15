@@ -2,22 +2,18 @@
 const { t } = useI18n()
 const route = useRoute()
 const localePath = useLocalePath()
-const appConfig = useAppConfig()
+const { link } = useWhatsApp()
 const { loggedIn } = useUserSession()
 
 useSeoMeta({ title: () => t('order.successTitle') })
 
 const orderId = computed(() => String(route.query.order || ''))
 
-const supportWa = computed(() =>
-  (appConfig.mugiew?.supportWa as string) || '6281280080275'
-)
-
 const waHref = computed(() => {
   const text = orderId.value
-    ? encodeURIComponent(`Halo MugiewDev, saya butuh bantuan pesanan ${orderId.value}`)
-    : encodeURIComponent('Halo MugiewDev, saya butuh bantuan pesanan')
-  return `https://wa.me/${supportWa.value}?text=${text}`
+    ? t('whatsapp.orderHelpWithId', { orderId: orderId.value })
+    : t('whatsapp.orderHelp')
+  return link(text)
 })
 
 const panelHref = computed(() =>

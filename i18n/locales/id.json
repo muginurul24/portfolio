@@ -40,6 +40,23 @@
     "viewTemplates": "Lihat Template",
     "learnMore": "Pelajari Lebih Lanjut"
   },
+  "whatsapp": {
+    "consultDefault": "Halo, saya ingin konsultasi website MugiewDev",
+    "consultExport": "Halo, saya ingin konsultasi website ekspor",
+    "consultUmkm": "Halo, saya ingin konsultasi website UMKM",
+    "consultEcommerce": "Halo, saya ingin konsultasi toko online",
+    "consultCustom": "Halo, saya butuh pesanan khusus website/app",
+    "orderHelp": "Halo MugiewDev, saya butuh bantuan pesanan",
+    "orderHelpWithId": "Halo MugiewDev, saya butuh bantuan pesanan {orderId}"
+  },
+  "home": {
+    "servicesTitle": "Layanan lengkap untuk UMKM & eksportir",
+    "servicesDesc": "Dari website ekspor multi-bahasa sampai toko online dan custom enterprise — satu platform.",
+    "stepsTitle": "Cara kerja",
+    "stepsDesc": "Tiga langkah. Website live dalam 2×24 jam kerja.",
+    "ctaTitle": "Saatnya bisnismu capai pasar global.",
+    "ctaDesc": "Balas cepat · SEO siap pakai · Tanpa komitmen. Pakai kode promo {code} potong {discount}."
+  },
   "serviceLanding": {
     "proofTitle": "Dipercaya UMKM & eksportir",
     "proofDesc": "Hasil nyata dari ratusan bisnis yang sudah online profesional.",
@@ -51,8 +68,23 @@
     "pricingEmpty": "Paket belum tersedia. Hubungi CS untuk penawaran.",
     "popular": "Populer",
     "projectOneTime": "project one-time",
+    "customQuote": "Custom quote",
     "ctaTitle": "Saatnya bisnismu tampil profesional online.",
-    "ctaDesc": "Balas cepat · SEO siap pakai · Tanpa komitmen. Pakai kode promo {code} potong Rp500.000."
+    "ctaDesc": "Balas cepat · SEO siap pakai · Tanpa komitmen. Pakai kode promo {code} potong {discount}.",
+    "exportCtaTitle": "Tampil di Google. Dapat inquiry buyer.",
+    "exportCtaDesc": "SEO siap · Multi-bahasa · Form inquiry. Pakai promo {code} potong {discount}.",
+    "umkmCtaTitle": "Bikin website UMKM yang siap dapat order.",
+    "umkmCtaDesc": "SEO lokal · Form WA · Harga transparan. Pakai promo {code} potong {discount}.",
+    "ecomCtaTitle": "Siap jualan online dengan checkout lengkap?",
+    "ecomCtaDesc": "{teaser} · Domain/hosting year-1 termasuk. Chat dulu biar pas kebutuhan.",
+    "ecomPriceTeaser": "{basic} · {standard}",
+    "customCtaTitle": "Punya brief? Mari kita bangun.",
+    "customCtaDesc": "Jelaskan kebutuhan, kami balas estimasi scope & timeline. Tanpa komitmen di chat awal.",
+    "customEmpty": "Paket custom dinilai per brief. Chat CS untuk estimasi dan timeline.",
+    "ecomStepsTitle": "Alur project toko online",
+    "ecomStepsDesc": "Dari brief sampai go-live — dikelola tim, bukan DIY semalam.",
+    "customStepsTitle": "Alur custom project",
+    "customStepsDesc": "Dari discovery sampai serah terima — dikontrol milestone."
   },
   "footer": {
     "products": "Produk",

@@ -3,7 +3,7 @@ import type { ServicePackage } from '~/types'
 
 const { t } = useI18n()
 const localePath = useLocalePath()
-const appConfig = useAppConfig()
+const { link } = useWhatsApp()
 
 useSeoMeta({
   title: () => t('services.custom'),
@@ -59,10 +59,7 @@ const steps = [
   { title: 'Build · uji · serah', description: 'Iterasi, UAT, go-live, dan training tim Anda.' }
 ]
 
-const waHref = computed(() => {
-  const n = appConfig.mugiew?.supportWa || '6281280080275'
-  return `https://wa.me/${n}?text=${encodeURIComponent('Halo, saya butuh pesanan khusus website/app')}`
-})
+const waHref = computed(() => link(t('whatsapp.consultCustom')))
 </script>
 
 <template>
@@ -90,7 +87,7 @@ const waHref = computed(() => {
     >
       <template #headline>
         <UBadge color="primary" variant="subtle" size="lg" class="mb-2">
-          Custom quote
+          {{ t('serviceLanding.customQuote') }}
         </UBadge>
       </template>
     </UPageHero>
@@ -104,8 +101,8 @@ const waHref = computed(() => {
     />
 
     <MarketingServiceSteps
-      title="Alur custom project"
-      description="Dari discovery sampai serah terima — dikontrol milestone."
+      :title="t('serviceLanding.customStepsTitle')"
+      :description="t('serviceLanding.customStepsDesc')"
       :steps="steps"
     />
 
@@ -115,12 +112,12 @@ const waHref = computed(() => {
       :loading="status === 'pending'"
       :cta-label="t('cta.consult')"
       :cta-to="waHref"
-      empty-text="Paket custom dinilai per brief. Chat CS untuk estimasi dan timeline."
+      :empty-text="t('serviceLanding.customEmpty')"
     />
 
     <MarketingServiceCta
-      title="Punya brief? Mari kita bangun."
-      description="Jelaskan kebutuhan, kami balas estimasi scope & timeline. Tanpa komitmen di chat awal."
+      :title="t('serviceLanding.customCtaTitle')"
+      :description="t('serviceLanding.customCtaDesc')"
       :primary-label="t('cta.consult')"
       :primary-to="waHref"
       :secondary-label="t('cta.viewTemplates')"

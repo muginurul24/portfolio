@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const { t, locale, locales, setLocale } = useI18n()
 const localePath = useLocalePath()
-const appConfig = useAppConfig()
+const { link } = useWhatsApp()
 
 const serviceItems = computed(() => [
   { label: t('services.export'), to: localePath('/jasa-pembuatan-website-ekspor'), icon: 'i-lucide-globe' },
@@ -60,10 +60,7 @@ const availableLocales = computed(() =>
   (locales.value as Array<{ code: string, name: string }>).filter(l => l.code !== locale.value)
 )
 
-const waHref = computed(() => {
-  const n = appConfig.mugiew?.supportWa || '6281280080275'
-  return `https://wa.me/${n}`
-})
+const waHref = computed(() => link())
 </script>
 
 <template>

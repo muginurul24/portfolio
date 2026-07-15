@@ -3,7 +3,7 @@ import type { ServicePackage } from '~/types'
 
 const { t } = useI18n()
 const localePath = useLocalePath()
-const appConfig = useAppConfig()
+const { link } = useWhatsApp()
 
 useSeoMeta({
   title: () => t('services.ecommerce'),
@@ -59,9 +59,26 @@ const steps = [
   { title: 'Uji & go-live', description: 'Uji checkout end-to-end. Domain/hosting/email bisnis year-1 termasuk.' }
 ]
 
-const waHref = computed(() => {
-  const n = appConfig.mugiew?.supportWa || '6281280080275'
-  return `https://wa.me/${n}?text=${encodeURIComponent('Halo, saya ingin konsultasi toko online')}`
+const waHref = computed(() => link(t('whatsapp.consultEcommerce')))
+
+/** Prefer package API prices for teaser; fall back to known seed tiers. */
+const ecomTeaser = computed(() => {
+  const sorted = [...packages.value].sort((a, b) => a.priceYearlyIdr - b.priceYearlyIdr)
+  const basic = sorted[0]
+  const standard = sorted.find(p => p.id === 'pkg_ecom_standard' || p.slug?.includes('standard')) || sorted[1]
+  if (basic && standard && basic.id !== standard.id) {
+    return t('serviceLanding.ecomPriceTeaser', {
+      basic: `Basic ${formatIdrCompact(basic.priceYearlyIdr)}`,
+      standard: `Standard ${formatIdrCompact(standard.priceYearlyIdr)}`
+    })
+  }
+  if (basic) {
+    return `Basic ${formatIdrCompact(basic.priceYearlyIdr)}`
+  }
+  return t('serviceLanding.ecomPriceTeaser', {
+    basic: 'Basic ~15jt',
+    standard: 'Standard ~25jt'
+  })
 })
 </script>
 
@@ -91,7 +108,7 @@ const waHref = computed(() => {
     >
       <template #headline>
         <UBadge color="primary" variant="subtle" size="lg" class="mb-2">
-          Basic ~15jt · Standard ~25jt
+          {{ ecomTeaser }}
         </UBadge>
       </template>
     </UPageHero>
@@ -105,8 +122,8 @@ const waHref = computed(() => {
     />
 
     <MarketingServiceSteps
-      title="Alur project toko online"
-      description="Dari brief sampai go-live — dikelola tim, bukan DIY semalam."
+      :title="t('serviceLanding.ecomStepsTitle')"
+      :description="t('serviceLanding.ecomStepsDesc')"
       :steps="steps"
     />
 
@@ -120,8 +137,8 @@ const waHref = computed(() => {
     />
 
     <MarketingServiceCta
-      title="Siap jualan online dengan checkout lengkap?"
-      description="Basic ~15jt · Standard ~25jt · Domain/hosting year-1 termasuk. Chat dulu biar pas kebutuhan."
+      :title="t('serviceLanding.ecomCtaTitle')"
+      :description="t('serviceLanding.ecomCtaDesc', { teaser: ecomTeaser })"
       :primary-label="t('cta.consult')"
       :primary-to="waHref"
       :secondary-label="t('cta.buildNow')"
