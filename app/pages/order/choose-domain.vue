@@ -19,6 +19,8 @@ interface DomainTld {
   isActive: boolean
 }
 
+type DomainConfidence = 'soft' | 'hard_unavailable'
+
 const { data: tldsRes, status: tldsStatus } = await useFetch<{ data: DomainTld[] }>(
   '/api/domains/tlds',
   { key: 'domain-tlds' }
@@ -33,6 +35,7 @@ const name = ref(queryName || orderStore.domainName || '')
 const selectedTld = ref(queryTld || orderStore.domainTld || 'com')
 const checking = ref(false)
 const available = ref<boolean | null>(null)
+const confidence = ref<DomainConfidence | null>(null)
 const checkError = ref('')
 
 const templateSlug = computed(() => String(route.query.template || orderStore.templateSlug || ''))
@@ -63,8 +66,11 @@ const displayPrice = computed(() => {
   return row.promoPriceYearlyIdr ?? row.priceYearlyIdr
 })
 
+const canContinue = computed(() => available.value === true && confidence.value === 'soft')
+
 watch([name, selectedTld], () => {
   available.value = null
+  confidence.value = null
   checkError.value = ''
 })
 
@@ -72,28 +78,37 @@ async function checkDomain() {
   if (!cleanName.value || cleanName.value.length < 3) {
     checkError.value = t('order.domainNameInvalid')
     available.value = null
+    confidence.value = null
     return
   }
   checking.value = true
   available.value = null
+  confidence.value = null
   checkError.value = ''
   try {
-    const res = await $fetch<{ domain: string, available: boolean }>(
+    const res = await $fetch<{
+      domain: string
+      available: boolean
+      stub: true
+      confidence: DomainConfidence
+    }>(
       '/api/domains/check',
       { query: { name: cleanName.value, tld: selectedTld.value } }
     )
     available.value = res.available
+    confidence.value = res.confidence
   } catch (e: unknown) {
     const err = e as { data?: { message?: string }, statusMessage?: string }
     checkError.value = err?.data?.message || err?.statusMessage || t('common.error')
     available.value = null
+    confidence.value = null
   } finally {
     checking.value = false
   }
 }
 
 function continueOrder() {
-  if (!available.value || !cleanName.value) return
+  if (!canContinue.value || !cleanName.value) return
   orderStore.setDomain(cleanName.value, selectedTld.value)
   if (templateSlug.value) orderStore.setTemplate(templateSlug.value)
 
@@ -163,16 +178,24 @@ function continueOrder() {
 
         <div v-if="available !== null" class="mt-6">
           <UAlert
-            :color="available ? 'success' : 'error'"
+            v-if="!available"
+            color="error"
             variant="subtle"
-            :title="available
-              ? t('order.domainAvailable', { domain: fullDomain })
-              : `${fullDomain} — ${t('order.domainUnavailable')}`"
-            :icon="available ? 'i-lucide-check-circle' : 'i-lucide-x-circle'"
+            :title="`${fullDomain} — ${t('order.domainHardUnavailable')}`"
+            icon="i-lucide-x-circle"
+          />
+
+          <UAlert
+            v-else-if="confidence === 'soft'"
+            color="warning"
+            variant="subtle"
+            :title="`${fullDomain} — ${t('order.domainSoftAvailable')}`"
+            :description="t('order.domainSoftHint')"
+            icon="i-lucide-info"
           />
 
           <div
-            v-if="available"
+            v-if="canContinue"
             class="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 rounded-xl bg-muted/40 px-4 py-3"
           >
             <p class="text-sm text-muted">
