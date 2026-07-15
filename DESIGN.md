@@ -162,3 +162,21 @@ Hierarchical:
 2. Else this file + `design-system/mugiewdev/MASTER.md` (generated)
 
 When implementing a page, agents MUST read this file first.
+
+## Dev Console / Panel (ops UI)
+
+Dense Soft Glass ops chrome — not marketing spaciousness.
+
+| Rule | Value |
+|------|-------|
+| Density | 8–16px gaps; table `text-sm`; row py ~2.5–3 |
+| Chrome | `glass-panel` sidebar/header; `shadow-soft-sm` cards |
+| Nav | Grouped: Platform / Catalog / Commerce / Content / System |
+| Role badges | DEV=primary, ADMIN=warning, CS=neutral |
+| Type | Plus Jakarta UI; mono for order numbers/slugs/TLD |
+| Motion | 150–250ms; skeletons for lists; honor reduced-motion |
+| Destructive | `DevConfirmModal` only — never browser `confirm()` |
+| Touch | ≥44px targets on mobile menus |
+| Dark | Semantic tokens only; paired glass |
+
+Customer panel uses same glass sidebar; staff may deep-link to `/dev` when allowed.

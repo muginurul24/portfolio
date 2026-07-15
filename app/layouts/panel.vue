@@ -58,7 +58,11 @@ async function logout() {
 
 <template>
   <div class="min-h-dvh flex bg-muted/40">
-    <aside class="hidden md:flex w-64 flex-col border-r border-default bg-default shadow-soft-sm">
+    <a
+      href="#main"
+      class="skip-link"
+    >{{ t('common.skipToContent') }}</a>
+    <aside class="hidden md:flex w-64 flex-col border-r border-default glass-panel shadow-soft-sm">
       <div class="p-4 border-b border-default">
         <NuxtLink :to="localePath('/')" class="inline-flex items-center cursor-pointer" :aria-label="t('brand.name')">
           <AppLogo class="h-6 w-auto" />
@@ -101,14 +105,19 @@ async function logout() {
 
     <div class="flex-1 flex flex-col min-w-0">
       <header class="md:hidden flex items-center justify-between p-4 border-b border-default glass-panel">
-        <NuxtLink :to="localePath('/')" class="inline-flex items-center cursor-pointer" :aria-label="t('brand.name')">
+        <NuxtLink
+          :to="localePath('/')"
+          class="inline-flex items-center cursor-pointer"
+          :aria-label="t('brand.name')"
+        >
           <AppLogo class="h-6 w-auto" />
         </NuxtLink>
         <UButton
           icon="i-lucide-menu"
           color="neutral"
           variant="ghost"
-          aria-label="Menu"
+          class="min-h-11 min-w-11"
+          :aria-label="t('dev.openMenu')"
           @click="mobileOpen = !mobileOpen"
         />
       </header>
@@ -125,7 +134,7 @@ async function logout() {
           color="neutral"
           variant="ghost"
           block
-          class="justify-start"
+          class="justify-start min-h-11"
           @click="mobileOpen = false"
         >
           {{ item.label }}
@@ -135,7 +144,7 @@ async function logout() {
           variant="ghost"
           icon="i-lucide-log-out"
           block
-          class="justify-start"
+          class="justify-start min-h-11"
           @click="logout"
         >
           {{ t('auth.logout') }}
