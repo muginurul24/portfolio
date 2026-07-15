@@ -102,9 +102,10 @@ const navBtn = {
       '!size-11 sm:!size-12 !min-w-11 sm:!min-w-12 !p-0',
       '!rounded-full aspect-square',
       'inline-flex items-center justify-center',
-      'shadow-soft-lg ring-1 ring-default/80',
-      'bg-default/95 backdrop-blur-md text-highlighted',
-      'hover:bg-elevated hover:text-primary',
+      'shadow-soft-md ring-1 ring-default/50',
+      // 50% transparent glass circle
+      '!bg-default/50 backdrop-blur-md text-highlighted',
+      'hover:!bg-default/70 hover:text-primary',
       'disabled:opacity-40'
     ].join(' '),
     leadingIcon: 'size-5 shrink-0'
