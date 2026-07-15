@@ -55,13 +55,13 @@ function formatDate(value?: string) {
       <p v-if="post.date" class="text-sm text-muted mb-3 tabular-nums">
         {{ formatDate(post.date) }}
       </p>
-      <h1 class="text-3xl md:text-4xl font-semibold text-highlighted tracking-tight">
+      <h1 class="text-display text-3xl md:text-4xl text-highlighted">
         {{ post.title }}
       </h1>
-      <p v-if="post.description" class="mt-3 text-lg text-muted">
+      <p v-if="post.description" class="mt-3 text-lg text-muted font-serif">
         {{ post.description }}
       </p>
-      <div class="mt-8 prose prose-slate dark:prose-invert max-w-none">
+      <div class="mt-8 prose prose-slate dark:prose-invert max-w-none font-serif prose-headings:font-display prose-headings:tracking-tight">
         <ContentRenderer :value="post" />
       </div>
     </article>

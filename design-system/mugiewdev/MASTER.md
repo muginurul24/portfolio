@@ -36,17 +36,17 @@
 
 ### Typography
 
-- **Heading Font:** Plus Jakarta Sans
-- **Body Font:** Plus Jakarta Sans
-- **Mood:** enterprise, calm authority, modern, clean, professional, trustworthy
-- **Google Fonts:** [Plus Jakarta Sans](https://fonts.google.com/share?selection.family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800)
-- **Display utility:** `.text-display` — letter-spacing −0.03em, weight 700, line-height 1.1
-- **Section index:** `.section-index` — tabular-nums, −0.04em, weight 700, sky-tinted
+| Role | Family | Utility |
+|------|--------|---------|
+| UI / body | Plus Jakarta Sans | default / `font-sans` |
+| Display | Fraunces | `.text-display`, `.font-display`, `.section-index` |
+| Serif | Source Serif 4 | `.font-serif`, prose editorial |
+| Hand accent | Caveat | `.quote-hand` (quotes only) |
+| Mono | IBM Plex Mono | `font-mono` (domain, order IDs) |
 
-**CSS Import:**
-```css
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
-```
+- **Mood:** enterprise, calm authority, editorial trust, modern
+- **Loaded via:** `@nuxt/fonts` in `nuxt.config.ts` (Google)
+- **Anti:** hand/script on CTAs/nav; display for entire body; mono for paragraphs
 
 ### Spacing Variables
 

@@ -4,13 +4,21 @@
 /*
   MugiewDev Design Tokens
   Style: Enterprise Soft Glass
-  Font: Plus Jakarta Sans
+  Type stack:
+    sans    — Plus Jakarta Sans (UI, body, buttons)
+    display — Fraunces (hero / section titles)
+    serif   — Source Serif 4 (editorial / long-form)
+    hand    — Caveat (quote accents only)
+    mono    — IBM Plex Mono (domain, order IDs)
   See DESIGN.md for full system
 */
 
 @theme static {
   --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
-  --font-display: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Fraunces', 'Source Serif 4', ui-serif, Georgia, serif;
+  --font-serif: 'Source Serif 4', 'Fraunces', ui-serif, Georgia, serif;
+  --font-hand: 'Caveat', 'Segoe Print', cursive;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'Cascadia Code', 'Segoe UI Mono', monospace;
 
   /* Brand — map to Nuxt UI semantic scale (sky as primary/accent) */
   --color-sky-50: #f0f9ff;
@@ -67,10 +75,12 @@
 }
 
 .section-index {
+  font-family: var(--font-display);
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.04em;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1;
+  font-optical-sizing: auto;
   color: color-mix(in oklab, var(--color-sky-600) 22%, transparent);
 }
 
@@ -96,9 +106,36 @@
 }
 
 .text-display {
-  letter-spacing: -0.03em;
-  font-weight: 700;
-  line-height: 1.1;
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+  font-weight: 600;
+  line-height: 1.12;
+  font-optical-sizing: auto;
+}
+
+/* Editorial body (blog, legal long-form) */
+.font-serif,
+.prose-editorial {
+  font-family: var(--font-serif);
+}
+
+/* Soft hand — testimonials / micro flourish only */
+.font-hand,
+.quote-hand {
+  font-family: var(--font-hand);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1.35;
+}
+
+/* Explicit display utility (headings outside .text-display) */
+.font-display {
+  font-family: var(--font-display);
+}
+
+/* Prose plugins may not map font-display — force display on heading utility chain */
+.prose-headings\:font-display :is(h1, h2, h3, h4) {
+  font-family: var(--font-display);
 }
 
 .card-lift {

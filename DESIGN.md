@@ -32,11 +32,18 @@
 
 ## Typography
 
-- **Family:** Plus Jakarta Sans (300–800 OK via `@nuxt/fonts`)
-- **Body base:** 16px, line-height 1.5–1.75
-- **Headings:** semibold/bold, tracking-tight; display via `.text-display` (−0.03em, weight 700, lh 1.1)
-- **Section index:** `.section-index` — tabular-nums, −0.04em tracking, weight 700, sky-tinted translucent
-- **Prices:** `tabular-nums`
+| Role | Family | Use |
+|------|--------|-----|
+| **Sans (UI)** | Plus Jakarta Sans 300–800 | Body, nav, buttons, forms |
+| **Display** | Fraunces 500–700 (+ italic) | Hero titles, section titles (`.text-display`, `.section-index`) |
+| **Serif** | Source Serif 4 400–700 (+ italic) | Blog/tutorial/legal long-form (`.font-serif`) |
+| **Hand** | Caveat 500–700 | Testimonial quotes only (`.quote-hand`) — restrained |
+| **Mono** | IBM Plex Mono 400–600 | Domain input, TLD labels, order numbers (`.font-mono`) |
+
+- **Body base:** 16px, line-height 1.5–1.75 (sans)
+- **Display:** optical sizing, tracking −0.02em, weight 600, lh 1.12
+- **Prices / IDs:** `tabular-nums` + mono where machine-readable
+- **Do not** use hand/script on nav, CTAs, or dense UI
 
 ## Spacing (8pt)
 

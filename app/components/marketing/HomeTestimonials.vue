@@ -113,7 +113,7 @@ const reviews = computed(() => [
 
           <UIcon name="i-lucide-quote" class="size-7 text-primary/25 mb-3" aria-hidden="true" />
 
-          <blockquote class="text-sm md:text-[0.95rem] text-highlighted leading-relaxed flex-1">
+          <blockquote class="quote-hand text-xl md:text-2xl text-highlighted flex-1">
             “{{ review.quote }}”
           </blockquote>
 

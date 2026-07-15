@@ -77,10 +77,10 @@ const orderPath = computed(() => localePath('/order/choose-domain'))
           <UBadge v-if="isPopular(pkg, i)" color="primary" class="mb-3 self-start">
             {{ t('home.domainPackages.popular') }}
           </UBadge>
-          <h3 class="text-xl font-semibold text-highlighted">
+          <h3 class="text-xl font-semibold text-highlighted font-mono tracking-tight">
             .{{ pkg.tld }}
           </h3>
-          <p class="text-2xl md:text-3xl font-semibold tabular-nums mt-3 text-highlighted">
+          <p class="text-2xl md:text-3xl font-semibold tabular-nums mt-3 text-highlighted font-mono">
             {{ formatIdr(displayPrice(pkg)) }}
           </p>
           <p class="text-sm text-muted mt-1">

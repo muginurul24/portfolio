@@ -143,7 +143,16 @@ export default defineNuxtConfig({
 
   fonts: {
     families: [
-      { name: 'Plus Jakarta Sans', provider: 'google', weights: [300, 400, 500, 600, 700] }
+      // UI / body
+      { name: 'Plus Jakarta Sans', provider: 'google', weights: [300, 400, 500, 600, 700, 800] },
+      // Display headlines (hero, section titles)
+      { name: 'Fraunces', provider: 'google', weights: [500, 600, 700], styles: ['normal', 'italic'] },
+      // Editorial serif (blog, quotes support, long-form)
+      { name: 'Source Serif 4', provider: 'google', weights: [400, 500, 600, 700], styles: ['normal', 'italic'] },
+      // Soft hand accent (testimonial quotes only — restrained)
+      { name: 'Caveat', provider: 'google', weights: [500, 600, 700] },
+      // Domain, order numbers, code-ish UI
+      { name: 'IBM Plex Mono', provider: 'google', weights: [400, 500, 600] }
     ]
   },
 
