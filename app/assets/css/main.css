@@ -3,7 +3,7 @@
 
 /*
   MugiewDev Design Tokens
-  Style: Soft Glass Trust (Soft UI Evolution)
+  Style: Enterprise Soft Glass
   Font: Plus Jakarta Sans
   See DESIGN.md for full system
 */
@@ -64,6 +64,18 @@
   background: rgb(15 23 42 / 0.72);
   border-color: rgb(51 65 85 / 0.75);
   box-shadow: 0 1px 0 rgb(255 255 255 / 0.04) inset;
+}
+
+.section-index {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.04em;
+  font-weight: 700;
+  line-height: 1;
+  color: color-mix(in oklab, var(--color-sky-600) 22%, transparent);
+}
+
+.dark .section-index {
+  color: color-mix(in oklab, var(--color-sky-400) 28%, transparent);
 }
 
 .dark {

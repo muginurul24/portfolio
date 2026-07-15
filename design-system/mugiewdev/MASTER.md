@@ -8,10 +8,10 @@
 
 **Project:** MugiewDev  
 **Generated:** 2026-07-15 11:32:28  
-**Updated:** 2026-07-15 — Soft Glass Trust tokens  
+**Updated:** 2026-07-15 — Enterprise Soft Glass  
 **Category:** SaaS (General)  
-**Style:** Soft Glass Trust (Soft UI Evolution)  
-**Design Dials:** Variance 6/10 | Motion 5/10 | Density 4/10  
+**Style:** Enterprise Soft Glass  
+**Design Dials:** Variance 7/10 | Motion 6/10 | Density 5/10  
 
 ---
 
@@ -32,24 +32,25 @@
 | Destructive | `#DC2626` | `--color-destructive` |
 | Ring | `#0F172A` | `--color-ring` |
 
-**Color Notes:** Professional navy headings + sky CTA (`#0369A1`). Soft mesh + glass with **light + dark** pairs (`.dark .bg-mesh-hero`, `.dark .glass-panel`). Prefer Nuxt UI semantic surfaces over raw hex.
+**Color Notes:** Professional navy headings + sky CTA (`#0369A1`). Soft mesh + glass with **light + dark** pairs (`.dark .bg-mesh-hero`, `.dark .glass-panel`, `.dark .section-index`). Prefer Nuxt UI semantic surfaces over raw hex. **No AI purple** gradients or playful candy palettes.
 
 ### Typography
 
 - **Heading Font:** Plus Jakarta Sans
 - **Body Font:** Plus Jakarta Sans
-- **Mood:** friendly, modern, saas, clean, approachable, professional, trustworthy
-- **Google Fonts:** [Plus Jakarta Sans](https://fonts.google.com/share?selection.family=Plus+Jakarta+Sans:wght@300;400;500;600;700)
+- **Mood:** enterprise, calm authority, modern, clean, professional, trustworthy
+- **Google Fonts:** [Plus Jakarta Sans](https://fonts.google.com/share?selection.family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800)
 - **Display utility:** `.text-display` — letter-spacing −0.03em, weight 700, line-height 1.1
+- **Section index:** `.section-index` — tabular-nums, −0.04em, weight 700, sky-tinted
 
 **CSS Import:**
 ```css
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
 ```
 
 ### Spacing Variables
 
-*Density: 4/10 — Slightly airy*
+*Density: 5/10 — Balanced enterprise (complete sections, not sparse)*
 
 | Token | Value | Usage |
 |-------|-------|-------|
@@ -75,12 +76,13 @@ Richer layered soft shadows (tokens in `app/assets/css/main.css`):
 | soft-xl | `--shadow-soft-xl` | Modals, floating WA |
 | glow-sky | `--shadow-glow-sky` | CTA emphasis |
 
-### Mesh & glass
+### Mesh, glass & section index
 
 | Class | Usage |
 |-------|-------|
-| `bg-mesh-hero` | Hero / marketing top bands |
-| `glass-panel` | Frosted sticky header / light panels |
+| `bg-mesh-hero` | Hero / marketing top bands (light + dark) |
+| `glass-panel` | Frosted sticky header / light panels (light + dark) |
+| `section-index` | Numbered section display `01`… (light + dark) |
 | `card-lift` | Hover lift (respects reduced-motion) |
 
 ---
@@ -181,47 +183,53 @@ Nuxt UI card root: `shadow-soft-md ring-1 ring-default/80 bg-default`.
 
 ## Style Guidelines
 
-**Style:** Soft Glass Trust (Soft UI Evolution)
+**Style:** Enterprise Soft Glass
 
-**Keywords:** Soft glass, trust navy, sky CTA, mesh hero, layered soft shadows, light-first, approachable professional
+**Keywords:** Soft glass, trust navy, sky CTA, mesh hero, segment carousel, numbered sections, layered soft shadows, dual theme, calm authority
 
-**Best For:** UMKM website builder, B2B SaaS marketing, trust-led conversion, hybrid product + content
+**Best For:** UMKM website builder, B2B SaaS marketing, trust-led conversion, enterprise-complete landing inventory
 
-**Key Effects:** Richer soft shadows, mesh backgrounds, glass panels (light), card-lift, focus visible, WCAG AA
+**Key Effects:** Soft shadows, mesh backgrounds, glass panels (dual theme), section-index, card-lift, focus visible, WCAG AA
 
 ### Page Pattern
 
-**Pattern Name:** Trust + Authority (Website Builder)
+**Pattern Name:** Trust + Authority + Enterprise Gateway (Website Builder)
 
-- **Conversion Strategy:** Hero domain search + transparent price floor + dual CTA (order / WA).
-- **CTA Placement:** Hero domain search + primary order CTA; sticky header secondary.
-- **Section Order:** 1. Hero (mesh + domain search), 2. Proof strip, 3. Features/services, 4. How it works, 5. Testimonials, 6. Pricing, 7. Final CTA, 8. Footer
+- **Conversion Strategy:** Segment carousel + hero domain search + transparent price floor + dual CTA (order / WA).
+- **CTA Placement:** Hero domain search + carousel dual CTAs + primary order CTA; sticky header secondary.
+- **Section Order:** 0 Promo → 1 Header → 2 Hero mission → 3 HeroCarousel → 4 Trust logos → 5 Templates → 6 Services → 7 Domain packages → 8 Testimonials → 9 Community → 10 Portfolio → 11 Journal → 12 Academy → 13 Final CTA → 14 Footer
 
 ---
 
 ## Motion
 
-**Dials:** Motion 5/10 — restrained micro-interactions
+**Dials:** Motion 6/10 — purposeful micro-interactions + controlled carousel
 
 - Page transition: opacity + 4px translateY, 200ms (CSS, not GSAP overlay by default)
 - Micro: 150–300ms ease
+- Carousel: autoplay optional with pause/controls
 - Respect `prefers-reduced-motion`
-- Max 1–2 animated moments per view
+- Avoid decorative-only motion
 
 ---
 
 ## Anti-Patterns (Do NOT Use)
 
+- ❌ Playful / toy UI, cartoon illustration overload
+- ❌ AI-slop purple / violet gradient defaults
 - ❌ Cheap promo spam (banner stacks, fake urgency countdown)
+- ❌ Missing carousel or sparse home vs full inventory
 - ❌ Emoji icons (use `i-lucide-*` / `i-simple-icons-*`)
 - ❌ Gray-on-gray low contrast
 - ❌ Dark mode by default
+- ❌ Light-only glass/mesh without `.dark` pairs
 - ❌ Excessive animation / GSAP bloat on marketing
 - ❌ Marketplace search-as-primary product framing
 - ❌ Missing `cursor:pointer` on clickables
 - ❌ Layout-shifting hover scales
 - ❌ Instant state changes without transition
 - ❌ Invisible focus states
+- ❌ Wrong component tags (`Marketing*` prefix)
 
 ---
 
@@ -239,4 +247,5 @@ Before delivering any UI code, verify:
 - [ ] Responsive: 375px, 768px, 1024px, 1440px
 - [ ] No content hidden behind fixed navbars
 - [ ] No horizontal scroll on mobile
-- [ ] Mesh/glass used only on light surfaces where intended
+- [ ] Mesh/glass/section-index have light + dark pairs
+- [ ] Home ships full 0–14 section inventory when building `/`
