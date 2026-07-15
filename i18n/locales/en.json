@@ -433,6 +433,10 @@
       "moduleUpdated": "Module updated",
       "moduleDeleted": "Module deleted",
       "confirmDeleteModule": "Delete module {title}?"
+    },
+    "system": {
+      "subtitle": "Service health check and runtime status.",
+      "health": "API health"
     }
   },
   "templates": {
@@ -559,6 +563,7 @@
     "expiresAt": "Expires",
     "profile": "Profile",
     "profileReadonly": "Profile is read-only in v1. Contact support to update data.",
+    "roleReadonlyHint": "Role is set by staff. Customers cannot change it themselves.",
     "role": "Role",
     "roleCustomer": "Customer",
     "roleAdmin": "Admin",

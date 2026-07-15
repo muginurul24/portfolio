@@ -433,6 +433,10 @@
       "moduleUpdated": "Modul diperbarui",
       "moduleDeleted": "Modul dihapus",
       "confirmDeleteModule": "Hapus modul {title}?"
+    },
+    "system": {
+      "subtitle": "Health check layanan dan status runtime.",
+      "health": "Health API"
     }
   },
   "templates": {
@@ -559,6 +563,7 @@
     "expiresAt": "Berlaku hingga",
     "profile": "Profil",
     "profileReadonly": "Profil hanya baca di v1. Hubungi CS untuk ubah data.",
+    "roleReadonlyHint": "Peran ditetapkan admin. Pelanggan tidak bisa mengubah sendiri.",
     "role": "Peran",
     "roleCustomer": "Pelanggan",
     "roleAdmin": "Admin",

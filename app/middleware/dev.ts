@@ -1,6 +1,6 @@
-import { isDev, type UserRole } from '~/utils/roles'
+import { canAccessDevConsole, type UserRole } from '~/utils/roles'
 
-/** Dev-only routes. Admin uses staff routes / canAccessDevConsole on login home. */
+/** Admin/dev console routes (not CS-only). */
 export default defineNuxtRouteMiddleware(async (to) => {
   const { loggedIn, ready, user, fetch } = useUserSession()
   const localePath = useLocalePath()
@@ -17,7 +17,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
   }
 
   const role = (user.value as { role?: UserRole } | null)?.role
-  if (!role || !isDev(role)) {
+  if (!role || !canAccessDevConsole(role)) {
     return navigateTo(localePath('/403'))
   }
 })
