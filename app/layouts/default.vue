@@ -65,11 +65,13 @@ const waHref = computed(() => link())
 
 <template>
   <div class="min-h-dvh flex flex-col bg-default">
-    <UHeader :ui="{ root: 'border-b border-default bg-default/80 backdrop-blur-md' }">
+    <PromoBanner />
+
+    <UHeader :ui="{ root: 'sticky top-0 z-40 border-b border-default/70 glass-panel' }">
       <template #left>
         <NuxtLink :to="localePath('/')" class="flex items-center gap-2 cursor-pointer">
           <AppLogo class="h-6 w-auto shrink-0" />
-          <span class="font-semibold text-highlighted hidden sm:inline">{{ t('brand.name') }}</span>
+          <span class="font-semibold tracking-tight text-highlighted hidden sm:inline">{{ t('brand.name') }}</span>
         </NuxtLink>
       </template>
 
@@ -106,7 +108,7 @@ const waHref = computed(() => link())
           :to="localePath('/order/choose-domain')"
           color="primary"
           trailing-icon="i-lucide-arrow-right"
-          class="hidden sm:inline-flex"
+          class="hidden sm:inline-flex shadow-glow-sky"
         >
           {{ t('nav.order') }}
         </UButton>
@@ -131,8 +133,30 @@ const waHref = computed(() => link())
 
     <UFooter :ui="{ root: 'border-t border-default mt-auto' }">
       <template #top>
-        <UContainer>
-          <UFooterColumns :columns="footerColumns" class="py-10" />
+        <UContainer class="py-12 md:py-16">
+          <div class="grid gap-10 lg:grid-cols-12">
+            <div class="lg:col-span-4 space-y-4">
+              <div class="flex items-center gap-2">
+                <AppLogo class="h-7 w-auto" />
+                <span class="font-semibold text-lg tracking-tight">{{ t('brand.name') }}</span>
+              </div>
+              <p class="text-sm text-muted leading-relaxed max-w-sm">
+                {{ t('footer.blurb') }}
+              </p>
+              <UButton
+                :to="waHref"
+                target="_blank"
+                icon="i-simple-icons-whatsapp"
+                color="success"
+                variant="soft"
+              >
+                {{ t('cta.consult') }}
+              </UButton>
+            </div>
+            <div class="lg:col-span-8">
+              <UFooterColumns :columns="footerColumns" />
+            </div>
+          </div>
         </UContainer>
       </template>
 
@@ -179,7 +203,7 @@ const waHref = computed(() => link())
       icon="i-simple-icons-whatsapp"
       color="success"
       size="xl"
-      class="fixed bottom-6 right-6 z-50 shadow-soft-lg rounded-full cursor-pointer"
+      class="fixed bottom-6 right-6 z-50 shadow-soft-xl rounded-full cursor-pointer"
       :aria-label="t('nav.contact')"
     />
   </div>
