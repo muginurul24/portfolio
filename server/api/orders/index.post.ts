@@ -6,7 +6,8 @@ import { computeOrderTotals } from '../../utils/pricing'
 import {
   assertPayableAmountIdr,
   qrisvipGenerate,
-  sanitizeCustomRef
+  sanitizeCustomRef,
+  sanitizeQrisUsername
 } from '../../utils/qrisvip'
 
 const bodySchema = z.object({
@@ -166,7 +167,8 @@ export default defineEventHandler(async (event) => {
   }
 
   const generated = await qrisvipGenerate({
-    username: customerEmail,
+    // API rejects email (@); use sanitized local-part
+    username: sanitizeQrisUsername(customerEmail, sanitizeCustomRef(orderNumber) || 'guest'),
     amountIdr: totals.totalIdr,
     customRef: sanitizeCustomRef(orderNumber)
   })

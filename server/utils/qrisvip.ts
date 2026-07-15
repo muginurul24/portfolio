@@ -7,6 +7,7 @@ export type QrisGenerateResult =
     trxId: string
     payload: string
     expiredAtSeconds: number | null
+    fee: number | null
     channel: 'qris' | 'va' | 'unknown'
   }
   | { ok: false, error: string }
@@ -28,6 +29,23 @@ export function sanitizeCustomRef(orderNumber: string): string {
     .toUpperCase()
     .replace(/[^A-Z0-9]/g, '')
     .slice(0, 36)
+}
+
+/**
+ * QrisVIP username: alpha / numeric / dash / strip only (no @ email).
+ * Use local-part of email or fallback guest id.
+ */
+export function sanitizeQrisUsername(raw: string, fallback = 'guest'): string {
+  const base = String(raw || '')
+    .trim()
+    .toLowerCase()
+  const local = base.includes('@') ? base.split('@')[0] || base : base
+  const cleaned = local
+    .replace(/[^a-z0-9_-]/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '')
+    .slice(0, 48)
+  return cleaned || fallback
 }
 
 export function isQrisPayload(data: string): boolean {
@@ -82,6 +100,7 @@ export async function qrisvipGenerate(input: {
       data?: string
       trx_id?: string
       expired_at?: number
+      fee?: number
       error?: string
     }>(`${c.baseUrl}/api/generate`, {
       method: 'POST',
@@ -116,6 +135,7 @@ export async function qrisvipGenerate(input: {
       trxId: res.trx_id,
       payload: res.data,
       expiredAtSeconds: res.expired_at ?? null,
+      fee: res.fee != null && Number.isFinite(Number(res.fee)) ? Number(res.fee) : null,
       channel
     }
   } catch (err) {

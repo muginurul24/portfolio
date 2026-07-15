@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import {
   sanitizeCustomRef,
+  sanitizeQrisUsername,
   isQrisPayload,
   assertPayableAmountIdr,
   QRIS_MIN_IDR,
@@ -32,5 +33,11 @@ describe('qrisvip helpers', () => {
   it('assertPayableAmountIdr rejects out of range', () => {
     expect(() => assertPayableAmountIdr(9999)).toThrow(/10\.000/)
     expect(() => assertPayableAmountIdr(10_000_001)).toThrow(/10\.000\.000/)
+  })
+
+  it('sanitizeQrisUsername strips email to local-part', () => {
+    expect(sanitizeQrisUsername('qris.test@mugiewdev.com')).toBe('qris-test')
+    expect(sanitizeQrisUsername('Dewi_Fork')).toBe('dewi_fork')
+    expect(sanitizeQrisUsername('@@@')).toBe('guest')
   })
 })
