@@ -8,9 +8,13 @@ const props = withDefaults(defineProps<{
   secondaryLabel?: string
   secondaryTo?: string
   secondaryExternal?: boolean
+  /** Maps to inquiries.productInterest + form source context */
+  service?: string
+  showInquiryForm?: boolean
 }>(), {
   primaryExternal: false,
-  secondaryExternal: false
+  secondaryExternal: false,
+  showInquiryForm: true
 })
 
 const { t } = useI18n()
@@ -50,6 +54,10 @@ const secondary = computed(() => {
     icon: external && String(to).includes('wa.me') ? 'i-simple-icons-whatsapp' : undefined
   }
 })
+
+const inquirySource = computed(() =>
+  props.service ? `service:${props.service}` : 'service-landing'
+)
 </script>
 
 <template>
@@ -84,6 +92,16 @@ const secondary = computed(() => {
           }
         ]"
       />
+
+      <div
+        v-if="showInquiryForm"
+        class="mt-8 max-w-2xl mx-auto"
+      >
+        <InquiryForm
+          :service="service"
+          :source="inquirySource"
+        />
+      </div>
     </UContainer>
   </section>
 </template>

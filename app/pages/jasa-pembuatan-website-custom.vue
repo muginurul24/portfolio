@@ -126,6 +126,7 @@ const waHref = computed(() => link(t('whatsapp.consultCustom')))
     />
 
     <ServiceCta
+      service="custom"
       :title="t('serviceLanding.customCtaTitle')"
       :description="t('serviceLanding.customCtaDesc')"
       :primary-label="t('cta.consult')"

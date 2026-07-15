@@ -638,5 +638,29 @@
     "statusSuspended": "Suspended",
     "payNow": "Pay now",
     "orderDetail": "Action"
+  },
+  "inquiry": {
+    "title": "Leave a message — we reply fast",
+    "subtitle": "Short form. CS will contact you by email/WhatsApp. No spam, no commitment.",
+    "name": "Name",
+    "namePlaceholder": "Your full name",
+    "email": "Email",
+    "emailPlaceholder": "name@business.com",
+    "phone": "WhatsApp",
+    "phonePlaceholder": "+62…",
+    "phoneHint": "Optional, but speeds up replies",
+    "message": "Message",
+    "messagePlaceholder": "Tell us what you need (business type, goals, deadline)…",
+    "submit": "Send Inquiry",
+    "privacyNote": "Data is only used to reply to your inquiry. Not sold to third parties.",
+    "successTitle": "Inquiry sent",
+    "successDesc": "Our CS team will contact you. Or chat on WhatsApp now for a faster reply.",
+    "chatWa": "Chat WhatsApp",
+    "sendAnother": "Send another",
+    "waPrefill": "Hi MugiewDev, I'm {name}. I'm inquiring about {service}.",
+    "serviceGeneric": "website",
+    "errorValidation": "Check the form: name min 2 chars, valid email, message min 10 chars.",
+    "errorRateLimit": "Too many submissions. Wait a few minutes, then try again.",
+    "errorGeneric": "Could not send inquiry. Check your connection, retry, or chat on WhatsApp."
   }
 }

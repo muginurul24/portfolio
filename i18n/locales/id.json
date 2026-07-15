@@ -638,5 +638,29 @@
     "statusSuspended": "Ditangguhkan",
     "payNow": "Bayar sekarang",
     "orderDetail": "Aksi"
+  },
+  "inquiry": {
+    "title": "Tinggalkan pesan — kami balas cepat",
+    "subtitle": "Isi form singkat. Tim CS hubungi lewat email/WA. Tanpa spam, tanpa komitmen.",
+    "name": "Nama",
+    "namePlaceholder": "Nama lengkap Anda",
+    "email": "Email",
+    "emailPlaceholder": "nama@bisnis.com",
+    "phone": "WhatsApp",
+    "phonePlaceholder": "08xxxxxxxxxx",
+    "phoneHint": "Opsional, tapi mempercepat balasan",
+    "message": "Pesan",
+    "messagePlaceholder": "Ceritakan kebutuhan website Anda (jenis bisnis, target, deadline)…",
+    "submit": "Kirim Inquiry",
+    "privacyNote": "Data hanya dipakai untuk balas inquiry. Tidak dijual ke pihak ketiga.",
+    "successTitle": "Inquiry terkirim",
+    "successDesc": "Tim CS akan hubungi Anda. Atau chat WA sekarang biar lebih cepat.",
+    "chatWa": "Chat WhatsApp",
+    "sendAnother": "Kirim lagi",
+    "waPrefill": "Halo MugiewDev, saya {name}. Saya inquiry layanan {service}.",
+    "serviceGeneric": "website",
+    "errorValidation": "Cek form: nama min 2 karakter, email valid, pesan min 10 karakter.",
+    "errorRateLimit": "Terlalu banyak kiriman. Tunggu beberapa menit, lalu coba lagi.",
+    "errorGeneric": "Gagal kirim inquiry. Cek koneksi, lalu coba lagi atau chat WA."
   }
 }

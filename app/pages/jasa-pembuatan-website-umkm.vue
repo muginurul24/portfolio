@@ -138,6 +138,7 @@ const priceFrom = computed(() => {
     />
 
     <ServiceCta
+      service="umkm"
       :title="t('serviceLanding.umkmCtaTitle')"
       :description="t('serviceLanding.umkmCtaDesc', {
         code: appConfig.mugiew?.promoCode || 'WEBSITEJUARA',

@@ -147,6 +147,7 @@ const ecomTeaser = computed(() => {
     />
 
     <ServiceCta
+      service="ecommerce"
       :title="t('serviceLanding.ecomCtaTitle')"
       :description="t('serviceLanding.ecomCtaDesc', { teaser: ecomTeaser })"
       :primary-label="t('cta.consult')"

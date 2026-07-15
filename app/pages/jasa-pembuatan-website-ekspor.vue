@@ -136,6 +136,7 @@ const priceFrom = computed(() => {
     />
 
     <ServiceCta
+      service="export"
       :title="t('serviceLanding.exportCtaTitle')"
       :description="t('serviceLanding.exportCtaDesc', {
         code: appConfig.mugiew?.promoCode || 'WEBSITEJUARA',
