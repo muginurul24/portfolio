@@ -14,30 +14,34 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <UPageSection
-    :title="title || t('serviceLanding.stepsTitle')"
-    :description="description || t('serviceLanding.stepsDesc')"
-  >
-    <div class="grid gap-6 md:grid-cols-3">
-      <UCard
-        v-for="(step, i) in steps"
-        :key="step.title"
-        :ui="{ root: 'shadow-soft-md' }"
-      >
-        <div class="flex items-start gap-4">
-          <div class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary font-semibold tabular-nums">
+  <section class="section-y bg-default">
+    <UContainer>
+      <SectionHeading
+        :title="title || t('serviceLanding.stepsTitle')"
+        :description="description || t('serviceLanding.stepsDesc')"
+      />
+      <div class="relative grid gap-6 md:grid-cols-3">
+        <div
+          class="pointer-events-none absolute top-12 left-[16%] right-[16%] hidden h-px border-t border-dashed border-primary/25 md:block"
+          aria-hidden="true"
+        />
+        <UCard
+          v-for="(step, i) in steps"
+          :key="step.title"
+          class="card-lift relative h-full"
+          :ui="{ root: 'shadow-soft-md', body: 'p-6 md:p-8' }"
+        >
+          <p class="text-display text-5xl md:text-6xl text-primary/20 tabular-nums mb-4">
             {{ String(i + 1).padStart(2, '0') }}
-          </div>
-          <div>
-            <h3 class="font-semibold text-highlighted">
-              {{ step.title }}
-            </h3>
-            <p class="mt-1 text-sm text-muted">
-              {{ step.description }}
-            </p>
-          </div>
-        </div>
-      </UCard>
-    </div>
-  </UPageSection>
+          </p>
+          <h3 class="text-lg font-semibold text-highlighted">
+            {{ step.title }}
+          </h3>
+          <p class="mt-2 text-sm text-muted leading-relaxed">
+            {{ step.description }}
+          </p>
+        </UCard>
+      </div>
+    </UContainer>
+  </section>
 </template>
