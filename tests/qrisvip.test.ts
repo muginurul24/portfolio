@@ -35,6 +35,20 @@ describe('qrisvip helpers', () => {
     expect(() => assertPayableAmountIdr(10_000_001)).toThrow(/10\.000\.000/)
   })
 
+  it('assertPayableAmountIdr rejects non-finite and below min', () => {
+    expect(() => assertPayableAmountIdr(NaN)).toThrow(/10\.000/)
+    expect(() => assertPayableAmountIdr(Number.POSITIVE_INFINITY)).toThrow(/10\.000/)
+    expect(() => assertPayableAmountIdr(0)).toThrow(/10\.000/)
+    expect(() => assertPayableAmountIdr(-1)).toThrow(/10\.000/)
+  })
+
+  it('assertPayableAmountIdr bounds match QRIS_MIN/MAX constants', () => {
+    expect(QRIS_MIN_IDR).toBe(10_000)
+    expect(QRIS_MAX_IDR).toBe(10_000_000)
+    expect(() => assertPayableAmountIdr(QRIS_MIN_IDR - 1)).toThrow()
+    expect(() => assertPayableAmountIdr(QRIS_MAX_IDR + 1)).toThrow()
+  })
+
   it('sanitizeQrisUsername strips email to local-part', () => {
     expect(sanitizeQrisUsername('qris.test@mugiewdev.com')).toBe('qris-test')
     expect(sanitizeQrisUsername('Dewi_Fork')).toBe('dewi_fork')
