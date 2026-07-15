@@ -2,11 +2,14 @@
  * Seed initial catalog data.
  * Run after `pnpm db:push`:
  *   pnpm exec tsx scripts/seed.ts
+ *
+ * Password hashes use @adonisjs/hash Scrypt (same as nuxt-auth-utils).
  */
 import Database from 'better-sqlite3'
 import { drizzle } from 'drizzle-orm/better-sqlite3'
-import { mkdirSync } from 'node:fs'
-import { dirname } from 'node:path'
+import { mkdirSync, realpathSync, existsSync } from 'node:fs'
+import { dirname, join } from 'node:path'
+import { pathToFileURL } from 'node:url'
 import * as schema from '../server/database/schema'
 
 const path = process.env.NUXT_DATABASE_URL?.replace('file:', '') || './.data/mugiew.sqlite'
@@ -18,7 +21,53 @@ const db = drizzle(sqlite, { schema })
 
 const now = new Date()
 
+/**
+ * Match nuxt-auth-utils `hashPassword` (Adonis Scrypt PHC).
+ * @adonisjs/hash lives next to nuxt-auth-utils under pnpm, not always hoisted.
+ */
+async function makePasswordHash(password: string): Promise<string> {
+  const authLink = join(process.cwd(), 'node_modules', 'nuxt-auth-utils')
+  const authReal = realpathSync(authLink)
+  // .../nuxt-auth-utils@x/node_modules/nuxt-auth-utils → sibling @adonisjs/hash
+  const hashRoot = join(dirname(authReal), '@adonisjs', 'hash')
+  if (!existsSync(join(hashRoot, 'package.json'))) {
+    throw new Error(`@adonisjs/hash not found beside nuxt-auth-utils at ${hashRoot}`)
+  }
+
+  const { Hash } = await import(pathToFileURL(join(hashRoot, 'build', 'index.js')).href)
+  const { Scrypt } = await import(
+    pathToFileURL(join(hashRoot, 'build', 'src', 'drivers', 'scrypt.js')).href
+  )
+
+  const hasher = new Hash(new Scrypt({}))
+  return hasher.make(password)
+}
+
 async function main() {
+  const [adminHash, demoHash] = await Promise.all([
+    makePasswordHash('Admin123!'),
+    makePasswordHash('Demo1234!')
+  ])
+
+  await db.insert(schema.users).values([
+    {
+      id: 'user_admin',
+      email: 'admin@mugiewdev.com',
+      name: 'Admin Mugiew',
+      role: 'admin',
+      passwordHash: adminHash,
+      phone: '6281280080275'
+    },
+    {
+      id: 'user_demo',
+      email: 'demo@mugiewdev.com',
+      name: 'Demo Customer',
+      role: 'customer',
+      passwordHash: demoHash,
+      phone: '6281234567890'
+    }
+  ]).onConflictDoNothing()
+
   await db.insert(schema.promoCodes).values({
     id: 'promo_websitejuara',
     code: 'WEBSITEJUARA',
@@ -45,6 +94,15 @@ async function main() {
       termYears: 1
     },
     {
+      id: 'pkg_export_2y',
+      slug: 'website-ekspor-2y',
+      name: 'Website Ekspor 2 Tahun',
+      serviceType: 'export',
+      priceYearlyIdr: 1_247_000, // yearly unit; termYears=2 applied at order time
+      features: ['Domain', 'Hosting unlimited', 'SSL', 'Email bisnis', 'Komunitas'],
+      termYears: 2
+    },
+    {
       id: 'pkg_umkm_1y',
       slug: 'website-umkm-1y',
       name: 'Website UMKM 1 Tahun',
@@ -61,12 +119,21 @@ async function main() {
       priceYearlyIdr: 15_000_000,
       features: ['≤300 SKU', 'Cart', 'Payment gateway', 'Shipping', 'Admin'],
       termYears: 1
+    },
+    {
+      id: 'pkg_ecom_standard',
+      slug: 'toko-online-standard',
+      name: 'Toko Online Standard',
+      serviceType: 'ecommerce',
+      priceYearlyIdr: 25_000_000,
+      features: ['≤1000 SKU', 'Loyalty', 'Multi-warehouse', 'Wholesale'],
+      termYears: 1
     }
   ]).onConflictDoNothing()
 
   const tpls = [
     ['coconut-briquettes', 'Coconut Briquettes Export', 'export'],
-    ['spice-exporter', 'Spice Exporter Pro', 'export'],
+    ['spice-border', 'Spice Exporter Pro', 'export'],
     ['seafood-export', 'Seafood Export', 'export'],
     ['furniture-rattan', 'Furniture & Rotan', 'export'],
     ['umkm-local', 'UMKM Lokal SEO', 'umkm'],
