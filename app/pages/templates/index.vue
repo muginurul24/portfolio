@@ -119,7 +119,7 @@ function resetFilters() {
                 color="primary"
                 class="flex-1 min-w-[7rem]"
               >
-                {{ t('cta.buildNow') }}
+                {{ t('templates.select') }}
               </UButton>
               <UButton
                 :to="localePath(`/templates/${tpl.slug}`)"
