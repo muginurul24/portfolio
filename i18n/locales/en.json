@@ -523,12 +523,22 @@
     "statusLabel": "Status",
     "payTitle": "Pay with QRIS",
     "paySubtitle": "Scan with any bank or e-wallet app. Settlement runs through QrisVIP.",
+    "payEyebrow": "QRIS payment",
     "orderNumber": "Order no.",
     "expiresAt": "Expires at",
     "scanHint": "Open your payment app → choose QRIS → scan the code above.",
     "iAlreadyPaid": "I already paid",
     "qrisMissingTitle": "QRIS not available",
-    "qrisMissingDesc": "Order is saved but QR generation failed. Contact support with your order number, or place the order again."
+    "qrisMissingDesc": "Order is saved but QR generation failed. Contact support with your order number, or place the order again.",
+    "payTipsTitle": "How to pay",
+    "payTip1": "Open e-wallet or m-banking → choose pay with QRIS",
+    "payTip2": "Scan the code on this screen (not a blurry screenshot)",
+    "payTip3": "Keep this page open until payment shows as paid",
+    "countdownLabel": "Valid until",
+    "countdownExpired": "QRIS expired",
+    "countdownExpiredDesc": "Place a new order or contact support on WhatsApp.",
+    "payHelpWa": "Need help paying?",
+    "pollingHint": "We check payment status every 5 seconds"
   },
   "auth": {
     "login": "Log in",

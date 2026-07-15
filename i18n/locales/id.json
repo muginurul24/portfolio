@@ -523,12 +523,22 @@
     "statusLabel": "Status",
     "payTitle": "Bayar dengan QRIS",
     "paySubtitle": "Scan QR pakai aplikasi bank atau e-wallet apa pun. Pembayaran diproses lewat QrisVIP.",
+    "payEyebrow": "Pembayaran QRIS",
     "orderNumber": "No. pesanan",
     "expiresAt": "Berlaku hingga",
     "scanHint": "Buka aplikasi pembayaran → pilih QRIS → scan kode di atas.",
     "iAlreadyPaid": "Saya sudah bayar",
     "qrisMissingTitle": "QRIS belum tersedia",
-    "qrisMissingDesc": "Pesanan tercatat, tetapi QR gagal digenerate. Hubungi CS dengan nomor pesanan, atau coba buat pesanan lagi."
+    "qrisMissingDesc": "Pesanan tercatat, tetapi QR gagal digenerate. Hubungi CS dengan nomor pesanan, atau coba buat pesanan lagi.",
+    "payTipsTitle": "Cara bayar",
+    "payTip1": "Buka e-wallet atau m-banking → pilih bayar QRIS",
+    "payTip2": "Scan kode di layar ini (bukan screenshot buram)",
+    "payTip3": "Jangan tutup halaman sampai status terbayar",
+    "countdownLabel": "Berlaku hingga",
+    "countdownExpired": "QRIS kedaluwarsa",
+    "countdownExpiredDesc": "Buat order baru atau hubungi CS via WhatsApp.",
+    "payHelpWa": "Butuh bantuan bayar?",
+    "pollingHint": "Kami cek status otomatis tiap 5 detik"
   },
   "auth": {
     "login": "Masuk",
