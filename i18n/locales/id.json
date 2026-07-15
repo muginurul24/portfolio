@@ -119,6 +119,27 @@
       "ecomBadge": "Toko Online",
       "ecomTitle": "Jualan online dengan checkout lengkap.",
       "ecomDesc": "Katalog, keranjang, VA/QRIS/e-wallet. Domain & hosting tahun pertama termasuk."
+    },
+    "trust": {
+      "eyebrow": "Kepercayaan bisnis",
+      "ssl": "SSL gratis",
+      "xendit": "Bayar via Xendit",
+      "responsive": "Mobile responsive",
+      "seo": "SEO siap pakai",
+      "hosting": "Hosting unlimited",
+      "support": "Support cepat"
+    },
+    "domainPackages": {
+      "eyebrow": "Domain",
+      "title": "Paket domain + hosting + SSL",
+      "description": "Pilih ekstensi domain favorit. Hosting unlimited dan SSL ikut dalam paket.",
+      "popular": "Paling laris",
+      "includeDomain": "Domain 1 tahun",
+      "includeHosting": "Hosting unlimited",
+      "includeSsl": "SSL gratis",
+      "cta": "Cari Domain",
+      "viewAllTlds": "Lihat semua ekstensi domain",
+      "empty": "Daftar domain belum tersedia. Hubungi CS untuk penawaran."
     }
   },
   "serviceLanding": {

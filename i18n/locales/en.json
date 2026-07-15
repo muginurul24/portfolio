@@ -119,6 +119,27 @@
       "ecomBadge": "Online Store",
       "ecomTitle": "Sell online with full checkout.",
       "ecomDesc": "Catalog, cart, VA/QRIS/e-wallet. Year-one domain & hosting included."
+    },
+    "trust": {
+      "eyebrow": "Business trust",
+      "ssl": "Free SSL",
+      "xendit": "Pay with Xendit",
+      "responsive": "Mobile responsive",
+      "seo": "SEO-ready",
+      "hosting": "Unlimited hosting",
+      "support": "Fast support"
+    },
+    "domainPackages": {
+      "eyebrow": "Domain",
+      "title": "Domain + hosting + SSL packages",
+      "description": "Pick your preferred TLD. Unlimited hosting and SSL included in the package.",
+      "popular": "Most popular",
+      "includeDomain": "1-year domain",
+      "includeHosting": "Unlimited hosting",
+      "includeSsl": "Free SSL",
+      "cta": "Search Domain",
+      "viewAllTlds": "View all domain extensions",
+      "empty": "Domain list unavailable. Contact support for a quote."
     }
   },
   "serviceLanding": {
