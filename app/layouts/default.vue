@@ -42,7 +42,19 @@ const navItems = computed(() => [
 
 const year = new Date().getFullYear()
 
-const footerColumns = computed(() => [
+interface FooterLink {
+  label: string
+  to: string
+  icon?: string
+  target?: '_blank'
+}
+
+interface FooterColumn {
+  label: string
+  children: FooterLink[]
+}
+
+const footerColumns = computed((): FooterColumn[] => [
   {
     label: t('footer.products'),
     children: [
@@ -170,16 +182,24 @@ const waHref = computed(() => link())
       <slot />
     </UMain>
 
-    <UFooter :ui="{ root: 'border-t border-default/70 mt-auto bg-default' }">
+    <UFooter
+      :ui="{
+        root: 'border-t border-default/70 mt-auto bg-default',
+        top: 'py-0',
+        bottom: 'border-t border-default/60',
+        container: 'max-w-[90rem] mx-auto w-full px-4 sm:px-6 lg:px-10 xl:px-12 py-6 lg:py-5 lg:flex lg:items-center lg:justify-between lg:gap-x-6'
+      }"
+    >
       <template #top>
-        <UContainer class="py-12 md:py-16">
-          <div class="grid gap-10 lg:grid-cols-12">
-            <div class="lg:col-span-4 space-y-4">
+        <!-- Wider than default UContainer (7xl) so legal/contact never ellipsis -->
+        <div class="max-w-[90rem] mx-auto w-full px-4 sm:px-6 lg:px-10 xl:px-12 py-12 md:py-16 lg:py-20">
+          <div class="grid gap-12 lg:grid-cols-12 lg:gap-x-10 xl:gap-x-14">
+            <div class="lg:col-span-3 space-y-4 min-w-0">
               <div class="flex items-center gap-2">
-                <AppLogo class="h-7 w-auto" />
+                <AppLogo class="h-7 w-auto shrink-0" />
                 <span class="font-semibold text-lg tracking-tight text-highlighted">{{ t('brand.name') }}</span>
               </div>
-              <p class="text-sm text-muted leading-relaxed max-w-sm">
+              <p class="text-sm text-muted leading-relaxed">
                 {{ t('footer.blurb') }}
               </p>
               <div class="flex flex-wrap items-center gap-2">
@@ -192,26 +212,51 @@ const waHref = computed(() => link())
                 >
                   {{ t('cta.consult') }}
                 </UButton>
-                <UButton
-                  :to="`mailto:${supportEmail}`"
-                  color="neutral"
-                  variant="ghost"
-                  icon="i-lucide-mail"
-                  class="text-muted"
-                >
-                  {{ supportEmail }}
-                </UButton>
               </div>
             </div>
-            <div class="lg:col-span-8">
-              <UFooterColumns :columns="footerColumns" />
+
+            <div class="lg:col-span-9 min-w-0">
+              <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-10 xl:gap-8">
+                <div
+                  v-for="col in footerColumns"
+                  :key="col.label"
+                  class="min-w-0"
+                >
+                  <p class="text-sm font-semibold text-highlighted tracking-tight">
+                    {{ col.label }}
+                  </p>
+                  <ul class="mt-5 space-y-3.5">
+                    <li
+                      v-for="(item, i) in col.children"
+                      :key="`${col.label}-${i}`"
+                      class="min-w-0"
+                    >
+                      <NuxtLink
+                        :to="item.to"
+                        :target="item.target"
+                        :external="Boolean(item.target === '_blank' || (typeof item.to === 'string' && item.to.startsWith('mailto:')))"
+                        class="group inline-flex items-start gap-2 text-sm text-muted hover:text-default transition-colors cursor-pointer max-w-full"
+                      >
+                        <UIcon
+                          v-if="item.icon"
+                          :name="item.icon"
+                          class="size-4 shrink-0 mt-0.5 text-muted group-hover:text-primary"
+                        />
+                        <span class="min-w-0 whitespace-normal break-words leading-snug">
+                          {{ item.label }}
+                        </span>
+                      </NuxtLink>
+                    </li>
+                  </ul>
+                </div>
+              </div>
             </div>
           </div>
-        </UContainer>
+        </div>
       </template>
 
       <template #left>
-        <p class="text-sm text-muted">
+        <p class="text-sm text-muted text-center lg:text-start">
           {{ t('footer.copyright', { year }) }}
         </p>
       </template>
