@@ -72,9 +72,14 @@
   "auth": {
     "login": "Masuk",
     "logout": "Keluar",
+    "register": "Daftar",
     "email": "Email",
     "password": "Kata sandi",
-    "forgotPassword": "Lupa kata sandi?"
+    "name": "Nama lengkap",
+    "phone": "WhatsApp",
+    "forgotPassword": "Lupa kata sandi?",
+    "haveAccount": "Sudah punya akun?",
+    "noAccount": "Belum punya akun?"
   },
   "panel": {
     "dashboard": "Dasbor",

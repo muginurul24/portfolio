@@ -72,9 +72,14 @@
   "auth": {
     "login": "Log in",
     "logout": "Log out",
+    "register": "Sign up",
     "email": "Email",
     "password": "Password",
-    "forgotPassword": "Forgot password?"
+    "name": "Full name",
+    "phone": "WhatsApp",
+    "forgotPassword": "Forgot password?",
+    "haveAccount": "Already have an account?",
+    "noAccount": "Don't have an account?"
   },
   "panel": {
     "dashboard": "Dashboard",

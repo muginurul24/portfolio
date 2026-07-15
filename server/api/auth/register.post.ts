@@ -1,0 +1,42 @@
+import { z } from 'zod'
+import { eq } from 'drizzle-orm'
+import { users } from '../../database/schema'
+import { createId } from '../../utils/id'
+
+const bodySchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(8).max(128),
+  name: z.string().min(2).max(120),
+  phone: z.string().min(8).max(20).optional()
+})
+
+export default defineEventHandler(async (event) => {
+  const body = await readValidatedBody(event, bodySchema.parse)
+  const db = useDb()
+  const email = body.email.toLowerCase().trim()
+
+  const existing = await db.query.users.findFirst({
+    where: eq(users.email, email)
+  })
+  if (existing) {
+    throw createError({ statusCode: 409, statusMessage: 'Email sudah terdaftar' })
+  }
+
+  const passwordHash = await hashPassword(body.password)
+  const id = createId('user')
+
+  await db.insert(users).values({
+    id,
+    email,
+    passwordHash,
+    name: body.name.trim(),
+    phone: body.phone?.trim() || null,
+    role: 'customer'
+  })
+
+  await setUserSession(event, {
+    user: { id, email, name: body.name.trim(), role: 'customer' }
+  })
+
+  return { ok: true }
+})

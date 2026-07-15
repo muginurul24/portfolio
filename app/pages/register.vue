@@ -7,9 +7,11 @@ definePageMeta({
   layout: false
 })
 
-useSeoMeta({ title: () => t('auth.login') })
+useSeoMeta({ title: () => t('auth.register') })
 
+const name = ref('')
 const email = ref('')
+const phone = ref('')
 const password = ref('')
 const error = ref('')
 const loading = ref(false)
@@ -22,9 +24,14 @@ async function onSubmit() {
   error.value = ''
   loading.value = true
   try {
-    await $fetch('/api/auth/login', {
+    await $fetch('/api/auth/register', {
       method: 'POST',
-      body: { email: email.value, password: password.value }
+      body: {
+        name: name.value,
+        email: email.value,
+        phone: phone.value || undefined,
+        password: password.value
+      }
     })
     await refreshSession()
     await navigateTo(localePath('/panel'))
@@ -46,11 +53,22 @@ async function onSubmit() {
           <span class="font-semibold text-lg">MugiewDev</span>
         </NuxtLink>
         <h1 class="mt-4 text-xl font-semibold text-highlighted">
-          {{ t('auth.login') }}
+          {{ t('auth.register') }}
         </h1>
       </div>
 
-      <UForm :state="{ email, password }" class="space-y-4" @submit="onSubmit">
+      <UForm :state="{ name, email, phone, password }" class="space-y-4" @submit="onSubmit">
+        <UFormField :label="t('auth.name')" name="name" required>
+          <UInput
+            v-model="name"
+            type="text"
+            autocomplete="name"
+            size="lg"
+            class="w-full"
+            required
+          />
+        </UFormField>
+
         <UFormField :label="t('auth.email')" name="email" required>
           <UInput
             v-model="email"
@@ -62,11 +80,21 @@ async function onSubmit() {
           />
         </UFormField>
 
+        <UFormField :label="t('auth.phone')" name="phone">
+          <UInput
+            v-model="phone"
+            type="tel"
+            autocomplete="tel"
+            size="lg"
+            class="w-full"
+          />
+        </UFormField>
+
         <UFormField :label="t('auth.password')" name="password" required>
           <UInput
             v-model="password"
             type="password"
-            autocomplete="current-password"
+            autocomplete="new-password"
             size="lg"
             class="w-full"
             required
@@ -89,14 +117,14 @@ async function onSubmit() {
           :loading="loading"
           :disabled="loading"
         >
-          {{ t('auth.login') }}
+          {{ t('auth.register') }}
         </UButton>
       </UForm>
 
       <p class="mt-6 text-center text-sm text-muted">
-        {{ t('auth.noAccount') }}
-        <NuxtLink :to="localePath('/register')" class="text-primary hover:underline cursor-pointer">
-          {{ t('auth.register') }}
+        {{ t('auth.haveAccount') }}
+        <NuxtLink :to="localePath('/login')" class="text-primary hover:underline cursor-pointer">
+          {{ t('auth.login') }}
         </NuxtLink>
       </p>
 
