@@ -3,14 +3,22 @@
 
 /*
   MugiewDev Design Tokens
-  Style: Soft UI Evolution — professional navy + sky CTA
-  Font: Plus Jakarta Sans
+  Style: Enterprise Soft Glass
+  Type stack:
+    sans    — Plus Jakarta Sans (UI, body, buttons)
+    display — Fraunces (hero / section titles)
+    serif   — Source Serif 4 (editorial / long-form)
+    hand    — Caveat (quote accents only)
+    mono    — IBM Plex Mono (domain, order IDs)
   See DESIGN.md for full system
 */
 
 @theme static {
   --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
-  --font-display: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Fraunces', 'Source Serif 4', ui-serif, Georgia, serif;
+  --font-serif: 'Source Serif 4', 'Fraunces', ui-serif, Georgia, serif;
+  --font-hand: 'Caveat', 'Segoe Print', cursive;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'Cascadia Code', 'Segoe UI Mono', monospace;
 
   /* Brand — map to Nuxt UI semantic scale (sky as primary/accent) */
   --color-sky-50: #f0f9ff;
@@ -25,11 +33,151 @@
   --color-sky-900: #0c3d5c;
   --color-sky-950: #082f49;
 
-  /* Soft UI shadows */
-  --shadow-soft-sm: 0 1px 2px rgb(15 23 42 / 0.05);
-  --shadow-soft-md: 0 4px 6px -1px rgb(15 23 42 / 0.08), 0 2px 4px -2px rgb(15 23 42 / 0.06);
-  --shadow-soft-lg: 0 10px 15px -3px rgb(15 23 42 / 0.1), 0 4px 6px -4px rgb(15 23 42 / 0.08);
-  --shadow-soft-xl: 0 20px 25px -5px rgb(15 23 42 / 0.12), 0 8px 10px -6px rgb(15 23 42 / 0.1);
+  /* Soft UI shadows (richer layered depth) */
+  --shadow-soft-sm: 0 1px 2px rgb(15 23 42 / 0.04), 0 1px 1px rgb(15 23 42 / 0.03);
+  --shadow-soft-md: 0 4px 16px -2px rgb(15 23 42 / 0.08), 0 2px 6px -2px rgb(15 23 42 / 0.05);
+  --shadow-soft-lg: 0 12px 32px -8px rgb(15 23 42 / 0.12), 0 4px 12px -4px rgb(15 23 42 / 0.06);
+  --shadow-soft-xl: 0 24px 48px -12px rgb(15 23 42 / 0.16), 0 8px 16px -8px rgb(15 23 42 / 0.08);
+  --shadow-glow-sky: 0 0 0 1px rgb(3 105 161 / 0.12), 0 8px 30px -6px rgb(3 105 161 / 0.35);
+}
+
+/*
+  Soft mesh hero + glass — dual theme (light default, dark full).
+  Prefer semantic Nuxt UI surfaces; only hardcode mesh/glass media.
+*/
+.bg-mesh-hero {
+  background-color: var(--ui-bg, #f8fafc);
+  background-image:
+    radial-gradient(ellipse 80% 60% at 50% -10%, rgb(14 165 233 / 0.18), transparent 55%),
+    radial-gradient(ellipse 50% 40% at 100% 0%, rgb(15 23 42 / 0.06), transparent 50%),
+    radial-gradient(ellipse 40% 30% at 0% 20%, rgb(3 105 161 / 0.08), transparent 45%);
+}
+
+.dark .bg-mesh-hero {
+  background-color: var(--ui-bg, #0b1220);
+  background-image:
+    radial-gradient(ellipse 80% 55% at 50% -10%, rgb(14 165 233 / 0.16), transparent 55%),
+    radial-gradient(ellipse 45% 35% at 100% 10%, rgb(56 189 248 / 0.08), transparent 50%),
+    radial-gradient(ellipse 40% 30% at 0% 30%, rgb(3 105 161 / 0.12), transparent 45%);
+}
+
+.glass-panel {
+  background: rgb(255 255 255 / 0.72);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgb(226 232 240 / 0.8);
+}
+
+.dark .glass-panel {
+  background: rgb(15 23 42 / 0.72);
+  border-color: rgb(51 65 85 / 0.75);
+  box-shadow: 0 1px 0 rgb(255 255 255 / 0.04) inset;
+}
+
+.section-index {
+  font-family: var(--font-display);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.04em;
+  font-weight: 600;
+  line-height: 1;
+  font-optical-sizing: auto;
+  color: color-mix(in oklab, var(--color-sky-600) 22%, transparent);
+}
+
+.dark .section-index {
+  color: color-mix(in oklab, var(--color-sky-400) 28%, transparent);
+}
+
+.dark {
+  --shadow-soft-sm: 0 1px 2px rgb(0 0 0 / 0.35), 0 1px 1px rgb(0 0 0 / 0.25);
+  --shadow-soft-md: 0 4px 16px -2px rgb(0 0 0 / 0.45), 0 2px 6px -2px rgb(0 0 0 / 0.35);
+  --shadow-soft-lg: 0 12px 32px -8px rgb(0 0 0 / 0.55), 0 4px 12px -4px rgb(0 0 0 / 0.4);
+  --shadow-soft-xl: 0 24px 48px -12px rgb(0 0 0 / 0.6), 0 8px 16px -8px rgb(0 0 0 / 0.45);
+  --shadow-glow-sky: 0 0 0 1px rgb(56 189 248 / 0.2), 0 8px 30px -6px rgb(14 165 233 / 0.35);
+}
+
+.section-y {
+  padding-block: 4rem;
+}
+@media (min-width: 768px) {
+  .section-y {
+    padding-block: 5.5rem;
+  }
+}
+
+.text-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+  font-weight: 600;
+  line-height: 1.12;
+  font-optical-sizing: auto;
+}
+
+/* Editorial body (blog, legal long-form) */
+.font-serif,
+.prose-editorial {
+  font-family: var(--font-serif);
+}
+
+/* Soft hand — testimonials / micro flourish only */
+.font-hand,
+.quote-hand {
+  font-family: var(--font-hand);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1.35;
+}
+
+/* Explicit display utility (headings outside .text-display) */
+.font-display {
+  font-family: var(--font-display);
+}
+
+/* Prose plugins may not map font-display — force display on heading utility chain */
+.prose-headings\:font-display :is(h1, h2, h3, h4) {
+  font-family: var(--font-display);
+}
+
+/* Hero carousel stage — soft mask so edges feel continuous */
+.hero-carousel-stage {
+  isolation: isolate;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-carousel-stage * {
+    scroll-behavior: auto !important;
+  }
+}
+
+.card-lift {
+  transition: box-shadow 200ms ease, transform 200ms ease;
+}
+.card-lift:hover {
+  box-shadow: var(--shadow-soft-lg);
+  transform: translateY(-2px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .card-lift,
+  .card-lift:hover {
+    transition: none;
+    transform: none;
+  }
+
+  /* Kill leftover hover lifts / scale / rotate outside .card-lift */
+  .group:hover .group-hover\:translate-x-0\.5,
+  .group:hover .group-hover\:-translate-y-0\.5,
+  .hover\:-translate-y-0\.5:hover,
+  .hover\:translate-y-\[-2px\]:hover {
+    transform: none !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* Page transitions (respect reduced motion) */
@@ -55,6 +203,14 @@
   .layout-leave-active {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
+    transform: none !important;
+  }
+
+  .page-enter-from,
+  .page-leave-to,
+  .layout-enter-from,
+  .layout-leave-to {
+    transform: none !important;
   }
 }
 
@@ -76,7 +232,7 @@
   z-index: 9999;
   padding: 0.75rem 1rem;
   background: var(--color-sky-600);
-  color: white;
+  color: #fff;
   border-radius: 0.5rem;
 }
 

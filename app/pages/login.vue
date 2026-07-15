@@ -1,8 +1,11 @@
 <script setup lang="ts">
+import type { UserRole } from '~/utils/roles'
+import { homeForRole, safeInternalPath } from '~/utils/auth-redirect'
+
 const { t } = useI18n()
 const route = useRoute()
 const localePath = useLocalePath()
-const { loggedIn, fetch: refreshSession } = useUserSession()
+const { loggedIn, user, fetch: refreshSession } = useUserSession()
 
 definePageMeta({
   layout: false
@@ -15,15 +18,14 @@ const password = ref('')
 const error = ref('')
 const loading = ref(false)
 
-/** Only allow same-origin relative paths (open-redirect safe). */
-function safeRedirect(): string {
-  const raw = String(route.query.redirect || '')
-  if (raw.startsWith('/') && !raw.startsWith('//')) return raw
-  return localePath('/panel')
+function destinationForSession(): string {
+  const role = (user.value as { role?: UserRole } | null)?.role
+  const fallback = homeForRole(role, localePath)
+  return safeInternalPath(route.query.redirect, fallback)
 }
 
 if (import.meta.client && loggedIn.value) {
-  await navigateTo(safeRedirect())
+  await navigateTo(destinationForSession())
 }
 
 async function onSubmit() {
@@ -35,7 +37,7 @@ async function onSubmit() {
       body: { email: email.value, password: password.value }
     })
     await refreshSession()
-    await navigateTo(safeRedirect())
+    await navigateTo(destinationForSession())
   } catch (e: unknown) {
     const err = e as { data?: { message?: string }, statusMessage?: string }
     error.value = err?.data?.message || err?.statusMessage || t('common.error')
@@ -49,9 +51,8 @@ async function onSubmit() {
   <div class="min-h-dvh flex items-center justify-center bg-muted/40 p-4">
     <UCard class="w-full max-w-md shadow-soft-lg">
       <div class="text-center mb-6">
-        <NuxtLink :to="localePath('/')" class="inline-flex items-center gap-2 cursor-pointer">
+        <NuxtLink :to="localePath('/')" class="inline-flex items-center cursor-pointer" :aria-label="t('brand.name')">
           <AppLogo class="h-7 w-auto" />
-          <span class="font-semibold text-lg">MugiewDev</span>
         </NuxtLink>
         <h1 class="mt-4 text-xl font-semibold text-highlighted">
           {{ t('auth.login') }}
@@ -103,13 +104,12 @@ async function onSubmit() {
 
       <p class="mt-6 text-center text-sm text-muted">
         {{ t('auth.noAccount') }}
-        <NuxtLink :to="localePath('/register')" class="text-primary hover:underline cursor-pointer">
+        <NuxtLink :to="localePath('/register')" class="text-primary font-medium hover:underline cursor-pointer">
           {{ t('auth.register') }}
         </NuxtLink>
       </p>
-
-      <p class="mt-3 text-center text-sm text-muted">
-        <NuxtLink :to="localePath('/')" class="text-primary hover:underline cursor-pointer">
+      <p class="mt-2 text-center text-sm">
+        <NuxtLink :to="localePath('/')" class="text-muted hover:underline cursor-pointer">
           {{ t('common.back') }}
         </NuxtLink>
       </p>

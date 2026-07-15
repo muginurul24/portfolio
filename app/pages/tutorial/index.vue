@@ -4,7 +4,7 @@ const localePath = useLocalePath()
 
 useSeoMeta({
   title: () => t('nav.tutorial'),
-  description: 'Tutorial kelola website, domain, dan panel MugiewDev — langkah demi langkah.'
+  description: 'Tutorial kelola website, domain, dan panel MugiewDev - langkah demi langkah.'
 })
 
 const { data: tutorials, status } = await useAsyncData('tutorial-list', () =>

@@ -11,11 +11,14 @@ export default defineAppConfig({
     button: {
       defaultVariants: {
         size: 'md'
+      },
+      slots: {
+        base: 'cursor-pointer font-semibold'
       }
     },
     card: {
       slots: {
-        root: 'shadow-soft-md ring-1 ring-default'
+        root: 'shadow-soft-md ring-1 ring-default/80 bg-default'
       }
     }
   },

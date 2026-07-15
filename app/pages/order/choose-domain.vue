@@ -26,8 +26,11 @@ const { data: tldsRes, status: tldsStatus } = await useFetch<{ data: DomainTld[]
 
 const tlds = computed(() => tldsRes.value?.data ?? [])
 
-const name = ref(orderStore.domainName || '')
-const selectedTld = ref(orderStore.domainTld || 'com')
+const queryName = typeof route.query.name === 'string' ? route.query.name : ''
+const queryTld = typeof route.query.tld === 'string' ? route.query.tld : ''
+
+const name = ref(queryName || orderStore.domainName || '')
+const selectedTld = ref(queryTld || orderStore.domainTld || 'com')
 const checking = ref(false)
 const available = ref<boolean | null>(null)
 const checkError = ref('')
@@ -105,101 +108,106 @@ function continueOrder() {
 </script>
 
 <template>
-  <UContainer class="py-10 md:py-16 max-w-3xl">
-    <div class="mb-8">
-      <UBadge color="primary" variant="subtle" class="mb-3">
-        {{ t('order.stepOf', { step: 1, total: 3 }) }}
-      </UBadge>
-      <h1 class="text-3xl font-semibold text-highlighted tracking-tight">
-        {{ t('order.chooseDomain') }}
-      </h1>
-      <p class="mt-2 text-muted">
-        {{ t('order.chooseDomainDesc') }}
-      </p>
-    </div>
+  <div class="bg-mesh-hero min-h-[60vh]">
+    <UContainer class="py-10 md:py-16 max-w-3xl">
+      <OrderStepper :step="1" />
 
-    <UCard :ui="{ root: 'shadow-soft-md' }">
-      <div class="flex flex-col sm:flex-row gap-3">
-        <UInput
-          v-model="name"
-          size="lg"
-          :placeholder="t('order.domainPlaceholder')"
-          class="flex-1"
-          :ui="{ base: 'font-mono' }"
-          @keyup.enter="checkDomain"
-        />
-        <USelect
-          v-model="selectedTld"
-          :items="tlds.map(x => ({ label: `.${x.tld}`, value: x.tld }))"
-          :loading="tldsStatus === 'pending'"
-          size="lg"
-          class="sm:w-36"
-        />
-        <UButton
-          color="primary"
-          size="lg"
-          :loading="checking"
-          :disabled="!name.trim() || checking || tldsStatus === 'pending'"
-          @click="checkDomain"
-        >
-          {{ t('common.search') }}
-        </UButton>
+      <div class="mb-8">
+        <h1 class="text-3xl font-semibold text-highlighted tracking-tight">
+          {{ t('order.chooseDomain') }}
+        </h1>
+        <p class="mt-2 text-muted">
+          {{ t('order.chooseDomainDesc') }}
+        </p>
       </div>
 
-      <UAlert
-        v-if="checkError"
-        color="error"
-        variant="subtle"
-        :title="checkError"
-        icon="i-lucide-alert-circle"
-        class="mt-4"
-      />
-
-      <div v-if="available !== null" class="mt-6">
-        <UAlert
-          :color="available ? 'success' : 'error'"
-          variant="subtle"
-          :title="available
-            ? t('order.domainAvailable', { domain: fullDomain })
-            : t('order.domainUnavailable', { domain: fullDomain })"
-          :icon="available ? 'i-lucide-check-circle' : 'i-lucide-x-circle'"
-        />
-
-        <div
-          v-if="available"
-          class="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
-        >
-          <p class="text-sm text-muted">
-            {{ t('order.domainPriceFrom') }}
-            <span class="font-semibold text-highlighted tabular-nums">
-              {{ formatIdr(displayPrice) }}{{ t('order.perYear') }}
-            </span>
-          </p>
+      <UCard
+        class="glass-panel"
+        :ui="{ root: 'shadow-soft-md ring-1 ring-default/60' }"
+      >
+        <div class="flex flex-col sm:flex-row gap-3">
+          <UInput
+            v-model="name"
+            size="lg"
+            :placeholder="t('order.domainPlaceholder')"
+            class="flex-1"
+            :ui="{ base: 'font-mono' }"
+            @keyup.enter="checkDomain"
+          />
+          <USelect
+            v-model="selectedTld"
+            :items="tlds.map(x => ({ label: `.${x.tld}`, value: x.tld }))"
+            :loading="tldsStatus === 'pending'"
+            size="lg"
+            class="sm:w-36"
+          />
           <UButton
             color="primary"
             size="lg"
-            trailing-icon="i-lucide-arrow-right"
-            @click="continueOrder"
+            :loading="checking"
+            :disabled="!name.trim() || checking || tldsStatus === 'pending'"
+            @click="checkDomain"
           >
-            {{ t('common.continue') }}
+            {{ t('common.search') }}
           </UButton>
         </div>
-      </div>
-    </UCard>
 
-    <div class="mt-8 grid gap-3 sm:grid-cols-3">
-      <UCard
-        v-for="row in tlds.slice(0, 3)"
-        :key="row.tld"
-        :ui="{ root: 'shadow-soft-sm' }"
-      >
-        <p class="font-mono font-semibold">
-          .{{ row.tld }}
-        </p>
-        <p class="text-sm text-muted tabular-nums mt-1">
-          {{ formatIdr(row.promoPriceYearlyIdr ?? row.priceYearlyIdr) }}{{ t('order.perYearShort') }}
-        </p>
+        <UAlert
+          v-if="checkError"
+          color="error"
+          variant="subtle"
+          :title="checkError"
+          icon="i-lucide-alert-circle"
+          class="mt-4"
+        />
+
+        <div v-if="available !== null" class="mt-6">
+          <UAlert
+            :color="available ? 'success' : 'error'"
+            variant="subtle"
+            :title="available
+              ? t('order.domainAvailable', { domain: fullDomain })
+              : `${fullDomain} — ${t('order.domainUnavailable')}`"
+            :icon="available ? 'i-lucide-check-circle' : 'i-lucide-x-circle'"
+          />
+
+          <div
+            v-if="available"
+            class="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 rounded-xl bg-muted/40 px-4 py-3"
+          >
+            <p class="text-sm text-muted">
+              {{ t('order.domainPriceFrom') }}
+              <span class="font-semibold text-highlighted tabular-nums">
+                {{ formatIdr(displayPrice) }}{{ t('order.perYear') }}
+              </span>
+            </p>
+            <UButton
+              color="primary"
+              size="lg"
+              trailing-icon="i-lucide-arrow-right"
+              @click="continueOrder"
+            >
+              {{ t('common.continue') }}
+            </UButton>
+          </div>
+        </div>
       </UCard>
-    </div>
-  </UContainer>
+
+      <div class="mt-8 grid gap-3 sm:grid-cols-3">
+        <UCard
+          v-for="row in tlds.slice(0, 3)"
+          :key="row.tld"
+          class="card-lift"
+          :ui="{ root: 'shadow-soft-sm' }"
+        >
+          <p class="font-mono font-semibold">
+            .{{ row.tld }}
+          </p>
+          <p class="text-sm text-muted tabular-nums mt-1">
+            {{ formatIdr(row.promoPriceYearlyIdr ?? row.priceYearlyIdr) }}{{ t('order.perYearShort') }}
+          </p>
+        </UCard>
+      </div>
+    </UContainer>
+  </div>
 </template>

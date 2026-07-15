@@ -9,14 +9,14 @@ useSeoMeta({
 
 <template>
   <UContainer class="py-10 md:py-16 max-w-3xl">
-    <h1 class="text-3xl md:text-4xl font-semibold text-highlighted tracking-tight">
+    <h1 class="text-display text-3xl md:text-4xl text-highlighted">
       {{ t('footer.terms') }}
     </h1>
-    <p class="mt-3 text-muted">
+    <p class="mt-3 text-muted font-serif">
       Terakhir diperbarui: 15 Juli 2026. Berlaku untuk seluruh layanan MugiewDev.
     </p>
 
-    <div class="mt-10 space-y-8 text-default leading-relaxed">
+    <div class="mt-10 space-y-8 text-default leading-relaxed font-serif prose-headings:font-display">
       <section>
         <h2 class="text-xl font-semibold text-highlighted mb-3">
           1. Layanan
@@ -91,7 +91,7 @@ useSeoMeta({
           7. Batasan tanggung jawab
         </h2>
         <p>
-          Layanan disediakan “sebagaimana adanya”. Kami berupaya menjaga
+          Layanan disediakan "sebagaimana adanya". Kami berupaya menjaga
           uptime wajar, namun tidak menjamin bebas gangguan. Tanggung jawab
           kami terbatas pada nilai biaya layanan yang Anda bayar untuk
           periode terkait, sejauh diizinkan hukum.

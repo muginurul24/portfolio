@@ -1,7 +1,25 @@
 <script setup lang="ts">
 const { t, locale, locales, setLocale } = useI18n()
 const localePath = useLocalePath()
-const { link } = useWhatsApp()
+const config = useRuntimeConfig()
+const { number: waNumber, link } = useWhatsApp()
+const { loggedIn } = useUserSession()
+
+const supportEmail = computed(() => String(config.public.supportEmail || 'support@mugiewdev.com'))
+
+function formatWaDisplay(raw: unknown) {
+  // runtimeConfig / env can be non-string under HMR - coerce first
+  const s = String(raw ?? '').trim()
+  if (!s) return ''
+  const digits = s.replace(/\D/g, '')
+  if (!digits) return s
+  if (digits.startsWith('62') && digits.length >= 11) {
+    return `+62 ${digits.slice(2, 5)}-${digits.slice(5, 9)}-${digits.slice(9)}`
+  }
+  return s.startsWith('+') ? s : `+${digits}`
+}
+
+const waDisplay = computed(() => formatWaDisplay(waNumber.value))
 
 const serviceItems = computed(() => [
   { label: t('services.export'), to: localePath('/jasa-pembuatan-website-ekspor'), icon: 'i-lucide-globe' },
@@ -25,7 +43,19 @@ const navItems = computed(() => [
 
 const year = new Date().getFullYear()
 
-const footerColumns = computed(() => [
+interface FooterLink {
+  label: string
+  to: string
+  icon?: string
+  target?: '_blank'
+}
+
+interface FooterColumn {
+  label: string
+  children: FooterLink[]
+}
+
+const footerColumns = computed((): FooterColumn[] => [
   {
     label: t('footer.products'),
     children: [
@@ -47,6 +77,22 @@ const footerColumns = computed(() => [
     ]
   },
   {
+    label: t('footer.contact'),
+    children: [
+      {
+        label: supportEmail.value,
+        to: `mailto:${supportEmail.value}`,
+        icon: 'i-lucide-mail'
+      },
+      {
+        label: waDisplay.value || String(waNumber.value || ''),
+        to: link(),
+        target: '_blank',
+        icon: 'i-simple-icons-whatsapp'
+      }
+    ]
+  },
+  {
     label: t('footer.legal'),
     children: [
       { label: t('footer.terms'), to: localePath('/legal/syarat-ketentuan') },
@@ -65,11 +111,12 @@ const waHref = computed(() => link())
 
 <template>
   <div class="min-h-dvh flex flex-col bg-default">
-    <UHeader :ui="{ root: 'border-b border-default bg-default/80 backdrop-blur-md' }">
+    <PromoBanner />
+
+    <UHeader :ui="{ root: 'sticky top-0 z-40 border-b border-default/70 glass-panel' }">
       <template #left>
-        <NuxtLink :to="localePath('/')" class="flex items-center gap-2 cursor-pointer">
+        <NuxtLink :to="localePath('/')" class="inline-flex items-center cursor-pointer" :aria-label="t('brand.name')">
           <AppLogo class="h-6 w-auto shrink-0" />
-          <span class="font-semibold text-highlighted hidden sm:inline">{{ t('brand.name') }}</span>
         </NuxtLink>
       </template>
 
@@ -88,12 +135,14 @@ const waHref = computed(() => link())
             color="neutral"
             variant="ghost"
             icon="i-lucide-languages"
-            :aria-label="locale === 'id' ? 'Language' : 'Bahasa'"
+            :aria-label="t('common.switchLanguage')"
             size="sm"
           />
         </UDropdownMenu>
 
+        <AppUserMenu v-if="loggedIn" />
         <UButton
+          v-else
           :to="localePath('/login')"
           color="neutral"
           variant="ghost"
@@ -106,7 +155,7 @@ const waHref = computed(() => link())
           :to="localePath('/order/choose-domain')"
           color="primary"
           trailing-icon="i-lucide-arrow-right"
-          class="hidden sm:inline-flex"
+          class="hidden sm:inline-flex shadow-glow-sky"
         >
           {{ t('nav.order') }}
         </UButton>
@@ -115,10 +164,23 @@ const waHref = computed(() => link())
       <template #body>
         <UNavigationMenu :items="navItems" orientation="vertical" class="lg:hidden" />
         <div class="flex flex-col gap-2 mt-4 lg:hidden">
-          <UButton :to="localePath('/login')" color="neutral" variant="outline" block>
+          <AppUserMenu v-if="loggedIn" mobile />
+          <UButton
+            v-else
+            :to="localePath('/login')"
+            color="neutral"
+            variant="outline"
+            block
+          >
             {{ t('nav.login') }}
           </UButton>
-          <UButton :to="localePath('/order/choose-domain')" color="primary" block>
+          <UButton
+            :to="localePath('/order/choose-domain')"
+            color="primary"
+            trailing-icon="i-lucide-arrow-right"
+            block
+            class="shadow-glow-sky"
+          >
             {{ t('nav.order') }}
           </UButton>
         </div>
@@ -129,15 +191,80 @@ const waHref = computed(() => link())
       <slot />
     </UMain>
 
-    <UFooter :ui="{ root: 'border-t border-default mt-auto' }">
+    <UFooter
+      :ui="{
+        root: 'border-t border-default/70 mt-auto bg-default',
+        top: 'py-0',
+        bottom: 'border-t border-default/60',
+        container: 'max-w-[90rem] mx-auto w-full px-4 sm:px-6 lg:px-10 xl:px-12 py-6 lg:py-5 lg:flex lg:items-center lg:justify-between lg:gap-x-6'
+      }"
+    >
       <template #top>
-        <UContainer>
-          <UFooterColumns :columns="footerColumns" class="py-10" />
-        </UContainer>
+        <!-- Wider than default UContainer (7xl) so legal/contact never ellipsis -->
+        <div class="max-w-[90rem] mx-auto w-full px-4 sm:px-6 lg:px-10 xl:px-12 py-12 md:py-16 lg:py-20">
+          <div class="grid gap-12 lg:grid-cols-12 lg:gap-x-10 xl:gap-x-14">
+            <div class="lg:col-span-3 space-y-4 min-w-0">
+              <NuxtLink :to="localePath('/')" class="inline-flex items-center cursor-pointer w-fit" :aria-label="t('brand.name')">
+                <AppLogo class="h-7 w-auto shrink-0" />
+              </NuxtLink>
+              <p class="text-sm text-muted leading-relaxed">
+                {{ t('footer.blurb') }}
+              </p>
+              <div class="flex flex-wrap items-center gap-2">
+                <UButton
+                  :to="waHref"
+                  target="_blank"
+                  icon="i-simple-icons-whatsapp"
+                  color="success"
+                  variant="soft"
+                >
+                  {{ t('cta.consult') }}
+                </UButton>
+              </div>
+            </div>
+
+            <div class="lg:col-span-9 min-w-0">
+              <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-10 xl:gap-8">
+                <div
+                  v-for="col in footerColumns"
+                  :key="col.label"
+                  class="min-w-0"
+                >
+                  <p class="text-sm font-semibold text-highlighted tracking-tight">
+                    {{ col.label }}
+                  </p>
+                  <ul class="mt-5 space-y-3.5">
+                    <li
+                      v-for="(item, i) in col.children"
+                      :key="`${col.label}-${i}`"
+                      class="min-w-0"
+                    >
+                      <NuxtLink
+                        :to="item.to"
+                        :target="item.target"
+                        :external="Boolean(item.target === '_blank' || (typeof item.to === 'string' && item.to.startsWith('mailto:')))"
+                        class="group inline-flex items-start gap-2 text-sm text-muted hover:text-default transition-colors cursor-pointer max-w-full"
+                      >
+                        <UIcon
+                          v-if="item.icon"
+                          :name="item.icon"
+                          class="size-4 shrink-0 mt-0.5 text-muted group-hover:text-primary"
+                        />
+                        <span class="min-w-0 whitespace-normal break-words leading-snug">
+                          {{ item.label }}
+                        </span>
+                      </NuxtLink>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </template>
 
       <template #left>
-        <p class="text-sm text-muted">
+        <p class="text-sm text-muted text-center lg:text-start">
           {{ t('footer.copyright', { year }) }}
         </p>
       </template>
@@ -150,23 +277,23 @@ const waHref = computed(() => link())
             icon="i-simple-icons-whatsapp"
             color="neutral"
             variant="ghost"
-            aria-label="WhatsApp"
+            :aria-label="t('footer.socialWhatsapp')"
           />
           <UButton
-            to="https://instagram.com"
+            to="https://instagram.com/mugiewdev"
             target="_blank"
             icon="i-simple-icons-instagram"
             color="neutral"
             variant="ghost"
-            aria-label="Instagram"
+            :aria-label="t('footer.socialInstagram')"
           />
           <UButton
-            to="https://linkedin.com"
+            to="https://linkedin.com/company/mugiewdev"
             target="_blank"
             icon="i-simple-icons-linkedin"
             color="neutral"
             variant="ghost"
-            aria-label="LinkedIn"
+            :aria-label="t('footer.socialLinkedin')"
           />
         </div>
       </template>
@@ -179,7 +306,7 @@ const waHref = computed(() => link())
       icon="i-simple-icons-whatsapp"
       color="success"
       size="xl"
-      class="fixed bottom-6 right-6 z-50 shadow-soft-lg rounded-full cursor-pointer"
+      class="fixed bottom-6 right-6 z-50 shadow-soft-xl rounded-full cursor-pointer"
       :aria-label="t('nav.contact')"
     />
   </div>

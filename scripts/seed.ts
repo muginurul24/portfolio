@@ -46,16 +46,16 @@ async function makePasswordHash(password: string): Promise<string> {
 
 async function main() {
   const [adminHash, demoHash] = await Promise.all([
-    makePasswordHash('Admin123!'),
+    makePasswordHash('aa123123'),
     makePasswordHash('Demo1234!')
   ])
 
   await db.insert(schema.users).values([
     {
       id: 'user_admin',
-      email: 'admin@mugiewdev.com',
+      email: 'mugiew@nuxt.dev',
       name: 'Admin Mugiew',
-      role: 'admin',
+      role: 'dev',
       passwordHash: adminHash,
       phone: '6281280080275'
     },

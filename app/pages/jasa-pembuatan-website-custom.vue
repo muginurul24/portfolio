@@ -24,7 +24,7 @@ const features = [
   {
     icon: 'i-lucide-blocks',
     title: 'Sistem bisnis',
-    description: 'ERP ringan, CRM, inventory, booking — sesuai proses internal Anda.'
+    description: 'ERP ringan, CRM, inventory, booking - sesuai proses internal Anda.'
   },
   {
     icon: 'i-lucide-bot',
@@ -64,35 +64,45 @@ const waHref = computed(() => link(t('whatsapp.consultCustom')))
 
 <template>
   <div>
-    <UPageHero
-      :title="t('services.custom')"
-      description="Butuh lebih dari template? ERP, integrasi AI, mobile app, dan sistem pihak ketiga — dikerjakan sesuai brief."
-      :links="[
-        {
-          label: t('cta.consult'),
-          to: waHref,
-          target: '_blank',
-          color: 'primary',
-          size: 'xl',
-          icon: 'i-simple-icons-whatsapp'
-        },
-        {
-          label: t('cta.viewTemplates'),
-          to: localePath('/templates'),
-          color: 'neutral',
-          variant: 'outline',
-          size: 'xl'
-        }
-      ]"
-    >
-      <template #headline>
-        <UBadge color="primary" variant="subtle" size="lg" class="mb-2">
-          {{ t('serviceLanding.customQuote') }}
-        </UBadge>
-      </template>
-    </UPageHero>
+    <section class="bg-mesh-hero border-b border-default">
+      <UContainer class="section-y !pb-12 md:!pb-16">
+        <div class="max-w-3xl text-left space-y-6">
+          <UBadge color="primary" variant="subtle" size="lg">
+            {{ t('serviceLanding.customQuote') }}
+          </UBadge>
 
-    <MarketingServiceProof />
+          <h1 class="text-display text-4xl sm:text-5xl md:text-6xl text-highlighted">
+            {{ t('services.custom') }}
+          </h1>
+
+          <p class="text-lg md:text-xl text-muted leading-relaxed">
+            Butuh lebih dari template? ERP, integrasi AI, mobile app, dan sistem pihak ketiga — dikerjakan sesuai brief.
+          </p>
+
+          <div class="flex flex-wrap gap-3">
+            <UButton
+              :to="waHref"
+              target="_blank"
+              color="primary"
+              size="xl"
+              icon="i-simple-icons-whatsapp"
+            >
+              {{ t('cta.consult') }}
+            </UButton>
+            <UButton
+              :to="localePath('/templates')"
+              color="neutral"
+              variant="outline"
+              size="xl"
+            >
+              {{ t('cta.viewTemplates') }}
+            </UButton>
+          </div>
+        </div>
+      </UContainer>
+    </section>
+
+    <ServiceProof />
 
     <UPageSection
       :title="t('serviceLanding.featuresTitle')"
@@ -100,13 +110,13 @@ const waHref = computed(() => link(t('whatsapp.consultCustom')))
       :features="features"
     />
 
-    <MarketingServiceSteps
+    <ServiceSteps
       :title="t('serviceLanding.customStepsTitle')"
       :description="t('serviceLanding.customStepsDesc')"
       :steps="steps"
     />
 
-    <MarketingServicePricing
+    <ServicePricing
       :packages="packages"
       billing-mode="project"
       :loading="status === 'pending'"
@@ -115,7 +125,7 @@ const waHref = computed(() => link(t('whatsapp.consultCustom')))
       :empty-text="t('serviceLanding.customEmpty')"
     />
 
-    <MarketingServiceCta
+    <ServiceCta
       :title="t('serviceLanding.customCtaTitle')"
       :description="t('serviceLanding.customCtaDesc')"
       :primary-label="t('cta.consult')"

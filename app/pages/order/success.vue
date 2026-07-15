@@ -47,7 +47,7 @@ if (orderId.value) {
       orderNumber.value = data.value.data.orderNumber || data.value.data.id
     }
   } else {
-    // Unauthenticated: never claim paid — neutral pending confirmation only
+    // Unauthenticated: never claim paid - neutral pending confirmation only
     orderStatus.value = null
   }
 }
@@ -86,83 +86,90 @@ const panelHref = computed(() =>
 </script>
 
 <template>
-  <UContainer class="py-10 md:py-16 max-w-xl">
-    <UCard class="shadow-soft-md text-center">
-      <div class="flex justify-center mb-4">
-        <div
-          class="size-14 rounded-full flex items-center justify-center"
-          :class="statusColorClass"
-        >
-          <UIcon :name="statusIcon" class="size-8" />
+  <div class="bg-mesh-hero min-h-[60vh]">
+    <UContainer class="py-10 md:py-16 max-w-3xl">
+      <OrderStepper :step="3" />
+
+      <UCard
+        class="mx-auto max-w-xl text-center glass-panel"
+        :ui="{ root: 'shadow-soft-md ring-1 ring-default/60' }"
+      >
+        <div class="flex justify-center mb-4">
+          <div
+            class="size-14 rounded-full flex items-center justify-center"
+            :class="statusColorClass"
+          >
+            <UIcon :name="statusIcon" class="size-8" />
+          </div>
         </div>
-      </div>
 
-      <h1 class="text-2xl font-semibold text-highlighted tracking-tight">
-        {{ title }}
-      </h1>
-      <p class="mt-2 text-muted">
-        {{ description }}
-      </p>
+        <h1 class="text-2xl font-semibold text-highlighted tracking-tight">
+          {{ title }}
+        </h1>
+        <p class="mt-2 text-muted">
+          {{ description }}
+        </p>
 
-      <div
-        v-if="orderId"
-        class="mt-6 rounded-lg bg-muted/50 px-4 py-3 text-left"
-      >
-        <p class="text-xs text-muted uppercase tracking-wide">
-          {{ t('order.orderId') }}
-        </p>
-        <p class="mt-1 font-mono text-sm font-medium break-all">
-          {{ orderNumber || orderId }}
-        </p>
-        <p
-          v-if="orderStatus"
-          class="mt-2 text-xs text-muted"
+        <div
+          v-if="orderId"
+          class="mt-6 rounded-xl bg-muted/40 px-4 py-3 text-left ring-1 ring-default/50"
         >
-          {{ t('order.statusLabel') }}:
-          <span class="font-medium text-highlighted">{{ orderStatus }}</span>
-        </p>
-        <p
-          v-else-if="isPending"
-          class="mt-2 text-xs text-muted"
-        >
-          {{ t('order.statusLabel') }}:
-          <span class="font-medium text-highlighted">pending_payment</span>
-        </p>
-      </div>
+          <p class="text-xs text-muted uppercase tracking-wide">
+            {{ t('order.orderId') }}
+          </p>
+          <p class="mt-1 font-mono text-sm font-medium break-all">
+            {{ orderNumber || orderId }}
+          </p>
+          <p
+            v-if="orderStatus"
+            class="mt-2 text-xs text-muted"
+          >
+            {{ t('order.statusLabel') }}:
+            <span class="font-medium text-highlighted">{{ orderStatus }}</span>
+          </p>
+          <p
+            v-else-if="isPending"
+            class="mt-2 text-xs text-muted"
+          >
+            {{ t('order.statusLabel') }}:
+            <span class="font-medium text-highlighted">pending_payment</span>
+          </p>
+        </div>
 
-      <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
+        <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
+          <UButton
+            :to="panelHref"
+            color="primary"
+            size="lg"
+            icon="i-lucide-layout-dashboard"
+          >
+            {{ loggedIn ? t('order.goToPanel') : t('auth.login') }}
+          </UButton>
+          <UButton
+            :to="waHref"
+            color="neutral"
+            variant="outline"
+            size="lg"
+            icon="i-lucide-message-circle"
+            target="_blank"
+            rel="noopener"
+            external
+          >
+            {{ t('order.contactSupport') }}
+          </UButton>
+        </div>
+
         <UButton
-          :to="panelHref"
-          color="primary"
-          size="lg"
-          icon="i-lucide-layout-dashboard"
-        >
-          {{ loggedIn ? t('order.goToPanel') : t('auth.login') }}
-        </UButton>
-        <UButton
-          :to="waHref"
+          :to="localePath('/')"
           color="neutral"
-          variant="outline"
-          size="lg"
-          icon="i-lucide-message-circle"
-          target="_blank"
-          rel="noopener"
-          external
+          variant="ghost"
+          size="sm"
+          class="mt-6"
+          icon="i-lucide-home"
         >
-          {{ t('order.contactSupport') }}
+          {{ t('order.backHome') }}
         </UButton>
-      </div>
-
-      <UButton
-        :to="localePath('/')"
-        color="neutral"
-        variant="ghost"
-        size="sm"
-        class="mt-6"
-        icon="i-lucide-home"
-      >
-        {{ t('order.backHome') }}
-      </UButton>
-    </UCard>
-  </UContainer>
+      </UCard>
+    </UContainer>
+  </div>
 </template>

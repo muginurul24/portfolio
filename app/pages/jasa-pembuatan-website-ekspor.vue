@@ -25,7 +25,7 @@ const features = [
   {
     icon: 'i-lucide-globe',
     title: 'Domain + email bisnis',
-    description: 'Domain resmi dan email profesional — kredibel di mata buyer global.'
+    description: 'Domain resmi dan email profesional - kredibel di mata buyer global.'
   },
   {
     icon: 'i-lucide-search',
@@ -40,12 +40,12 @@ const features = [
   {
     icon: 'i-lucide-file-badge',
     title: 'Sertifikasi & legal',
-    description: 'NIB, HACCP, Halal, Organic, Fair Trade — showcase di satu halaman.'
+    description: 'NIB, HACCP, Halal, Organic, Fair Trade - showcase di satu halaman.'
   },
   {
     icon: 'i-lucide-package',
     title: 'Katalog ekspor',
-    description: 'HS code, MOQ, packaging, sample request — data yang buyer cari.'
+    description: 'HS code, MOQ, packaging, sample request - data yang buyer cari.'
   },
   {
     icon: 'i-lucide-inbox',
@@ -77,34 +77,49 @@ const priceFrom = computed(() => {
 
 <template>
   <div>
-    <UPageHero
-      :title="t('services.export')"
-      description="Buyer global riset supplier lewat Google. Tampilkan HS code, MOQ, sertifikasi, dan form inquiry yang rapi — lead masuk tanpa komisi marketplace."
-      :links="[
-        {
-          label: t('cta.buildNow'),
-          to: localePath('/order/choose-domain'),
-          color: 'primary',
-          size: 'xl',
-          trailingIcon: 'i-lucide-arrow-right'
-        },
-        {
-          label: t('cta.viewTemplates'),
-          to: localePath('/templates'),
-          color: 'neutral',
-          variant: 'outline',
-          size: 'xl'
-        }
-      ]"
-    >
-      <template v-if="priceFrom != null" #headline>
-        <UBadge color="primary" variant="subtle" size="lg" class="mb-2">
-          {{ t('hero.priceFrom', { price: new Intl.NumberFormat('id-ID').format(priceFrom) }) }}
-        </UBadge>
-      </template>
-    </UPageHero>
+    <section class="bg-mesh-hero border-b border-default">
+      <UContainer class="section-y !pb-12 md:!pb-16">
+        <div class="max-w-3xl text-left space-y-6">
+          <UBadge
+            v-if="priceFrom != null"
+            color="primary"
+            variant="subtle"
+            size="lg"
+          >
+            {{ t('hero.priceFrom', { price: new Intl.NumberFormat('id-ID').format(priceFrom) }) }}
+          </UBadge>
 
-    <MarketingServiceProof />
+          <h1 class="text-display text-4xl sm:text-5xl md:text-6xl text-highlighted">
+            {{ t('services.export') }}
+          </h1>
+
+          <p class="text-lg md:text-xl text-muted leading-relaxed">
+            Buyer global riset supplier lewat Google. Tampilkan HS code, MOQ, sertifikasi, dan form inquiry yang rapi — lead masuk tanpa komisi marketplace.
+          </p>
+
+          <div class="flex flex-wrap gap-3">
+            <UButton
+              :to="localePath('/order/choose-domain')"
+              color="primary"
+              size="xl"
+              trailing-icon="i-lucide-arrow-right"
+            >
+              {{ t('cta.buildNow') }}
+            </UButton>
+            <UButton
+              :to="localePath('/templates')"
+              color="neutral"
+              variant="outline"
+              size="xl"
+            >
+              {{ t('cta.viewTemplates') }}
+            </UButton>
+          </div>
+        </div>
+      </UContainer>
+    </section>
+
+    <ServiceProof />
 
     <UPageSection
       :title="t('serviceLanding.featuresTitle')"
@@ -112,15 +127,15 @@ const priceFrom = computed(() => {
       :features="features"
     />
 
-    <MarketingServiceSteps :steps="steps" />
+    <ServiceSteps :steps="steps" />
 
-    <MarketingServicePricing
+    <ServicePricing
       :packages="packages"
       billing-mode="yearly"
       :loading="status === 'pending'"
     />
 
-    <MarketingServiceCta
+    <ServiceCta
       :title="t('serviceLanding.exportCtaTitle')"
       :description="t('serviceLanding.exportCtaDesc', {
         code: appConfig.mugiew?.promoCode || 'WEBSITEJUARA',

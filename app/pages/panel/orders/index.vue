@@ -26,7 +26,7 @@ const { data, status, error, refresh } = await useFetch('/api/orders', {
 const orders = computed(() => (data.value?.data ?? []) as OrderRow[])
 
 function domainLabel(row: OrderRow) {
-  if (!row.domainName) return '—'
+  if (!row.domainName) return '-'
   const tld = row.domainTld ? `.${row.domainTld.replace(/^\./, '')}` : ''
   return `${row.domainName}${tld}`
 }
@@ -61,9 +61,9 @@ function statusColor(s: string): 'neutral' | 'warning' | 'info' | 'success' | 'e
 }
 
 function formatDate(value: string | Date | null) {
-  if (!value) return '—'
+  if (!value) return '-'
   const d = value instanceof Date ? value : new Date(value)
-  if (Number.isNaN(d.getTime())) return '—'
+  if (Number.isNaN(d.getTime())) return '-'
   return new Intl.DateTimeFormat(locale.value === 'en' ? 'en-GB' : 'id-ID', {
     day: '2-digit',
     month: 'short',

@@ -23,7 +23,7 @@ useSeoMeta({
 <template>
   <UApp>
     <a href="#main" class="skip-link">
-      Skip to main content
+      {{ $t('common.skipToContent') }}
     </a>
     <NuxtLayout>
       <NuxtPage />

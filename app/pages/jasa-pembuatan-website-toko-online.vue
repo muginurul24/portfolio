@@ -29,7 +29,7 @@ const features = [
   {
     icon: 'i-lucide-credit-card',
     title: 'Payment gateway',
-    description: 'VA, QRIS, e-wallet, kartu — terintegrasi gateway Indonesia.'
+    description: 'VA, QRIS, e-wallet, kartu - terintegrasi gateway Indonesia.'
   },
   {
     icon: 'i-lucide-truck',
@@ -84,36 +84,46 @@ const ecomTeaser = computed(() => {
 
 <template>
   <div>
-    <UPageHero
-      :title="t('services.ecommerce')"
-      description="Full commerce: keranjang, pembayaran, ongkir, notifikasi WA/email. Year-1 domain/hosting/email bisnis termasuk."
-      :links="[
-        {
-          label: t('cta.consult'),
-          to: waHref,
-          target: '_blank',
-          color: 'primary',
-          size: 'xl',
-          icon: 'i-simple-icons-whatsapp'
-        },
-        {
-          label: t('cta.buildNow'),
-          to: localePath('/order/choose-domain'),
-          color: 'neutral',
-          variant: 'outline',
-          size: 'xl',
-          trailingIcon: 'i-lucide-arrow-right'
-        }
-      ]"
-    >
-      <template #headline>
-        <UBadge color="primary" variant="subtle" size="lg" class="mb-2">
-          {{ ecomTeaser }}
-        </UBadge>
-      </template>
-    </UPageHero>
+    <section class="bg-mesh-hero border-b border-default">
+      <UContainer class="section-y !pb-12 md:!pb-16">
+        <div class="max-w-3xl text-left space-y-6">
+          <UBadge color="primary" variant="subtle" size="lg">
+            {{ ecomTeaser }}
+          </UBadge>
 
-    <MarketingServiceProof />
+          <h1 class="text-display text-4xl sm:text-5xl md:text-6xl text-highlighted">
+            {{ t('services.ecommerce') }}
+          </h1>
+
+          <p class="text-lg md:text-xl text-muted leading-relaxed">
+            Full commerce: keranjang, pembayaran, ongkir, notifikasi WA/email. Year-1 domain/hosting/email bisnis termasuk.
+          </p>
+
+          <div class="flex flex-wrap gap-3">
+            <UButton
+              :to="waHref"
+              target="_blank"
+              color="primary"
+              size="xl"
+              icon="i-simple-icons-whatsapp"
+            >
+              {{ t('cta.consult') }}
+            </UButton>
+            <UButton
+              :to="localePath('/order/choose-domain')"
+              color="neutral"
+              variant="outline"
+              size="xl"
+              trailing-icon="i-lucide-arrow-right"
+            >
+              {{ t('cta.buildNow') }}
+            </UButton>
+          </div>
+        </div>
+      </UContainer>
+    </section>
+
+    <ServiceProof />
 
     <UPageSection
       :title="t('serviceLanding.featuresTitle')"
@@ -121,13 +131,13 @@ const ecomTeaser = computed(() => {
       :features="features"
     />
 
-    <MarketingServiceSteps
+    <ServiceSteps
       :title="t('serviceLanding.ecomStepsTitle')"
       :description="t('serviceLanding.ecomStepsDesc')"
       :steps="steps"
     />
 
-    <MarketingServicePricing
+    <ServicePricing
       :packages="packages"
       billing-mode="project"
       highlight-id="pkg_ecom_standard"
@@ -136,7 +146,7 @@ const ecomTeaser = computed(() => {
       :cta-to="waHref"
     />
 
-    <MarketingServiceCta
+    <ServiceCta
       :title="t('serviceLanding.ecomCtaTitle')"
       :description="t('serviceLanding.ecomCtaDesc', { teaser: ecomTeaser })"
       :primary-label="t('cta.consult')"

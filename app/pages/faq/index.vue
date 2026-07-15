@@ -3,7 +3,7 @@ const { t } = useI18n()
 
 useSeoMeta({
   title: () => t('nav.faq'),
-  description: 'FAQ MugiewDev — produk, bayar, aktivasi, dukungan.'
+  description: 'FAQ MugiewDev - produk, bayar, aktivasi, dukungan.'
 })
 
 const items = [
@@ -13,7 +13,7 @@ const items = [
   },
   {
     label: 'Berapa lama website live?',
-    content: 'Maksimal 2×24 jam kerja setelah pembayaran terverifikasi.'
+    content: 'Maksimal 2x24 jam kerja setelah pembayaran terverifikasi.'
   },
   {
     label: 'Metode pembayaran apa saja?',

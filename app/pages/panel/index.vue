@@ -18,25 +18,25 @@ const stats = computed(() => {
   return [
     {
       label: t('panel.statActiveSites'),
-      value: d?.activeSites ?? '—',
+      value: d?.activeSites ?? '-',
       icon: 'i-lucide-globe',
       to: localePath('/panel/sites')
     },
     {
       label: t('panel.statOrders'),
-      value: d?.orders ?? '—',
+      value: d?.orders ?? '-',
       icon: 'i-lucide-receipt',
       to: localePath('/panel/orders')
     },
     {
       label: t('panel.statNewInquiries'),
-      value: d?.newInquiries ?? '—',
+      value: d?.newInquiries ?? '-',
       icon: 'i-lucide-inbox',
       to: localePath('/panel/inquiries')
     },
     {
       label: t('panel.statAcademy'),
-      value: d?.academyCompleted ?? '—',
+      value: d?.academyCompleted ?? '-',
       icon: 'i-lucide-graduation-cap',
       to: localePath('/panel/academy')
     }
@@ -98,8 +98,8 @@ const stats = computed(() => {
         class="block"
       >
         <UCard
-          class="h-full transition-shadow duration-200 hover:shadow-soft-md"
-          :ui="{ root: 'shadow-soft-sm' }"
+          class="card-lift h-full"
+          :ui="{ root: 'shadow-soft-sm ring-1 ring-default/50' }"
         >
           <div class="flex items-center gap-3">
             <div class="flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
@@ -112,7 +112,7 @@ const stats = computed(() => {
               <p class="text-sm text-muted">
                 {{ s.label }}
               </p>
-              <p class="text-xl font-semibold tabular-nums">
+              <p class="text-xl font-semibold tabular-nums text-highlighted">
                 {{ s.value }}
               </p>
             </div>

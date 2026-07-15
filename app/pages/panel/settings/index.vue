@@ -1,5 +1,9 @@
 <script setup lang="ts">
+import type { UserRole } from '~/utils/roles'
+import { canAccessDevConsole, isStaff } from '~/utils/roles'
+
 const { t } = useI18n()
+const localePath = useLocalePath()
 
 definePageMeta({
   layout: 'panel',
@@ -16,19 +20,34 @@ const profile = computed(() => {
     email?: string
     name?: string
     phone?: string | null
-    role?: string
+    role?: UserRole
   } | null
-  const roleKey = u?.role === 'admin'
-    ? 'panel.roleAdmin'
-    : u?.role === 'customer'
-      ? 'panel.roleCustomer'
-      : null
+
+  let roleLabel = u?.role || '-'
+  if (u?.role === 'admin') roleLabel = t('panel.roleAdmin')
+  else if (u?.role === 'customer') roleLabel = t('panel.roleCustomer')
+  else if (u?.role === 'cs') roleLabel = t('dev.roleCs')
+  else if (u?.role === 'dev') roleLabel = t('dev.roleDev')
+
   return {
-    name: u?.name || '—',
-    email: u?.email || '—',
-    phone: u?.phone || '—',
-    role: roleKey ? t(roleKey) : (u?.role || '—')
+    name: u?.name || '-',
+    email: u?.email || '-',
+    phone: u?.phone || '-',
+    role: roleLabel,
+    rawRole: u?.role
   }
+})
+
+const staffLink = computed(() => {
+  const r = profile.value.rawRole
+  if (!r) return null
+  if (canAccessDevConsole(r)) {
+    return { to: localePath('/dev'), label: t('dev.consoleTitle') }
+  }
+  if (isStaff(r)) {
+    return { to: localePath('/dev/orders'), label: t('dev.ordersTitle') }
+  }
+  return null
 })
 </script>
 
@@ -83,9 +102,23 @@ const profile = computed(() => {
             >
               {{ profile.role }}
             </UBadge>
+            <p class="text-xs text-muted mt-2">
+              {{ t('panel.roleReadonlyHint') }}
+            </p>
           </dd>
         </div>
       </dl>
+
+      <div v-if="staffLink" class="mt-6 pt-4 border-t border-default">
+        <UButton
+          :to="staffLink.to"
+          color="primary"
+          variant="soft"
+          icon="i-lucide-terminal"
+        >
+          {{ staffLink.label }}
+        </UButton>
+      </div>
     </UCard>
   </div>
 </template>

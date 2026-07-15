@@ -39,13 +39,13 @@ useSeoMeta({
     </UButton>
 
     <article v-if="page">
-      <h1 class="text-3xl md:text-4xl font-semibold text-highlighted tracking-tight">
+      <h1 class="text-display text-3xl md:text-4xl text-highlighted">
         {{ page.title }}
       </h1>
-      <p v-if="page.description" class="mt-3 text-lg text-muted">
+      <p v-if="page.description" class="mt-3 text-lg text-muted font-serif">
         {{ page.description }}
       </p>
-      <div class="mt-8 prose prose-slate dark:prose-invert max-w-none">
+      <div class="mt-8 prose prose-slate dark:prose-invert max-w-none font-serif prose-headings:font-display">
         <ContentRenderer :value="page" />
       </div>
     </article>

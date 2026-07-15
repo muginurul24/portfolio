@@ -16,6 +16,16 @@ export default defineNuxtConfig({
     'nuxt-charts'
   ],
 
+  // Nested dirs (marketing/, order/) must not force Marketing* / Order* prefixes
+  // so tags like <HeroDomainSearch> and <SectionHeading> resolve.
+  // https://nuxt.com/docs/4.x/directory-structure/app/components#component-names
+  components: [
+    {
+      path: '~/components',
+      pathPrefix: false
+    }
+  ],
+
   devtools: {
     enabled: true
   },
@@ -46,11 +56,12 @@ export default defineNuxtConfig({
     defaultLocale: 'id'
   },
 
-  // Soft UI Evolution — navy + sky accent (see DESIGN.md)
+  // Soft Glass Trust - light default; full dark via class `dark` + UColorModeButton
   colorMode: {
     preference: 'light',
     fallback: 'light',
-    classSuffix: ''
+    classSuffix: '',
+    storageKey: 'mugiew-color-mode'
   },
 
   content: {
@@ -58,7 +69,7 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
-    // Server-only secrets — override with NUXT_* env vars
+    // Server-only secrets - override with NUXT_* env vars
     session: {
       maxAge: 60 * 60 * 24 * 7, // 7 days
       password: process.env.NUXT_SESSION_PASSWORD || ''
@@ -83,7 +94,7 @@ export default defineNuxtConfig({
   },
 
   routeRules: {
-    // Marketing — prerender / SWR for speed + SEO
+    // Marketing - prerender / SWR for speed + SEO
     '/': { prerender: true },
     '/templates': { swr: 3600 },
     '/templates/**': { swr: 3600 },
@@ -95,7 +106,7 @@ export default defineNuxtConfig({
     '/faq': { swr: 3600 },
     '/blog': { swr: 600 },
     '/blog/**': { swr: 600 },
-    // Order flow — dynamic
+    // Order flow - dynamic
     '/order/**': { ssr: true },
     // Auth + panel
     '/login': { ssr: true },
@@ -104,8 +115,13 @@ export default defineNuxtConfig({
 
   experimental: {
     viewTransition: true,
-    payloadExtraction: true
+    payloadExtraction: true,
+    // Avoid Vite "#app-manifest" resolve failures after HMR / partial .nuxt rebuilds.
+    // Route rules still apply server-side; client manifest not required for this app.
+    appManifest: false
   },
+
+  // OG image signing: set NUXT_OG_IMAGE_SECRET in .env (see .env.example)
 
   compatibilityDate: '2026-06-30',
 
@@ -118,6 +134,25 @@ export default defineNuxtConfig({
         driver: 'fs',
         base: './.data/storage'
       }
+    }
+  },
+
+  // pnpm nests @nuxtjs/mdc remark/* deps; Vite 7 cannot resolve "@nuxtjs/mdc > pkg"
+  // include entries. Prebundle bare package names instead (silences optimizeDeps warn).
+  vite: {
+    optimizeDeps: {
+      include: [
+        'remark-gfm',
+        'remark-emoji',
+        'remark-mdc',
+        'remark-rehype',
+        'rehype-raw',
+        'parse5',
+        'unist-util-visit',
+        'unified',
+        'debug',
+        'extend'
+      ]
     }
   },
 
@@ -137,7 +172,16 @@ export default defineNuxtConfig({
 
   fonts: {
     families: [
-      { name: 'Plus Jakarta Sans', provider: 'google', weights: [300, 400, 500, 600, 700] }
+      // UI / body
+      { name: 'Plus Jakarta Sans', provider: 'google', weights: [300, 400, 500, 600, 700, 800] },
+      // Display headlines (hero, section titles)
+      { name: 'Fraunces', provider: 'google', weights: [500, 600, 700], styles: ['normal', 'italic'] },
+      // Editorial serif (blog, quotes support, long-form)
+      { name: 'Source Serif 4', provider: 'google', weights: [400, 500, 600, 700], styles: ['normal', 'italic'] },
+      // Soft hand accent (testimonial quotes only - restrained)
+      { name: 'Caveat', provider: 'google', weights: [500, 600, 700] },
+      // Domain, order numbers, code-ish UI
+      { name: 'IBM Plex Mono', provider: 'google', weights: [400, 500, 600] }
     ]
   },
 
@@ -171,7 +215,7 @@ export default defineNuxtConfig({
     }
   },
 
-  // Nuxt 4 srcDir is `app/` — pinia resolves storesDirs from layer.app
+  // Nuxt 4 srcDir is `app/` - pinia resolves storesDirs from layer.app
   pinia: {
     storesDirs: ['./stores']
   },

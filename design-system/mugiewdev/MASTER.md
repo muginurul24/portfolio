@@ -6,10 +6,12 @@
 
 ---
 
-**Project:** MugiewDev
-**Generated:** 2026-07-15 11:32:28
-**Category:** SaaS (General)
-**Design Dials:** Variance 5/10 (Balanced / Modern) | Motion 6/10 (Standard) | Density 5/10 (Standard)
+**Project:** MugiewDev  
+**Generated:** 2026-07-15 11:32:28  
+**Updated:** 2026-07-15 — Enterprise Soft Glass  
+**Category:** SaaS (General)  
+**Style:** Enterprise Soft Glass  
+**Design Dials:** Variance 7/10 | Motion 6/10 | Density 5/10  
 
 ---
 
@@ -30,23 +32,25 @@
 | Destructive | `#DC2626` | `--color-destructive` |
 | Ring | `#0F172A` | `--color-ring` |
 
-**Color Notes:** Professional navy + blue CTA
+**Color Notes:** Professional navy headings + sky CTA (`#0369A1`). Soft mesh + glass with **light + dark** pairs (`.dark .bg-mesh-hero`, `.dark .glass-panel`, `.dark .section-index`). Prefer Nuxt UI semantic surfaces over raw hex. **No AI purple** gradients or playful candy palettes.
 
 ### Typography
 
-- **Heading Font:** Plus Jakarta Sans
-- **Body Font:** Plus Jakarta Sans
-- **Mood:** friendly, modern, saas, clean, approachable, professional
-- **Google Fonts:** [Plus Jakarta Sans + Plus Jakarta Sans](https://fonts.google.com/share?selection.family=Plus+Jakarta+Sans:wght@300;400;500;600;700)
+| Role | Family | Utility |
+|------|--------|---------|
+| UI / body | Plus Jakarta Sans | default / `font-sans` |
+| Display | Fraunces | `.text-display`, `.font-display`, `.section-index` |
+| Serif | Source Serif 4 | `.font-serif`, prose editorial |
+| Hand accent | Caveat | `.quote-hand` (quotes only) |
+| Mono | IBM Plex Mono | `font-mono` (domain, order IDs) |
 
-**CSS Import:**
-```css
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
-```
+- **Mood:** enterprise, calm authority, editorial trust, modern
+- **Loaded via:** `@nuxt/fonts` in `nuxt.config.ts` (Google)
+- **Anti:** hand/script on CTAs/nav; display for entire body; mono for paragraphs
 
 ### Spacing Variables
 
-*Density: 5/10 — Standard*
+*Density: 5/10 — Balanced enterprise (complete sections, not sparse)*
 
 | Token | Value | Usage |
 |-------|-------|-------|
@@ -58,14 +62,28 @@
 | `--space-2xl` | `48px` / `3rem` | Section margins |
 | `--space-3xl` | `64px` / `4rem` | Hero padding |
 
+Section utility: `.section-y` → `4rem` / `5.5rem` (md+).
+
 ### Shadow Depths
 
-| Level | Value | Usage |
+Richer layered soft shadows (tokens in `app/assets/css/main.css`):
+
+| Level | Token | Usage |
 |-------|-------|-------|
-| `--shadow-sm` | `0 1px 2px rgba(0,0,0,0.05)` | Subtle lift |
-| `--shadow-md` | `0 4px 6px rgba(0,0,0,0.1)` | Cards, buttons |
-| `--shadow-lg` | `0 10px 15px rgba(0,0,0,0.1)` | Modals, dropdowns |
-| `--shadow-xl` | `0 20px 25px rgba(0,0,0,0.15)` | Hero images, featured cards |
+| soft-sm | `--shadow-soft-sm` | Subtle lift |
+| soft-md | `--shadow-soft-md` | Cards, buttons |
+| soft-lg | `--shadow-soft-lg` | Hover cards, dropdowns |
+| soft-xl | `--shadow-soft-xl` | Modals, floating WA |
+| glow-sky | `--shadow-glow-sky` | CTA emphasis |
+
+### Mesh, glass & section index
+
+| Class | Usage |
+|-------|-------|
+| `bg-mesh-hero` | Hero / marketing top bands (light + dark) |
+| `glass-panel` | Frosted sticky header / light panels (light + dark) |
+| `section-index` | Numbered section display `01`… (light + dark) |
+| `card-lift` | Hover lift (respects reduced-motion) |
 
 ---
 
@@ -103,23 +121,27 @@
 }
 ```
 
+Nuxt UI: `button.slots.base` includes `cursor-pointer font-semibold`.
+
 ### Cards
 
 ```css
 .card {
-  background: #F8FAFC;
+  background: #FFFFFF;
   border-radius: 12px;
   padding: 24px;
-  box-shadow: var(--shadow-md);
-  transition: all 200ms ease;
-  cursor: pointer;
+  box-shadow: var(--shadow-soft-md);
+  ring: 1px solid rgb(226 232 240 / 0.8);
+  transition: box-shadow 200ms ease, transform 200ms ease;
 }
 
 .card:hover {
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-soft-lg);
   transform: translateY(-2px);
 }
 ```
+
+Nuxt UI card root: `shadow-soft-md ring-1 ring-default/80 bg-default`.
 
 ### Inputs
 
@@ -133,9 +155,9 @@
 }
 
 .input:focus {
-  border-color: #0F172A;
+  border-color: #0369A1;
   outline: none;
-  box-shadow: 0 0 0 3px #0F172A20;
+  box-shadow: 0 0 0 3px rgb(3 105 161 / 0.2);
 }
 ```
 
@@ -151,7 +173,7 @@
   background: white;
   border-radius: 16px;
   padding: 32px;
-  box-shadow: var(--shadow-xl);
+  box-shadow: var(--shadow-soft-xl);
   max-width: 500px;
   width: 90%;
 }
@@ -161,53 +183,53 @@
 
 ## Style Guidelines
 
-**Style:** Soft UI Evolution
+**Style:** Enterprise Soft Glass
 
-**Keywords:** Evolved soft UI, better contrast, modern aesthetics, subtle depth, accessibility-focused, improved shadows, hybrid
+**Keywords:** Soft glass, trust navy, sky CTA, mesh hero, segment carousel, numbered sections, layered soft shadows, dual theme, calm authority
 
-**Best For:** Modern enterprise apps, SaaS platforms, health/wellness, modern business tools, professional, hybrid
+**Best For:** UMKM website builder, B2B SaaS marketing, trust-led conversion, enterprise-complete landing inventory
 
-**Key Effects:** Improved shadows (softer than flat, clearer than neumorphism), modern (200-300ms), focus visible, WCAG AA/AAA
+**Key Effects:** Soft shadows, mesh backgrounds, glass panels (dual theme), section-index, card-lift, focus visible, WCAG AA
 
 ### Page Pattern
 
-**Pattern Name:** Marketplace / Directory
+**Pattern Name:** Trust + Authority + Enterprise Gateway (Website Builder)
 
-- **Conversion Strategy:** Search bar is the CTA. Reduce friction to search. Popular searches suggestions.
-- **CTA Placement:** Hero Search Bar + Navbar 'List your item'
-- **Section Order:** 1. Hero (Search focused), 2. Categories, 3. Featured Listings, 4. Trust/Safety, 5. CTA (Become a host/seller)
+- **Conversion Strategy:** Segment carousel + hero domain search + transparent price floor + dual CTA (order / WA).
+- **CTA Placement:** Hero domain search + carousel dual CTAs + primary order CTA; sticky header secondary.
+- **Section Order:** 0 Promo → 1 Header → 2 Hero mission → 3 HeroCarousel → 4 Trust logos → 5 Templates → 6 Services → 7 Domain packages → 8 Testimonials → 9 Community → 10 Portfolio → 11 Journal → 12 Academy → 13 Final CTA → 14 Footer
 
 ---
 
 ## Motion
 
-**Page Transition** (Standard) — Trigger: route change | Duration: 400-600ms | Easing: `power2.inOut`
+**Dials:** Motion 6/10 — purposeful micro-interactions + controlled carousel
 
-```js
-const tl = gsap.timeline(); tl.to('.transition-overlay', { yPercent: 0, duration: 0.4, ease: 'power2.inOut' }).call(navigate).to('.transition-overlay', { yPercent: -100, duration: 0.4, ease: 'power2.inOut', delay: 0.1 });
-```
-
-**Framework notes:** Keep the overlay element mounted at the layout root (outside the page component) so it survives the route swap
-
-- ✅ Show a lightweight loading indicator if the destination route's data fetch outlasts the overlay
-- ❌ Don't tie the overlay's reveal directly to data-fetch completion without a max-wait timeout; a slow API stalls the whole transition
-- ⚡ Prefer CSS transform (yPercent) over top/left to keep the overlay animation on the compositor thread
+- Page transition: opacity + 4px translateY, 200ms (CSS, not GSAP overlay by default)
+- Micro: 150–300ms ease
+- Carousel: autoplay optional with pause/controls
+- Respect `prefers-reduced-motion`
+- Avoid decorative-only motion
 
 ---
 
 ## Anti-Patterns (Do NOT Use)
 
-- ❌ Excessive animation
+- ❌ Playful / toy UI, cartoon illustration overload
+- ❌ AI-slop purple / violet gradient defaults
+- ❌ Cheap promo spam (banner stacks, fake urgency countdown)
+- ❌ Missing carousel or sparse home vs full inventory
+- ❌ Emoji icons (use `i-lucide-*` / `i-simple-icons-*`)
+- ❌ Gray-on-gray low contrast
 - ❌ Dark mode by default
-
-### Additional Forbidden Patterns
-
-- ❌ **Emojis as icons** — Use SVG icons (Heroicons, Lucide, Simple Icons)
-- ❌ **Missing cursor:pointer** — All clickable elements must have cursor:pointer
-- ❌ **Layout-shifting hovers** — Avoid scale transforms that shift layout
-- ❌ **Low contrast text** — Maintain 4.5:1 minimum contrast ratio
-- ❌ **Instant state changes** — Always use transitions (150-300ms)
-- ❌ **Invisible focus states** — Focus states must be visible for a11y
+- ❌ Light-only glass/mesh without `.dark` pairs
+- ❌ Excessive animation / GSAP bloat on marketing
+- ❌ Marketplace search-as-primary product framing
+- ❌ Missing `cursor:pointer` on clickables
+- ❌ Layout-shifting hover scales
+- ❌ Instant state changes without transition
+- ❌ Invisible focus states
+- ❌ Wrong component tags (`Marketing*` prefix)
 
 ---
 
@@ -216,7 +238,7 @@ const tl = gsap.timeline(); tl.to('.transition-overlay', { yPercent: 0, duration
 Before delivering any UI code, verify:
 
 - [ ] No emojis used as icons (use SVG instead)
-- [ ] All icons from consistent icon set (Heroicons/Lucide)
+- [ ] All icons from consistent icon set (Lucide / Simple Icons)
 - [ ] `cursor-pointer` on all clickable elements
 - [ ] Hover states with smooth transitions (150-300ms)
 - [ ] Light mode: text contrast 4.5:1 minimum
@@ -225,3 +247,5 @@ Before delivering any UI code, verify:
 - [ ] Responsive: 375px, 768px, 1024px, 1440px
 - [ ] No content hidden behind fixed navbars
 - [ ] No horizontal scroll on mobile
+- [ ] Mesh/glass/section-index have light + dark pairs
+- [ ] Home ships full 0–14 section inventory when building `/`

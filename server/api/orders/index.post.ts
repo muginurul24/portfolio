@@ -113,7 +113,7 @@ export default defineEventHandler(async (event) => {
     }
   }
 
-  // better-sqlite3: sync transaction — order + payment atomic
+  // better-sqlite3: sync transaction - order + payment atomic
   db.transaction((tx) => {
     tx.insert(orders).values({
       id: orderId,

@@ -53,34 +53,37 @@ const secondary = computed(() => {
 </script>
 
 <template>
-  <UPageSection>
-    <UPageCTA
-      :title="title || t('serviceLanding.ctaTitle')"
-      :description="description || t('serviceLanding.ctaDesc', {
-        code: appConfig.mugiew?.promoCode || 'WEBSITEJUARA',
-        discount: discountLabel
-      })"
-      variant="subtle"
-      :links="[
-        {
-          label: primary.label,
-          to: primary.to,
-          target: primary.external ? '_blank' : undefined,
-          icon: primary.icon,
-          trailingIcon: primary.trailingIcon,
-          color: 'primary',
-          size: 'xl'
-        },
-        {
-          label: secondary.label,
-          to: secondary.to,
-          target: secondary.external ? '_blank' : undefined,
-          icon: secondary.icon,
-          color: 'neutral',
-          variant: 'outline',
-          size: 'xl'
-        }
-      ]"
-    />
-  </UPageSection>
+  <section class="section-y bg-mesh-hero border-y border-default">
+    <UContainer>
+      <UPageCTA
+        :title="title || t('serviceLanding.ctaTitle')"
+        :description="description || t('serviceLanding.ctaDesc', {
+          code: appConfig.mugiew?.promoCode || 'WEBSITEJUARA',
+          discount: discountLabel
+        })"
+        variant="subtle"
+        class="shadow-soft-lg ring-1 ring-default"
+        :links="[
+          {
+            label: primary.label,
+            to: primary.to,
+            target: primary.external ? '_blank' : undefined,
+            icon: primary.icon,
+            trailingIcon: primary.trailingIcon,
+            color: 'primary',
+            size: 'xl'
+          },
+          {
+            label: secondary.label,
+            to: secondary.to,
+            target: secondary.external ? '_blank' : undefined,
+            icon: secondary.icon,
+            color: 'neutral',
+            variant: 'outline',
+            size: 'xl'
+          }
+        ]"
+      />
+    </UContainer>
+  </section>
 </template>

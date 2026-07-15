@@ -34,7 +34,7 @@ export type OrderStatus
     | 'cancelled'
     | 'expired'
 
-export type UserRole = 'customer' | 'admin' | 'cs'
+export type UserRole = 'customer' | 'cs' | 'admin' | 'dev'
 
 export interface NavItem {
   label: string

@@ -1,12 +1,12 @@
 # DESIGN.md — MugiewDev
 
-**Style:** Soft UI Evolution  
+**Style:** Enterprise Soft Glass  
 **Product:** Website-builder platform untuk UMKM & eksportir Indonesia  
-**Tone:** Profesional, dapat dipercaya, approachable — bukan marketplace flashy  
+**Tone:** Profesional, calm authority, approachable — bukan marketplace flashy / discount spam  
 
 ## Signature
 
-**Satu elemen yang diingat:** Hero thesis *"Bikin Website · Tanpa Ribet"* + harga transparan + CTA domain search / order. Trust navy + sky CTA. Soft depth (bukan neumorphism kental).
+**Elemen yang diingat:** Segment hero **carousel** (Export / UMKM / Toko) + **domain search** on soft mesh (`bg-mesh-hero`) + **numbered sections** (`01`–`08` via `.section-index`) + harga transparan. Trust navy + sky CTA. Soft depth + dual-theme glass panels.
 
 ## Color tokens
 
@@ -25,42 +25,78 @@
 **Nuxt UI mapping** (`app.config.ts`):
 - `primary: 'sky'`
 - `neutral: 'slate'`
-- Default color mode: **light** (dark supported, not default)
+- Color mode: default **light**, full **dark** supported (`classSuffix: ''` → class `dark` on `<html>`, storage `mugiew-color-mode`)
+- Surfaces use semantic tokens (`bg-default`, `text-highlighted`, `text-muted`, `ring-default`, `bg-elevated`)
+- Custom chrome (`.bg-mesh-hero`, `.glass-panel`, `.section-index`, soft shadows) has **paired light + dark** rules in `main.css`
+- Toggle: `UColorModeButton` in header; never ship light-only hardcodes
 
 ## Typography
 
-- **Family:** Plus Jakarta Sans (300–700) via `@nuxt/fonts`
-- **Body base:** 16px, line-height 1.5–1.75
-- **Headings:** semibold/bold, tracking-tight
-- **Prices:** `tabular-nums`
+| Role | Family | Use |
+|------|--------|-----|
+| **Sans (UI)** | Plus Jakarta Sans 300–800 | Body, nav, buttons, forms |
+| **Display** | Fraunces 500–700 (+ italic) | Hero titles, section titles (`.text-display`, `.section-index`) |
+| **Serif** | Source Serif 4 400–700 (+ italic) | Blog/tutorial/legal long-form (`.font-serif`) |
+| **Hand** | Caveat 500–700 | Testimonial quotes only (`.quote-hand`) — restrained |
+| **Mono** | IBM Plex Mono 400–600 | Domain input, TLD labels, order numbers (`.font-mono`) |
+
+- **Body base:** 16px, line-height 1.5–1.75 (sans)
+- **Display:** optical sizing, tracking −0.02em, weight 600, lh 1.12
+- **Prices / IDs:** `tabular-nums` + mono where machine-readable
+- **Do not** use hand/script on nav, CTAs, or dense UI
 
 ## Spacing (8pt)
 
 `4 / 8 / 16 / 24 / 32 / 48 / 64`
 
-## Shadows (Soft UI)
+Section vertical rhythm: `.section-y` → `4rem` / `5.5rem` (md+).
+
+## Shadows (Soft UI — richer layered)
 
 ```
-soft-sm  — subtle lift
-soft-md  — cards
-soft-lg  — hover cards, dropdowns
-soft-xl  — modals, floating WA
+soft-sm   — subtle lift
+soft-md   — cards
+soft-lg   — hover cards, dropdowns
+soft-xl   — modals, floating WA
+glow-sky  — CTA / primary emphasis ring + glow
 ```
 
-Defined in `app/assets/css/main.css` as `--shadow-soft-*`.
+Defined in `app/assets/css/main.css` as `--shadow-soft-*` and `--shadow-glow-sky`.
+
+## Mesh, glass & section utilities
+
+| Class | Use |
+|-------|-----|
+| `bg-mesh-hero` | Hero / top marketing bands — soft sky mesh (light + dark pairs) |
+| `glass-panel` | Frosted surfaces (header sticky, overlays) — light + dark pairs |
+| `section-index` | Numbered section display (`01`…) — light + dark sky tint |
+| `card-lift` | Card hover: soft-lg + −2px translateY; reduced-motion safe |
+| `section-y` | Consistent section padding-block |
+| `text-display` | Large marketing headlines |
 
 ## Layout patterns
 
-### Marketing pages
-1. Sticky header (blur, border-b)
-2. Hero (thesis + dual CTA)
-3. Proof strip (stats)
-4. Features / services grid
-5. How it works (3 steps numbered)
-6. Testimonials (when data ready)
-7. Pricing / packages
-8. Final CTA
-9. Footer columns
+### Marketing pages — home section order (0–14)
+
+| # | Section | Premium note |
+|---|---------|--------------|
+| 0 | PromoBanner | Calm single line |
+| 1 | Glass header | Sticky glass, services dropdown |
+| 2 | Hero mission | Mesh + domain search + dual CTA + proof chips |
+| 3 | **HeroCarousel** | UCarousel Export / UMKM / Ecom |
+| 4 | Trust logos strip | Payment / SSL / Xendit badges |
+| 5 | Design collection | Chips + 8 templates + Lihat semua |
+| 6 | Services | Bento 2×2 + Lihat layanan |
+| 7 | Domain packages | Live TLD API prices |
+| 8 | Voice of users | Stats + testimonial cards |
+| 9 | Community | Cluster + benefits + CTA |
+| 10 | Portfolio teaser | 3 cases → `/portofolio` |
+| 11 | Journal | 3 blog posts |
+| 12 | Academy teaser | Slim band → `/academy` |
+| 13 | Final CTA | Dual CTA + micro trust |
+| 14 | Footer | Brand + columns + legal + social |
+
+Component tags = **filename only** (no `Marketing` prefix): `HeroCarousel`, `HeroDomainSearch`, `SectionHeading`, etc.
 
 ### Order wizard
 Progress indicator · one primary action per step · back always available · promo code on checkout.
@@ -72,8 +108,8 @@ Sidebar nav (desktop) · top bar mobile · dense cards · tabular stats.
 
 - Micro: 150–300ms ease
 - Page transition: opacity + 4px translateY, 200ms
-- Respect `prefers-reduced-motion`
-- No decorative-only animation; max 1–2 animated moments per view
+- Carousel: pause/controls; respect `prefers-reduced-motion`
+- No decorative-only animation; max 1–2 animated moments per view beyond carousel
 
 ## Icons
 
@@ -90,25 +126,34 @@ Sidebar nav (desktop) · top bar mobile · dense cards · tabular stats.
 - Labels on all form fields (not placeholder-only)
 - Loading buttons disabled + spinner
 - Color not sole meaning
+- Carousel: pause + controls
 
-## Landing conversion (Trust + Authority)
+## Landing conversion (Trust + Authority + Enterprise Gateway)
 
-- Hero credibility + price floor
-- Proof: 12k+ UMKM, rating, growth claim
+- Hero credibility + price floor + domain search
+- Segment carousel for Export / UMKM / Ecom paths
+- Proof: 12k+ UMKM, rating, growth claim, trust logos
 - Transparent pricing, promo code visible
 - Low-friction WA consult secondary CTA
-- Primary CTA: order / domain
+- Primary CTA: order / domain search
+- Numbered section system for calm enterprise scanability
 
 ## Anti-patterns
 
-- ❌ Dark mode default
+- ❌ Missing carousel when legacy has one
+- ❌ Home shorter/sparser than full 0–14 inventory
+- ❌ Light-only hardcode that breaks dark (`bg-white`, fixed mesh without `.dark` pair)
+- ❌ Pure invert “night mode” — use desaturated surfaces + sky accent
 - ❌ Excessive animation / GSAP bloat on marketing unless justified
 - ❌ Marketplace search-as-primary (kita jual website, bukan listing barang)
 - ❌ Emoji icons
+- ❌ Cheap promo spam (banner stack, countdown gimmicks)
+- ❌ Playful / toy UI; AI-slop purple gradients
 - ❌ Hover-only interactions
 - ❌ Layout-shifting hover scales
 - ❌ Gray-on-gray low contrast
 - ❌ Hardcoded hex in components — use tokens / Nuxt UI semantic classes
+- ❌ Wrong auto-import tags (`Marketing*` prefix)
 
 ## Page overrides
 
@@ -117,3 +162,21 @@ Hierarchical:
 2. Else this file + `design-system/mugiewdev/MASTER.md` (generated)
 
 When implementing a page, agents MUST read this file first.
+
+## Dev Console / Panel (ops UI)
+
+Dense Soft Glass ops chrome — not marketing spaciousness.
+
+| Rule | Value |
+|------|-------|
+| Density | 8–16px gaps; table `text-sm`; row py ~2.5–3 |
+| Chrome | `glass-panel` sidebar/header; `shadow-soft-sm` cards |
+| Nav | Grouped: Platform / Catalog / Commerce / Content / System |
+| Role badges | DEV=primary, ADMIN=warning, CS=neutral |
+| Type | Plus Jakarta UI; mono for order numbers/slugs/TLD |
+| Motion | 150–250ms; skeletons for lists; honor reduced-motion |
+| Destructive | `DevConfirmModal` only — never browser `confirm()` |
+| Touch | ≥44px targets on mobile menus |
+| Dark | Semantic tokens only; paired glass |
+
+Customer panel uses same glass sidebar; staff may deep-link to `/dev` when allowed.
