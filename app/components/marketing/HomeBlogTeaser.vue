@@ -25,16 +25,17 @@ function formatDate(value?: string) {
 </script>
 
 <template>
-  <section id="blog" class="section-y bg-default">
+  <section id="blog" class="section-y bg-muted/30">
     <UContainer>
       <SectionHeading
+        index="07"
         :eyebrow="t('home.blogEyebrow')"
         :title="t('home.blogTitle')"
         :description="t('home.blogDesc')"
       />
 
       <div v-if="status === 'pending'" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        <USkeleton v-for="i in 3" :key="i" class="h-48 rounded-xl" />
+        <USkeleton v-for="i in 3" :key="i" class="h-52 rounded-xl" />
       </div>
 
       <div v-else-if="!posts?.length" class="py-12 text-center text-muted">
@@ -46,9 +47,12 @@ function formatDate(value?: string) {
           v-for="post in posts"
           :key="post.path"
           class="card-lift h-full"
-          :ui="{ root: 'shadow-soft-md', body: 'p-5 flex flex-col h-full' }"
+          :ui="{
+            root: 'bg-default ring-default shadow-soft-md border-0 h-full',
+            body: 'p-5 md:p-6 flex flex-col h-full'
+          }"
         >
-          <p v-if="post.date" class="text-xs text-muted mb-2 tabular-nums">
+          <p v-if="post.date" class="text-xs font-medium text-muted mb-2 tabular-nums">
             {{ formatDate(post.date) }}
           </p>
           <h3 class="text-lg font-semibold text-highlighted tracking-tight">
@@ -59,7 +63,7 @@ function formatDate(value?: string) {
               {{ post.title }}
             </NuxtLink>
           </h3>
-          <p v-if="post.description" class="mt-2 text-sm text-muted flex-1 leading-relaxed">
+          <p v-if="post.description" class="mt-2 text-sm text-muted flex-1 leading-relaxed line-clamp-3">
             {{ post.description }}
           </p>
           <div class="mt-4">
