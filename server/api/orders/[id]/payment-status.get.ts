@@ -3,6 +3,11 @@ import { orders, payments } from '../../../database/schema'
 import { qrisvipCheckStatus } from '../../../utils/qrisvip'
 import { fulfillPaidOrder } from '../../../utils/order-fulfillment'
 
+/**
+ * Poll endpoint for pay page.
+ * Only marks paid when Check Status V2 returns status "success"
+ * and amount matches (or remote omits amount — then use stored amount).
+ */
 export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, 'id')
   if (!id) throw createError({ statusCode: 400, statusMessage: 'ID wajib' })
@@ -31,27 +36,52 @@ export default defineEventHandler(async (event) => {
     }
   }
 
+  // Expired QR: soft flag (do not auto-cancel order here)
+  const expired = payment.expiresAt
+    ? new Date(payment.expiresAt).getTime() < Date.now()
+    : false
+
   if (!payment.providerRef || payment.provider !== 'qrisvip') {
     return {
       data: {
         orderStatus: order.status,
         paymentStatus: payment.status,
-        paid: false
+        paid: false,
+        expired
       }
     }
   }
 
   const check = await qrisvipCheckStatus(payment.providerRef)
+
   if (check.ok && check.status === 'success') {
-    const amount = check.amount ?? payment.amountIdr
+    if (check.amount != null && check.amount !== payment.amountIdr) {
+      console.error('[payment-status] amount mismatch', {
+        orderId: id,
+        expected: payment.amountIdr,
+        remote: check.amount
+      })
+      return {
+        data: {
+          orderStatus: order.status,
+          paymentStatus: payment.status,
+          paid: false,
+          remote: 'success',
+          remoteError: 'amount_mismatch',
+          expired
+        }
+      }
+    }
+
     const result = await fulfillPaidOrder({
       orderId: order.id,
       paymentId: payment.id,
-      paidAmountIdr: amount,
+      paidAmountIdr: payment.amountIdr,
       method: 'qris',
-      providerRef: check.trxId,
-      rawPayload: check.raw
+      providerRef: check.trxId || payment.providerRef,
+      rawPayload: { source: 'payment_status_poll', check: check.raw }
     })
+
     if (result.ok) {
       const fresh = await db.query.orders.findFirst({ where: eq(orders.id, id) })
       return {
@@ -62,6 +92,17 @@ export default defineEventHandler(async (event) => {
         }
       }
     }
+
+    return {
+      data: {
+        orderStatus: order.status,
+        paymentStatus: payment.status,
+        paid: false,
+        remote: 'success',
+        remoteError: result.reason,
+        expired
+      }
+    }
   }
 
   return {
@@ -70,7 +111,8 @@ export default defineEventHandler(async (event) => {
       paymentStatus: payment.status,
       paid: false,
       remote: check.ok ? check.status : undefined,
-      remoteError: check.ok ? undefined : check.error
+      remoteError: check.ok ? undefined : check.error,
+      expired
     }
   }
 })

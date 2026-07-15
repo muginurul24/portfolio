@@ -1,11 +1,29 @@
-import { eq } from 'drizzle-orm'
-import { payments } from '../../database/schema'
-import { qrisvipCheckStatus } from '../../utils/qrisvip'
-import { fulfillPaidOrder } from '../../utils/order-fulfillment'
+import {
+  findPaymentForQris,
+  isDisbursementCallback,
+  parseDepositCallback,
+  reconcileQrisPayment
+} from '../../utils/qris-reconcile'
 
 /**
- * Optional inbound notify from QrisVIP.
- * Never trusts body amount alone — always re-checks via Check Status V2.
+ * QrisVIP → MugiewDev webhook.
+ *
+ * Deposit callback (official sample):
+ * {
+ *   amount, terminal_id, merchant_id, trx_id, rrn, custom_ref,
+ *   vendor, status: "success", created_at, finish_at
+ * }
+ *
+ * Disbursement callbacks (partner_ref_no) are ignored (out of scope).
+ *
+ * Security:
+ * - Optional shared secret header when NUXT_QRISVIP_WEBHOOK_SECRET set
+ * - Always prefer Check Status V2 re-verify
+ * - Fallback webhook proof only if amount + merchant_id match
+ * - Idempotent on already-paid
+ *
+ * Always returns 2xx for known payload shapes so provider does not retry forever
+ * on business rejects (logged server-side). Auth failures still 401.
  */
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig()
@@ -14,59 +32,103 @@ export default defineEventHandler(async (event) => {
     const header
       = getHeader(event, 'x-qrisvip-secret')
       || getHeader(event, 'x-callback-token')
+      || getHeader(event, 'x-webhook-secret')
       || getHeader(event, 'authorization')?.replace(/^Bearer\s+/i, '')
     if (!header || header !== secret) {
       throw createError({ statusCode: 401, statusMessage: 'Invalid webhook secret' })
     }
   }
 
-  const body = await readBody(event) as Record<string, unknown>
-  const trxId = String(
-    body.trx_id
-    || body.trxId
-    || (body.data as { trx_id?: string } | undefined)?.trx_id
-    || ''
-  ).trim()
-
-  if (!trxId) {
-    throw createError({ statusCode: 400, statusMessage: 'trx_id wajib' })
+  let body: Record<string, unknown>
+  try {
+    body = (await readBody(event)) as Record<string, unknown>
+  } catch {
+    throw createError({ statusCode: 400, statusMessage: 'Invalid JSON body' })
+  }
+  if (!body || typeof body !== 'object') {
+    throw createError({ statusCode: 400, statusMessage: 'Body wajib object JSON' })
   }
 
-  const db = useDb()
-  const payment = await db.query.payments.findFirst({
-    where: eq(payments.providerRef, trxId)
+  // Ignore transfer/disbursement callbacks (not deposit QRIS)
+  if (isDisbursementCallback(body)) {
+    console.info('[qrisvip webhook] ignore disbursement callback')
+    return { ok: true, ignored: true, reason: 'disbursement_out_of_scope', message: 'received' }
+  }
+
+  const parsed = parseDepositCallback(body)
+
+  // Non-success deposit notify (should not happen per docs; ack anyway)
+  if (parsed.status && parsed.status !== 'success') {
+    console.info('[qrisvip webhook] non-success status', { status: parsed.status, trxId: parsed.trxId })
+    return { ok: true, ignored: true, reason: 'not_success', message: 'received' }
+  }
+
+  if (!parsed.trxId && !parsed.customRef) {
+    throw createError({ statusCode: 400, statusMessage: 'trx_id atau custom_ref wajib' })
+  }
+
+  const payment = await findPaymentForQris({
+    trxId: parsed.trxId,
+    customRef: parsed.customRef
   })
+
   if (!payment) {
-    throw createError({ statusCode: 404, statusMessage: 'Payment not found' })
-  }
-  if (payment.status === 'paid') {
-    return { ok: true, duplicate: true }
-  }
-
-  const check = await qrisvipCheckStatus(trxId)
-  if (!check.ok) {
-    return { ok: true, ignored: true, reason: check.error }
-  }
-  if (check.status !== 'success') {
-    return { ok: true, ignored: true, reason: 'not_success' }
+    // 200 so provider stops retrying unknown old txs; log for ops
+    console.warn('[qrisvip webhook] payment not found', {
+      trxId: parsed.trxId,
+      customRef: parsed.customRef
+    })
+    return { ok: true, ignored: true, reason: 'payment_not_found', message: 'received' }
   }
 
-  const amount = check.amount ?? payment.amountIdr
-  const result = await fulfillPaidOrder({
-    orderId: payment.orderId,
+  if (payment.provider !== 'qrisvip') {
+    return { ok: true, ignored: true, reason: 'wrong_provider', message: 'received' }
+  }
+
+  const trxId = parsed.trxId || payment.providerRef
+  if (!trxId) {
+    return { ok: true, ignored: true, reason: 'missing_trx', message: 'received' }
+  }
+
+  // Persist trx_id if we only matched via custom_ref
+  if (!payment.providerRef && parsed.trxId) {
+    const db = useDb()
+    const { eq } = await import('drizzle-orm')
+    const { payments: paymentsTable } = await import('../../database/schema')
+    await db.update(paymentsTable).set({
+      providerRef: parsed.trxId,
+      updatedAt: new Date()
+    }).where(eq(paymentsTable.id, payment.id))
+  }
+
+  const result = await reconcileQrisPayment({
     paymentId: payment.id,
-    paidAmountIdr: amount,
-    method: 'qris',
-    providerRef: check.trxId,
-    rawPayload: { webhook: body, check: check.raw }
+    orderId: payment.orderId,
+    trxId,
+    webhook: parsed,
+    rawWebhook: body
   })
 
   if (!result.ok) {
-    throw createError({
-      statusCode: result.reason === 'amount_mismatch' ? 400 : 409,
-      statusMessage: result.reason
+    console.error('[qrisvip webhook] reconcile failed', {
+      reason: result.reason,
+      paymentId: payment.id,
+      orderId: payment.orderId,
+      trxId
     })
+    // Business reject: still 200 + message so QrisVIP does not hammer retries;
+    // amount mismatch is serious — return 422 so it surfaces in provider logs.
+    if (result.reason === 'amount_mismatch' || result.reason === 'merchant_mismatch') {
+      throw createError({ statusCode: 422, statusMessage: result.reason })
+    }
+    return { ok: true, ignored: true, reason: result.reason, message: 'received' }
   }
 
-  return { ok: true, alreadyPaid: result.alreadyPaid, siteConflict: result.siteConflict }
+  return {
+    ok: true,
+    message: 'received',
+    alreadyPaid: result.alreadyPaid,
+    siteConflict: result.siteConflict,
+    source: result.source
+  }
 })
