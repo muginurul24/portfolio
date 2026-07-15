@@ -6,13 +6,19 @@ const { number: waNumber, link } = useWhatsApp()
 
 const supportEmail = computed(() => String(config.public.supportEmail || 'support@mugiewdev.com'))
 
-function formatWaDisplay(raw: string) {
-  const digits = raw.replace(/\D/g, '')
+function formatWaDisplay(raw: unknown) {
+  // runtimeConfig / env can be non-string under HMR — coerce first
+  const s = String(raw ?? '').trim()
+  if (!s) return ''
+  const digits = s.replace(/\D/g, '')
+  if (!digits) return s
   if (digits.startsWith('62') && digits.length >= 11) {
     return `+62 ${digits.slice(2, 5)}-${digits.slice(5, 9)}-${digits.slice(9)}`
   }
-  return raw.startsWith('+') ? raw : `+${digits}`
+  return s.startsWith('+') ? s : `+${digits}`
 }
+
+const waDisplay = computed(() => formatWaDisplay(waNumber.value))
 
 const serviceItems = computed(() => [
   { label: t('services.export'), to: localePath('/jasa-pembuatan-website-ekspor'), icon: 'i-lucide-globe' },
@@ -66,7 +72,7 @@ const footerColumns = computed(() => [
         icon: 'i-lucide-mail'
       },
       {
-        label: formatWaDisplay(waNumber.value),
+        label: waDisplay.value || String(waNumber.value || ''),
         to: link(),
         target: '_blank',
         icon: 'i-simple-icons-whatsapp'
