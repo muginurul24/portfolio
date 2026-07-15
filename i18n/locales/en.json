@@ -546,7 +546,17 @@
     "nextLive": "Site live & panel access",
     "openPanel": "Open my panel",
     "orderAgain": "Order another website",
-    "saveOrderNumber": "Save this order number for support"
+    "saveOrderNumber": "Save this order number for support",
+    "status": {
+      "draft": "Draft",
+      "pending_payment": "Pending payment",
+      "paid": "Paid",
+      "provisioning": "Provisioning",
+      "active": "Active",
+      "cancelled": "Cancelled",
+      "expired": "Expired",
+      "suspended": "Suspended"
+    }
   },
   "auth": {
     "login": "Log in",
@@ -614,6 +624,8 @@
     "statusActive": "Active",
     "statusCancelled": "Cancelled",
     "statusExpired": "Expired",
-    "statusSuspended": "Suspended"
+    "statusSuspended": "Suspended",
+    "payNow": "Pay now",
+    "orderDetail": "Action"
   }
 }

@@ -17,6 +17,7 @@ type OrderRow = {
   status: string
   totalIdr: number
   createdAt: string | Date | null
+  payPath?: string | null
 }
 
 const { data, status, error, refresh } = await useFetch('/api/orders', {
@@ -32,16 +33,15 @@ function domainLabel(row: OrderRow) {
 }
 
 function statusLabel(s: string) {
-  const map: Record<string, string> = {
-    draft: t('panel.statusDraft'),
-    pending_payment: t('panel.statusPendingPayment'),
-    paid: t('panel.statusPaid'),
-    provisioning: t('panel.statusProvisioning'),
-    active: t('panel.statusActive'),
-    cancelled: t('panel.statusCancelled'),
-    expired: t('panel.statusExpired')
-  }
-  return map[s] || s
+  const key = `order.status.${s}`
+  const label = t(key)
+  return label === key ? s : label
+}
+
+function payTo(payPath: string) {
+  const [pathPart, qs] = payPath.split('?')
+  const query = Object.fromEntries(new URLSearchParams(qs || ''))
+  return { path: localePath(pathPart || payPath), query }
 }
 
 function statusColor(s: string): 'neutral' | 'warning' | 'info' | 'success' | 'error' {
@@ -137,6 +137,9 @@ function formatDate(value: string | Date | null) {
               <th class="px-4 py-3 font-medium">
                 {{ t('panel.createdAt') }}
               </th>
+              <th class="px-4 py-3 font-medium text-right">
+                {{ t('panel.orderDetail') }}
+              </th>
             </tr>
           </thead>
           <tbody class="divide-y divide-default">
@@ -165,6 +168,16 @@ function formatDate(value: string | Date | null) {
               </td>
               <td class="px-4 py-3 text-muted whitespace-nowrap">
                 {{ formatDate(row.createdAt) }}
+              </td>
+              <td class="px-4 py-3 text-right">
+                <UButton
+                  v-if="row.status === 'pending_payment' && row.payPath"
+                  :to="payTo(row.payPath)"
+                  color="primary"
+                  size="sm"
+                >
+                  {{ t('panel.payNow') }}
+                </UButton>
               </td>
             </tr>
           </tbody>

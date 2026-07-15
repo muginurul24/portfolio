@@ -546,7 +546,17 @@
     "nextLive": "Website live & akses panel",
     "openPanel": "Buka panel saya",
     "orderAgain": "Pesan website lain",
-    "saveOrderNumber": "Simpan nomor order untuk CS"
+    "saveOrderNumber": "Simpan nomor order untuk CS",
+    "status": {
+      "draft": "Draf",
+      "pending_payment": "Menunggu bayar",
+      "paid": "Lunas",
+      "provisioning": "Diproses",
+      "active": "Aktif",
+      "cancelled": "Dibatalkan",
+      "expired": "Kedaluwarsa",
+      "suspended": "Ditangguhkan"
+    }
   },
   "auth": {
     "login": "Masuk",
@@ -614,6 +624,8 @@
     "statusActive": "Aktif",
     "statusCancelled": "Dibatalkan",
     "statusExpired": "Kedaluwarsa",
-    "statusSuspended": "Ditangguhkan"
+    "statusSuspended": "Ditangguhkan",
+    "payNow": "Bayar sekarang",
+    "orderDetail": "Aksi"
   }
 }
