@@ -6,6 +6,12 @@ import {
   canManageCatalog,
   canManageUsers,
   canPromoteDev,
+  canManageOrders,
+  canManageInquiries,
+  canManageSites,
+  canManagePayments,
+  canManageContent,
+  canAccessSystem,
   type UserRole
 } from '../app/utils/roles'
 
@@ -50,5 +56,47 @@ describe('role helpers matrix', () => {
     for (const role of roles) {
       expect(canPromoteDev(role)).toBe(role === 'dev')
     }
+  })
+
+  it('canManageOrders: cs|admin|dev', () => {
+    expect(canManageOrders('customer')).toBe(false)
+    expect(canManageOrders('cs')).toBe(true)
+    expect(canManageOrders('admin')).toBe(true)
+    expect(canManageOrders('dev')).toBe(true)
+  })
+
+  it('canManageInquiries: cs|admin|dev', () => {
+    expect(canManageInquiries('customer')).toBe(false)
+    expect(canManageInquiries('cs')).toBe(true)
+    expect(canManageInquiries('admin')).toBe(true)
+    expect(canManageInquiries('dev')).toBe(true)
+  })
+
+  it('canManageSites: cs|admin|dev', () => {
+    expect(canManageSites('customer')).toBe(false)
+    expect(canManageSites('cs')).toBe(true)
+    expect(canManageSites('admin')).toBe(true)
+    expect(canManageSites('dev')).toBe(true)
+  })
+
+  it('canManagePayments: cs|admin|dev', () => {
+    expect(canManagePayments('customer')).toBe(false)
+    expect(canManagePayments('cs')).toBe(true)
+    expect(canManagePayments('admin')).toBe(true)
+    expect(canManagePayments('dev')).toBe(true)
+  })
+
+  it('canManageContent: admin|dev only', () => {
+    expect(canManageContent('customer')).toBe(false)
+    expect(canManageContent('cs')).toBe(false)
+    expect(canManageContent('admin')).toBe(true)
+    expect(canManageContent('dev')).toBe(true)
+  })
+
+  it('canAccessSystem: admin|dev', () => {
+    expect(canAccessSystem('customer')).toBe(false)
+    expect(canAccessSystem('cs')).toBe(false)
+    expect(canAccessSystem('admin')).toBe(true)
+    expect(canAccessSystem('dev')).toBe(true)
   })
 })

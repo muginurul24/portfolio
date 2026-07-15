@@ -24,3 +24,27 @@ export function canManageUsers(role: UserRole): boolean {
 export function canPromoteDev(role: UserRole): boolean {
   return role === 'dev'
 }
+
+export function canManageOrders(role: UserRole): boolean {
+  return role === 'cs' || role === 'admin' || role === 'dev'
+}
+
+export function canManageInquiries(role: UserRole): boolean {
+  return role === 'cs' || role === 'admin' || role === 'dev'
+}
+
+export function canManageSites(role: UserRole): boolean {
+  return role === 'cs' || role === 'admin' || role === 'dev'
+}
+
+export function canManagePayments(role: UserRole): boolean {
+  return role === 'cs' || role === 'admin' || role === 'dev'
+}
+
+export function canManageContent(role: UserRole): boolean {
+  return role === 'admin' || role === 'dev'
+}
+
+export function canAccessSystem(role: UserRole): boolean {
+  return role === 'admin' || role === 'dev'
+}
