@@ -3,6 +3,7 @@ const { t, locale, locales, setLocale } = useI18n()
 const localePath = useLocalePath()
 const config = useRuntimeConfig()
 const { number: waNumber, link } = useWhatsApp()
+const { loggedIn } = useUserSession()
 
 const supportEmail = computed(() => String(config.public.supportEmail || 'support@mugiewdev.com'))
 
@@ -139,7 +140,9 @@ const waHref = computed(() => link())
           />
         </UDropdownMenu>
 
+        <AppUserMenu v-if="loggedIn" />
         <UButton
+          v-else
           :to="localePath('/login')"
           color="neutral"
           variant="ghost"
@@ -161,7 +164,14 @@ const waHref = computed(() => link())
       <template #body>
         <UNavigationMenu :items="navItems" orientation="vertical" class="lg:hidden" />
         <div class="flex flex-col gap-2 mt-4 lg:hidden">
-          <UButton :to="localePath('/login')" color="neutral" variant="outline" block>
+          <AppUserMenu v-if="loggedIn" mobile />
+          <UButton
+            v-else
+            :to="localePath('/login')"
+            color="neutral"
+            variant="outline"
+            block
+          >
             {{ t('nav.login') }}
           </UButton>
           <UButton

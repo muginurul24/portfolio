@@ -368,7 +368,9 @@
     "forbiddenDesc": "Anda tidak punya izin membuka halaman ini. Masuk dengan akun yang sesuai atau kembali ke area yang diizinkan.",
     "goHome": "Ke beranda",
     "goPanel": "Ke panel saya",
-    "goDevConsole": "Ke konsol dev"
+    "goDevConsole": "Ke konsol dev",
+    "myPanel": "Panel saya",
+    "devConsole": "Konsol Dev"
   },
   "panel": {
     "dashboard": "Dasbor",

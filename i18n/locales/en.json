@@ -368,7 +368,9 @@
     "forbiddenDesc": "You do not have permission to open this page. Sign in with the right account or return to an allowed area.",
     "goHome": "Go home",
     "goPanel": "Go to my panel",
-    "goDevConsole": "Go to dev console"
+    "goDevConsole": "Go to dev console",
+    "myPanel": "My panel",
+    "devConsole": "Dev Console"
   },
   "panel": {
     "dashboard": "Dashboard",
