@@ -162,8 +162,9 @@ export default defineNuxtConfig({
     experimental: { nativeSqlite: true }
   },
 
+  // Nuxt 4 srcDir is `app/` — pinia resolves storesDirs from layer.app
   pinia: {
-    storesDirs: ['./app/stores/**']
+    storesDirs: ['./stores']
   },
 
   compatibilityDate: '2026-06-30',

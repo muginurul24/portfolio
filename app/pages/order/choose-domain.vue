@@ -1,47 +1,99 @@
 <script setup lang="ts">
+import { useOrderStore } from '~/stores/order'
+
 const { t } = useI18n()
 const localePath = useLocalePath()
 const route = useRoute()
+const orderStore = useOrderStore()
 
 useSeoMeta({
   title: () => t('order.chooseDomain'),
-  description: 'Cari dan pilih domain untuk website bisnis Anda.'
+  description: () => t('order.chooseDomainDesc')
 })
 
-const tlds = [
-  { tld: 'com', price: 1_247_000, promo: 1_247_000 },
-  { tld: 'co.id', price: 1_477_000, promo: 1_477_000 },
-  { tld: 'id', price: 1_466_000, promo: 1_466_000 },
-  { tld: 'net', price: 1_300_000, promo: null },
-  { tld: 'org', price: 1_300_000, promo: null }
-]
+interface DomainTld {
+  id: string
+  tld: string
+  priceYearlyIdr: number
+  promoPriceYearlyIdr: number | null
+  isActive: boolean
+}
 
-const name = ref('')
-const selectedTld = ref('com')
+const { data: tldsRes, status: tldsStatus } = await useFetch<{ data: DomainTld[] }>(
+  '/api/domains/tlds',
+  { key: 'domain-tlds' }
+)
+
+const tlds = computed(() => tldsRes.value?.data ?? [])
+
+const name = ref(orderStore.domainName || '')
+const selectedTld = ref(orderStore.domainTld || 'com')
 const checking = ref(false)
 const available = ref<boolean | null>(null)
+const checkError = ref('')
 
-const templateSlug = computed(() => String(route.query.template || ''))
+const templateSlug = computed(() => String(route.query.template || orderStore.templateSlug || ''))
+
+watch(tlds, (list) => {
+  if (!list.length) return
+  if (!list.some(x => x.tld === selectedTld.value)) {
+    selectedTld.value = list[0]!.tld
+  }
+}, { immediate: true })
+
+const cleanName = computed(() =>
+  name.value.trim().toLowerCase().replace(/[^a-z0-9-]/g, '')
+)
 
 const fullDomain = computed(() => {
-  const n = name.value.trim().toLowerCase().replace(/[^a-z0-9-]/g, '')
+  const n = cleanName.value
   return n ? `${n}.${selectedTld.value}` : ''
 })
 
+const selectedTldRow = computed(() =>
+  tlds.value.find(x => x.tld === selectedTld.value)
+)
+
+const displayPrice = computed(() => {
+  const row = selectedTldRow.value
+  if (!row) return 0
+  return row.promoPriceYearlyIdr ?? row.priceYearlyIdr
+})
+
+watch([name, selectedTld], () => {
+  available.value = null
+  checkError.value = ''
+})
+
 async function checkDomain() {
-  if (!fullDomain.value) return
+  if (!cleanName.value || cleanName.value.length < 3) {
+    checkError.value = t('order.domainNameInvalid')
+    available.value = null
+    return
+  }
   checking.value = true
   available.value = null
+  checkError.value = ''
   try {
-    // Stub: real registrar API later
-    await new Promise(r => setTimeout(r, 400))
-    available.value = name.value.trim().length >= 3
+    const res = await $fetch<{ domain: string, available: boolean }>(
+      '/api/domains/check',
+      { query: { name: cleanName.value, tld: selectedTld.value } }
+    )
+    available.value = res.available
+  } catch (e: unknown) {
+    const err = e as { data?: { message?: string }, statusMessage?: string }
+    checkError.value = err?.data?.message || err?.statusMessage || t('common.error')
+    available.value = null
   } finally {
     checking.value = false
   }
 }
 
 function continueOrder() {
+  if (!available.value || !cleanName.value) return
+  orderStore.setDomain(cleanName.value, selectedTld.value)
+  if (templateSlug.value) orderStore.setTemplate(templateSlug.value)
+
   navigateTo({
     path: localePath('/order/checkout'),
     query: {
@@ -56,13 +108,13 @@ function continueOrder() {
   <UContainer class="py-10 md:py-16 max-w-3xl">
     <div class="mb-8">
       <UBadge color="primary" variant="subtle" class="mb-3">
-        Step 1 / 3
+        {{ t('order.stepOf', { step: 1, total: 3 }) }}
       </UBadge>
       <h1 class="text-3xl font-semibold text-highlighted tracking-tight">
         {{ t('order.chooseDomain') }}
       </h1>
       <p class="mt-2 text-muted">
-        Domain + hosting + SSL dalam satu paket. Unlimited host.
+        {{ t('order.chooseDomainDesc') }}
       </p>
     </div>
 
@@ -71,14 +123,15 @@ function continueOrder() {
         <UInput
           v-model="name"
           size="lg"
-          placeholder="namabisnis"
+          :placeholder="t('order.domainPlaceholder')"
           class="flex-1"
           :ui="{ base: 'font-mono' }"
           @keyup.enter="checkDomain"
         />
         <USelect
           v-model="selectedTld"
-          :items="tlds.map(t => ({ label: `.${t.tld}`, value: t.tld }))"
+          :items="tlds.map(x => ({ label: `.${x.tld}`, value: x.tld }))"
+          :loading="tldsStatus === 'pending'"
           size="lg"
           class="sm:w-36"
         />
@@ -86,26 +139,40 @@ function continueOrder() {
           color="primary"
           size="lg"
           :loading="checking"
-          :disabled="!name.trim() || checking"
+          :disabled="!name.trim() || checking || tldsStatus === 'pending'"
           @click="checkDomain"
         >
           {{ t('common.search') }}
         </UButton>
       </div>
 
+      <UAlert
+        v-if="checkError"
+        color="error"
+        variant="subtle"
+        :title="checkError"
+        icon="i-lucide-alert-circle"
+        class="mt-4"
+      />
+
       <div v-if="available !== null" class="mt-6">
         <UAlert
           :color="available ? 'success' : 'error'"
           variant="subtle"
-          :title="available ? `${fullDomain} tersedia` : `${fullDomain} tidak tersedia`"
+          :title="available
+            ? t('order.domainAvailable', { domain: fullDomain })
+            : t('order.domainUnavailable', { domain: fullDomain })"
           :icon="available ? 'i-lucide-check-circle' : 'i-lucide-x-circle'"
         />
 
-        <div v-if="available" class="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div
+          v-if="available"
+          class="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+        >
           <p class="text-sm text-muted">
-            Paket mulai
+            {{ t('order.packageFrom') }}
             <span class="font-semibold text-highlighted tabular-nums">
-              {{ formatIdr(tlds.find(x => x.tld === selectedTld)?.price || 0) }}/tahun
+              {{ formatIdr(displayPrice) }}{{ t('order.perYear') }}
             </span>
           </p>
           <UButton
@@ -121,12 +188,16 @@ function continueOrder() {
     </UCard>
 
     <div class="mt-8 grid gap-3 sm:grid-cols-3">
-      <UCard v-for="t in tlds.slice(0, 3)" :key="t.tld" :ui="{ root: 'shadow-soft-sm' }">
+      <UCard
+        v-for="row in tlds.slice(0, 3)"
+        :key="row.tld"
+        :ui="{ root: 'shadow-soft-sm' }"
+      >
         <p class="font-mono font-semibold">
-          .{{ t.tld }}
+          .{{ row.tld }}
         </p>
         <p class="text-sm text-muted tabular-nums mt-1">
-          {{ formatIdr(t.price) }}/thn
+          {{ formatIdr(row.promoPriceYearlyIdr ?? row.priceYearlyIdr) }}{{ t('order.perYearShort') }}
         </p>
       </UCard>
     </div>
