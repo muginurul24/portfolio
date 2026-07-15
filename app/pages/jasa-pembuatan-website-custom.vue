@@ -102,7 +102,7 @@ const waHref = computed(() => link(t('whatsapp.consultCustom')))
       </UContainer>
     </section>
 
-    <MarketingServiceProof />
+    <ServiceProof />
 
     <UPageSection
       :title="t('serviceLanding.featuresTitle')"
@@ -110,13 +110,13 @@ const waHref = computed(() => link(t('whatsapp.consultCustom')))
       :features="features"
     />
 
-    <MarketingServiceSteps
+    <ServiceSteps
       :title="t('serviceLanding.customStepsTitle')"
       :description="t('serviceLanding.customStepsDesc')"
       :steps="steps"
     />
 
-    <MarketingServicePricing
+    <ServicePricing
       :packages="packages"
       billing-mode="project"
       :loading="status === 'pending'"
@@ -125,7 +125,7 @@ const waHref = computed(() => link(t('whatsapp.consultCustom')))
       :empty-text="t('serviceLanding.customEmpty')"
     />
 
-    <MarketingServiceCta
+    <ServiceCta
       :title="t('serviceLanding.customCtaTitle')"
       :description="t('serviceLanding.customCtaDesc')"
       :primary-label="t('cta.consult')"

@@ -123,7 +123,7 @@ const ecomTeaser = computed(() => {
       </UContainer>
     </section>
 
-    <MarketingServiceProof />
+    <ServiceProof />
 
     <UPageSection
       :title="t('serviceLanding.featuresTitle')"
@@ -131,13 +131,13 @@ const ecomTeaser = computed(() => {
       :features="features"
     />
 
-    <MarketingServiceSteps
+    <ServiceSteps
       :title="t('serviceLanding.ecomStepsTitle')"
       :description="t('serviceLanding.ecomStepsDesc')"
       :steps="steps"
     />
 
-    <MarketingServicePricing
+    <ServicePricing
       :packages="packages"
       billing-mode="project"
       highlight-id="pkg_ecom_standard"
@@ -146,7 +146,7 @@ const ecomTeaser = computed(() => {
       :cta-to="waHref"
     />
 
-    <MarketingServiceCta
+    <ServiceCta
       :title="t('serviceLanding.ecomCtaTitle')"
       :description="t('serviceLanding.ecomCtaDesc', { teaser: ecomTeaser })"
       :primary-label="t('cta.consult')"

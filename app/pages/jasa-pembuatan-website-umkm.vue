@@ -121,7 +121,7 @@ const priceFrom = computed(() => {
       </UContainer>
     </section>
 
-    <MarketingServiceProof />
+    <ServiceProof />
 
     <UPageSection
       :title="t('serviceLanding.featuresTitle')"
@@ -129,15 +129,15 @@ const priceFrom = computed(() => {
       :features="features"
     />
 
-    <MarketingServiceSteps :steps="steps" />
+    <ServiceSteps :steps="steps" />
 
-    <MarketingServicePricing
+    <ServicePricing
       :packages="packages"
       billing-mode="yearly"
       :loading="status === 'pending'"
     />
 
-    <MarketingServiceCta
+    <ServiceCta
       :title="t('serviceLanding.umkmCtaTitle')"
       :description="t('serviceLanding.umkmCtaDesc', {
         code: appConfig.mugiew?.promoCode || 'WEBSITEJUARA',
