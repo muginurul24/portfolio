@@ -75,6 +75,12 @@ const items = computed((): NavItem[] => {
       show: staffOps
     },
     {
+      label: t('dev.nav.payments'),
+      to: localePath('/dev/payments'),
+      icon: 'i-lucide-credit-card',
+      show: staffOps
+    },
+    {
       label: t('dev.nav.sites'),
       to: localePath('/dev/sites'),
       icon: 'i-lucide-globe',
