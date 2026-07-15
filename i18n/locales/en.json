@@ -40,6 +40,20 @@
     "viewTemplates": "View Templates",
     "learnMore": "Learn More"
   },
+  "serviceLanding": {
+    "proofTitle": "Trusted by SMEs & exporters",
+    "proofDesc": "Real outcomes from businesses already running professional sites.",
+    "featuresTitle": "What you get",
+    "stepsTitle": "How it works",
+    "stepsDesc": "Three steps. Site live within 2×24 business hours.",
+    "pricingTitle": "Packages & pricing",
+    "pricingDesc": "Transparent pricing. Domain, hosting, SSL, and business email per package.",
+    "pricingEmpty": "No packages yet. Contact support for a quote.",
+    "popular": "Popular",
+    "projectOneTime": "one-time project",
+    "ctaTitle": "Time for a professional online presence.",
+    "ctaDesc": "Fast replies · SEO-ready · No lock-in. Use promo code {code} for Rp500,000 off."
+  },
   "footer": {
     "products": "Products",
     "resources": "Resources",

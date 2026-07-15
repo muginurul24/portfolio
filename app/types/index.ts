@@ -1,5 +1,18 @@
 export type ServiceType = 'export' | 'umkm' | 'ecommerce' | 'custom' | 'academy'
 
+export interface ServicePackage {
+  id: string
+  slug: string
+  name: string
+  description?: string | null
+  priceYearlyIdr: number
+  features?: string[] | null
+  termYears?: number | null
+  serviceType?: ServiceType | string
+  isActive?: boolean
+  sortOrder?: number
+}
+
 export type TemplateCategory =
   | 'export'
   | 'umkm'

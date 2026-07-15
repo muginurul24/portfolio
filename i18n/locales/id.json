@@ -40,6 +40,20 @@
     "viewTemplates": "Lihat Template",
     "learnMore": "Pelajari Lebih Lanjut"
   },
+  "serviceLanding": {
+    "proofTitle": "Dipercaya UMKM & eksportir",
+    "proofDesc": "Hasil nyata dari ratusan bisnis yang sudah online profesional.",
+    "featuresTitle": "Yang Anda dapat",
+    "stepsTitle": "Cara kerja",
+    "stepsDesc": "Tiga langkah. Website live dalam 2×24 jam kerja.",
+    "pricingTitle": "Paket & harga",
+    "pricingDesc": "Harga transparan. Domain, hosting, SSL, dan email bisnis sesuai paket.",
+    "pricingEmpty": "Paket belum tersedia. Hubungi CS untuk penawaran.",
+    "popular": "Populer",
+    "projectOneTime": "project one-time",
+    "ctaTitle": "Saatnya bisnismu tampil profesional online.",
+    "ctaDesc": "Balas cepat · SEO siap pakai · Tanpa komitmen. Pakai kode promo {code} potong Rp500.000."
+  },
   "footer": {
     "products": "Produk",
     "resources": "Sumber Daya",
