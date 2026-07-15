@@ -86,6 +86,10 @@
     "customStepsTitle": "Custom project flow",
     "customStepsDesc": "From discovery to handover — milestone controlled."
   },
+  "promo": {
+    "banner": "Code {code} saves {discount} on yearly website packages",
+    "bannerCta": "Use now"
+  },
   "footer": {
     "products": "Products",
     "resources": "Resources",

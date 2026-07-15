@@ -86,6 +86,10 @@
     "customStepsTitle": "Alur custom project",
     "customStepsDesc": "Dari discovery sampai serah terima — dikontrol milestone."
   },
+  "promo": {
+    "banner": "Kode {code} potong {discount} untuk paket website tahunan",
+    "bannerCta": "Pakai sekarang"
+  },
   "footer": {
     "products": "Produk",
     "resources": "Sumber Daya",
