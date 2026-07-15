@@ -268,6 +268,17 @@
     "detail": "Detail",
     "resetFilter": "Reset filter"
   },
+  "errors": {
+    "forbiddenTitle": "Akses ditolak",
+    "forbiddenDesc": "Akun Anda tidak punya izin membuka halaman ini. Kembali ke beranda atau panel pelanggan.",
+    "forbiddenHome": "Ke beranda",
+    "forbiddenPanel": "Buka panel"
+  },
+  "dev": {
+    "consoleTitle": "Konsol Developer",
+    "consoleComing": "Konsol dev sedang disiapkan. Modul manajemen penuh menyusul.",
+    "consolePlaceholder": "Dasbor pengelolaan platform. Modul CRUD penuh menyusul di task berikutnya."
+  },
   "templates": {
     "eyebrow": "Template",
     "pageDesc": "Ratusan design siap pakai. Ganti gratis kapan saja setelah aktif.",
@@ -350,7 +361,12 @@
     "phone": "WhatsApp",
     "forgotPassword": "Lupa kata sandi?",
     "haveAccount": "Sudah punya akun?",
-    "noAccount": "Belum punya akun?"
+    "noAccount": "Belum punya akun?",
+    "forbiddenTitle": "Akses ditolak",
+    "forbiddenDesc": "Anda tidak punya izin membuka halaman ini. Masuk dengan akun yang sesuai atau kembali ke area yang diizinkan.",
+    "goHome": "Ke beranda",
+    "goPanel": "Ke panel saya",
+    "goDevConsole": "Ke konsol dev"
   },
   "panel": {
     "dashboard": "Dasbor",

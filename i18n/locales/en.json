@@ -268,6 +268,17 @@
     "detail": "Detail",
     "resetFilter": "Reset filters"
   },
+  "errors": {
+    "forbiddenTitle": "Access denied",
+    "forbiddenDesc": "Your account does not have permission to open this page. Go home or open the customer panel.",
+    "forbiddenHome": "Go home",
+    "forbiddenPanel": "Open panel"
+  },
+  "dev": {
+    "consoleTitle": "Developer Console",
+    "consoleComing": "Dev console coming soon. Full management modules follow.",
+    "consolePlaceholder": "Platform management dashboard. Full CRUD modules land in the next tasks."
+  },
   "templates": {
     "eyebrow": "Templates",
     "pageDesc": "Hundreds of ready designs. Free swap anytime after go-live.",
@@ -350,7 +361,12 @@
     "phone": "WhatsApp",
     "forgotPassword": "Forgot password?",
     "haveAccount": "Already have an account?",
-    "noAccount": "Don't have an account?"
+    "noAccount": "Don't have an account?",
+    "forbiddenTitle": "Access denied",
+    "forbiddenDesc": "You do not have permission to open this page. Sign in with the right account or return to an allowed area.",
+    "goHome": "Go home",
+    "goPanel": "Go to my panel",
+    "goDevConsole": "Go to dev console"
   },
   "panel": {
     "dashboard": "Dashboard",

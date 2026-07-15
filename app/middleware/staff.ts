@@ -1,5 +1,7 @@
+import { isStaff, type UserRole } from '~/utils/roles'
+
 export default defineNuxtRouteMiddleware(async (to) => {
-  const { loggedIn, ready, fetch } = useUserSession()
+  const { loggedIn, ready, user, fetch } = useUserSession()
   const localePath = useLocalePath()
 
   if (!ready.value) {
@@ -11,5 +13,10 @@ export default defineNuxtRouteMiddleware(async (to) => {
       path: localePath('/login'),
       query: { redirect: to.fullPath }
     })
+  }
+
+  const role = (user.value as { role?: UserRole } | null)?.role
+  if (!role || !isStaff(role)) {
+    return navigateTo(localePath('/403'))
   }
 })
