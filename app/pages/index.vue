@@ -15,16 +15,12 @@ const priceLabel = computed(() =>
   })
 )
 
-const discountLabel = computed(() =>
-  formatIdr(appConfig.mugiew?.promoDiscountIdr || 500_000)
-)
-
 const waHref = computed(() => link(t('whatsapp.consultDefault')))
 </script>
 
 <template>
   <div>
-    <section class="bg-mesh-hero section-y pt-10 md:pt-16">
+    <section class="bg-mesh-hero section-y pt-10 md:pt-14">
       <UContainer>
         <div class="max-w-3xl mx-auto text-center space-y-6">
           <UBadge color="primary" variant="subtle" size="lg">
@@ -80,40 +76,17 @@ const waHref = computed(() => link(t('whatsapp.consultDefault')))
       </UContainer>
     </section>
 
+    <HeroCarousel />
+    <TrustLogoStrip />
     <HomeTemplateShowcase />
     <HomeServicesBento />
     <HomeSteps />
-    <HomePricingStrip />
+    <HomeDomainPackages />
     <HomeTestimonials />
     <HomeCommunity />
+    <HomePortfolioTeaser />
     <HomeBlogTeaser />
-
-    <section class="section-y">
-      <UContainer>
-        <UPageCTA
-          :title="t('home.ctaTitle')"
-          :description="t('home.ctaDesc', {
-            code: appConfig.mugiew?.promoCode || 'WEBSITEJUARA',
-            discount: discountLabel
-          })"
-          variant="subtle"
-          class="shadow-soft-lg ring-1 ring-default"
-          :links="[
-            {
-              label: t('cta.buildNow'),
-              to: localePath('/order/choose-domain'),
-              trailingIcon: 'i-lucide-arrow-right',
-              color: 'primary'
-            },
-            {
-              label: t('cta.viewTemplates'),
-              to: localePath('/templates'),
-              color: 'neutral',
-              variant: 'outline'
-            }
-          ]"
-        />
-      </UContainer>
-    </section>
+    <HomeAcademyTeaser />
+    <HomeFinalCta />
   </div>
 </template>
