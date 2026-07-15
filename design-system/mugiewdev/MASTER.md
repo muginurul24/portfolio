@@ -6,10 +6,12 @@
 
 ---
 
-**Project:** MugiewDev
-**Generated:** 2026-07-15 11:32:28
-**Category:** SaaS (General)
-**Design Dials:** Variance 5/10 (Balanced / Modern) | Motion 6/10 (Standard) | Density 5/10 (Standard)
+**Project:** MugiewDev  
+**Generated:** 2026-07-15 11:32:28  
+**Updated:** 2026-07-15 — Soft Glass Trust tokens  
+**Category:** SaaS (General)  
+**Style:** Soft Glass Trust (Soft UI Evolution)  
+**Design Dials:** Variance 6/10 | Motion 5/10 | Density 4/10  
 
 ---
 
@@ -30,14 +32,15 @@
 | Destructive | `#DC2626` | `--color-destructive` |
 | Ring | `#0F172A` | `--color-ring` |
 
-**Color Notes:** Professional navy + blue CTA
+**Color Notes:** Professional navy headings + sky CTA (`#0369A1`). Soft mesh + glass on light surfaces.
 
 ### Typography
 
 - **Heading Font:** Plus Jakarta Sans
 - **Body Font:** Plus Jakarta Sans
-- **Mood:** friendly, modern, saas, clean, approachable, professional
-- **Google Fonts:** [Plus Jakarta Sans + Plus Jakarta Sans](https://fonts.google.com/share?selection.family=Plus+Jakarta+Sans:wght@300;400;500;600;700)
+- **Mood:** friendly, modern, saas, clean, approachable, professional, trustworthy
+- **Google Fonts:** [Plus Jakarta Sans](https://fonts.google.com/share?selection.family=Plus+Jakarta+Sans:wght@300;400;500;600;700)
+- **Display utility:** `.text-display` — letter-spacing −0.03em, weight 700, line-height 1.1
 
 **CSS Import:**
 ```css
@@ -46,7 +49,7 @@
 
 ### Spacing Variables
 
-*Density: 5/10 — Standard*
+*Density: 4/10 — Slightly airy*
 
 | Token | Value | Usage |
 |-------|-------|-------|
@@ -58,14 +61,27 @@
 | `--space-2xl` | `48px` / `3rem` | Section margins |
 | `--space-3xl` | `64px` / `4rem` | Hero padding |
 
+Section utility: `.section-y` → `4rem` / `5.5rem` (md+).
+
 ### Shadow Depths
 
-| Level | Value | Usage |
+Richer layered soft shadows (tokens in `app/assets/css/main.css`):
+
+| Level | Token | Usage |
 |-------|-------|-------|
-| `--shadow-sm` | `0 1px 2px rgba(0,0,0,0.05)` | Subtle lift |
-| `--shadow-md` | `0 4px 6px rgba(0,0,0,0.1)` | Cards, buttons |
-| `--shadow-lg` | `0 10px 15px rgba(0,0,0,0.1)` | Modals, dropdowns |
-| `--shadow-xl` | `0 20px 25px rgba(0,0,0,0.15)` | Hero images, featured cards |
+| soft-sm | `--shadow-soft-sm` | Subtle lift |
+| soft-md | `--shadow-soft-md` | Cards, buttons |
+| soft-lg | `--shadow-soft-lg` | Hover cards, dropdowns |
+| soft-xl | `--shadow-soft-xl` | Modals, floating WA |
+| glow-sky | `--shadow-glow-sky` | CTA emphasis |
+
+### Mesh & glass
+
+| Class | Usage |
+|-------|-------|
+| `bg-mesh-hero` | Hero / marketing top bands |
+| `glass-panel` | Frosted sticky header / light panels |
+| `card-lift` | Hover lift (respects reduced-motion) |
 
 ---
 
@@ -103,23 +119,27 @@
 }
 ```
 
+Nuxt UI: `button.slots.base` includes `cursor-pointer font-semibold`.
+
 ### Cards
 
 ```css
 .card {
-  background: #F8FAFC;
+  background: #FFFFFF;
   border-radius: 12px;
   padding: 24px;
-  box-shadow: var(--shadow-md);
-  transition: all 200ms ease;
-  cursor: pointer;
+  box-shadow: var(--shadow-soft-md);
+  ring: 1px solid rgb(226 232 240 / 0.8);
+  transition: box-shadow 200ms ease, transform 200ms ease;
 }
 
 .card:hover {
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-soft-lg);
   transform: translateY(-2px);
 }
 ```
+
+Nuxt UI card root: `shadow-soft-md ring-1 ring-default/80 bg-default`.
 
 ### Inputs
 
@@ -133,9 +153,9 @@
 }
 
 .input:focus {
-  border-color: #0F172A;
+  border-color: #0369A1;
   outline: none;
-  box-shadow: 0 0 0 3px #0F172A20;
+  box-shadow: 0 0 0 3px rgb(3 105 161 / 0.2);
 }
 ```
 
@@ -151,7 +171,7 @@
   background: white;
   border-radius: 16px;
   padding: 32px;
-  box-shadow: var(--shadow-xl);
+  box-shadow: var(--shadow-soft-xl);
   max-width: 500px;
   width: 90%;
 }
@@ -161,53 +181,47 @@
 
 ## Style Guidelines
 
-**Style:** Soft UI Evolution
+**Style:** Soft Glass Trust (Soft UI Evolution)
 
-**Keywords:** Evolved soft UI, better contrast, modern aesthetics, subtle depth, accessibility-focused, improved shadows, hybrid
+**Keywords:** Soft glass, trust navy, sky CTA, mesh hero, layered soft shadows, light-first, approachable professional
 
-**Best For:** Modern enterprise apps, SaaS platforms, health/wellness, modern business tools, professional, hybrid
+**Best For:** UMKM website builder, B2B SaaS marketing, trust-led conversion, hybrid product + content
 
-**Key Effects:** Improved shadows (softer than flat, clearer than neumorphism), modern (200-300ms), focus visible, WCAG AA/AAA
+**Key Effects:** Richer soft shadows, mesh backgrounds, glass panels (light), card-lift, focus visible, WCAG AA
 
 ### Page Pattern
 
-**Pattern Name:** Marketplace / Directory
+**Pattern Name:** Trust + Authority (Website Builder)
 
-- **Conversion Strategy:** Search bar is the CTA. Reduce friction to search. Popular searches suggestions.
-- **CTA Placement:** Hero Search Bar + Navbar 'List your item'
-- **Section Order:** 1. Hero (Search focused), 2. Categories, 3. Featured Listings, 4. Trust/Safety, 5. CTA (Become a host/seller)
+- **Conversion Strategy:** Hero domain search + transparent price floor + dual CTA (order / WA).
+- **CTA Placement:** Hero domain search + primary order CTA; sticky header secondary.
+- **Section Order:** 1. Hero (mesh + domain search), 2. Proof strip, 3. Features/services, 4. How it works, 5. Testimonials, 6. Pricing, 7. Final CTA, 8. Footer
 
 ---
 
 ## Motion
 
-**Page Transition** (Standard) — Trigger: route change | Duration: 400-600ms | Easing: `power2.inOut`
+**Dials:** Motion 5/10 — restrained micro-interactions
 
-```js
-const tl = gsap.timeline(); tl.to('.transition-overlay', { yPercent: 0, duration: 0.4, ease: 'power2.inOut' }).call(navigate).to('.transition-overlay', { yPercent: -100, duration: 0.4, ease: 'power2.inOut', delay: 0.1 });
-```
-
-**Framework notes:** Keep the overlay element mounted at the layout root (outside the page component) so it survives the route swap
-
-- ✅ Show a lightweight loading indicator if the destination route's data fetch outlasts the overlay
-- ❌ Don't tie the overlay's reveal directly to data-fetch completion without a max-wait timeout; a slow API stalls the whole transition
-- ⚡ Prefer CSS transform (yPercent) over top/left to keep the overlay animation on the compositor thread
+- Page transition: opacity + 4px translateY, 200ms (CSS, not GSAP overlay by default)
+- Micro: 150–300ms ease
+- Respect `prefers-reduced-motion`
+- Max 1–2 animated moments per view
 
 ---
 
 ## Anti-Patterns (Do NOT Use)
 
-- ❌ Excessive animation
+- ❌ Cheap promo spam (banner stacks, fake urgency countdown)
+- ❌ Emoji icons (use `i-lucide-*` / `i-simple-icons-*`)
+- ❌ Gray-on-gray low contrast
 - ❌ Dark mode by default
-
-### Additional Forbidden Patterns
-
-- ❌ **Emojis as icons** — Use SVG icons (Heroicons, Lucide, Simple Icons)
-- ❌ **Missing cursor:pointer** — All clickable elements must have cursor:pointer
-- ❌ **Layout-shifting hovers** — Avoid scale transforms that shift layout
-- ❌ **Low contrast text** — Maintain 4.5:1 minimum contrast ratio
-- ❌ **Instant state changes** — Always use transitions (150-300ms)
-- ❌ **Invisible focus states** — Focus states must be visible for a11y
+- ❌ Excessive animation / GSAP bloat on marketing
+- ❌ Marketplace search-as-primary product framing
+- ❌ Missing `cursor:pointer` on clickables
+- ❌ Layout-shifting hover scales
+- ❌ Instant state changes without transition
+- ❌ Invisible focus states
 
 ---
 
@@ -216,7 +230,7 @@ const tl = gsap.timeline(); tl.to('.transition-overlay', { yPercent: 0, duration
 Before delivering any UI code, verify:
 
 - [ ] No emojis used as icons (use SVG instead)
-- [ ] All icons from consistent icon set (Heroicons/Lucide)
+- [ ] All icons from consistent icon set (Lucide / Simple Icons)
 - [ ] `cursor-pointer` on all clickable elements
 - [ ] Hover states with smooth transitions (150-300ms)
 - [ ] Light mode: text contrast 4.5:1 minimum
@@ -225,3 +239,4 @@ Before delivering any UI code, verify:
 - [ ] Responsive: 375px, 768px, 1024px, 1440px
 - [ ] No content hidden behind fixed navbars
 - [ ] No horizontal scroll on mobile
+- [ ] Mesh/glass used only on light surfaces where intended

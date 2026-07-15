@@ -3,7 +3,7 @@
 
 /*
   MugiewDev Design Tokens
-  Style: Soft UI Evolution — professional navy + sky CTA
+  Style: Soft Glass Trust (Soft UI Evolution)
   Font: Plus Jakarta Sans
   See DESIGN.md for full system
 */
@@ -25,11 +25,58 @@
   --color-sky-900: #0c3d5c;
   --color-sky-950: #082f49;
 
-  /* Soft UI shadows */
-  --shadow-soft-sm: 0 1px 2px rgb(15 23 42 / 0.05);
-  --shadow-soft-md: 0 4px 6px -1px rgb(15 23 42 / 0.08), 0 2px 4px -2px rgb(15 23 42 / 0.06);
-  --shadow-soft-lg: 0 10px 15px -3px rgb(15 23 42 / 0.1), 0 4px 6px -4px rgb(15 23 42 / 0.08);
-  --shadow-soft-xl: 0 20px 25px -5px rgb(15 23 42 / 0.12), 0 8px 10px -6px rgb(15 23 42 / 0.1);
+  /* Soft UI shadows (richer layered depth) */
+  --shadow-soft-sm: 0 1px 2px rgb(15 23 42 / 0.04), 0 1px 1px rgb(15 23 42 / 0.03);
+  --shadow-soft-md: 0 4px 16px -2px rgb(15 23 42 / 0.08), 0 2px 6px -2px rgb(15 23 42 / 0.05);
+  --shadow-soft-lg: 0 12px 32px -8px rgb(15 23 42 / 0.12), 0 4px 12px -4px rgb(15 23 42 / 0.06);
+  --shadow-soft-xl: 0 24px 48px -12px rgb(15 23 42 / 0.16), 0 8px 16px -8px rgb(15 23 42 / 0.08);
+  --shadow-glow-sky: 0 0 0 1px rgb(3 105 161 / 0.12), 0 8px 30px -6px rgb(3 105 161 / 0.35);
+}
+
+/* Soft mesh hero background (light-friendly) */
+.bg-mesh-hero {
+  background-color: #f8fafc;
+  background-image:
+    radial-gradient(ellipse 80% 60% at 50% -10%, rgb(14 165 233 / 0.18), transparent 55%),
+    radial-gradient(ellipse 50% 40% at 100% 0%, rgb(15 23 42 / 0.06), transparent 50%),
+    radial-gradient(ellipse 40% 30% at 0% 20%, rgb(3 105 161 / 0.08), transparent 45%);
+}
+
+.glass-panel {
+  background: rgb(255 255 255 / 0.72);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgb(226 232 240 / 0.8);
+}
+
+.section-y {
+  padding-block: 4rem;
+}
+@media (min-width: 768px) {
+  .section-y {
+    padding-block: 5.5rem;
+  }
+}
+
+.text-display {
+  letter-spacing: -0.03em;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.card-lift {
+  transition: box-shadow 200ms ease, transform 200ms ease;
+}
+.card-lift:hover {
+  box-shadow: var(--shadow-soft-lg);
+  transform: translateY(-2px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .card-lift,
+  .card-lift:hover {
+    transition: none;
+    transform: none;
+  }
 }
 
 /* Page transitions (respect reduced motion) */
