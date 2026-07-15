@@ -110,7 +110,10 @@ export default defineNuxtConfig({
 
   experimental: {
     viewTransition: true,
-    payloadExtraction: true
+    payloadExtraction: true,
+    // Avoid Vite "#app-manifest" resolve failures after HMR / partial .nuxt rebuilds.
+    // Route rules still apply server-side; client manifest not required for this app.
+    appManifest: false
   },
 
   compatibilityDate: '2026-06-30',
