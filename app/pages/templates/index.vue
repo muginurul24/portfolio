@@ -22,26 +22,16 @@ const categories = [
 const activeCategory = ref('all')
 const search = ref('')
 
-// Placeholder catalog — replace with useFetch('/api/templates') when API ready
-const templates = ref([
-  { id: '1', slug: 'coconut-briquettes', name: 'Coconut Briquettes Export', category: 'export', thumbnailUrl: null },
-  { id: '2', slug: 'spice-exporter', name: 'Spice Exporter Pro', category: 'export', thumbnailUrl: null },
-  { id: '3', slug: 'umkm-local', name: 'UMKM Lokal SEO', category: 'umkm', thumbnailUrl: null },
-  { id: '4', slug: 'craft-gallery', name: 'Craft Gallery', category: 'craft', thumbnailUrl: null },
-  { id: '5', slug: 'company-profile', name: 'Company Profile', category: 'company', thumbnailUrl: null },
-  { id: '6', slug: 'seafood-export', name: 'Seafood Export', category: 'export', thumbnailUrl: null },
-  { id: '7', slug: 'furniture-rattan', name: 'Furniture & Rotan', category: 'export', thumbnailUrl: null },
-  { id: '8', slug: 'toko-online-basic', name: 'Toko Online Basic', category: 'ecommerce', thumbnailUrl: null }
-])
-
-const filtered = computed(() => {
-  return templates.value.filter((tpl) => {
-    const catOk = activeCategory.value === 'all' || tpl.category === activeCategory.value
-    const q = search.value.trim().toLowerCase()
-    const searchOk = !q || tpl.name.toLowerCase().includes(q)
-    return catOk && searchOk
-  })
+const { data, status } = await useFetch('/api/templates', {
+  key: 'templates-catalog',
+  query: computed(() => ({
+    category: activeCategory.value === 'all' ? undefined : activeCategory.value,
+    q: search.value.trim() || undefined
+  })),
+  watch: [activeCategory, search]
 })
+
+const templates = computed(() => data.value?.data ?? [])
 </script>
 
 <template>
@@ -78,9 +68,13 @@ const filtered = computed(() => {
       </div>
     </div>
 
-    <div v-if="filtered.length" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    <div v-if="status === 'pending'" class="py-20 text-center text-muted">
+      {{ t('common.loading') }}
+    </div>
+
+    <div v-else-if="templates.length" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       <UCard
-        v-for="tpl in filtered"
+        v-for="tpl in templates"
         :key="tpl.id"
         class="group cursor-pointer overflow-hidden transition-shadow duration-200 hover:shadow-soft-lg"
         :ui="{ body: 'p-0' }"
