@@ -1,7 +1,11 @@
 <script setup lang="ts">
+import type { UserRole } from '~/utils/roles'
+import { homeForRole, safeInternalPath } from '~/utils/auth-redirect'
+
 const { t } = useI18n()
+const route = useRoute()
 const localePath = useLocalePath()
-const { loggedIn, fetch: refreshSession } = useUserSession()
+const { loggedIn, user, fetch: refreshSession } = useUserSession()
 
 definePageMeta({
   layout: false
@@ -16,8 +20,14 @@ const password = ref('')
 const error = ref('')
 const loading = ref(false)
 
+function destinationForSession(): string {
+  const role = (user.value as { role?: UserRole } | null)?.role
+  const fallback = homeForRole(role, localePath)
+  return safeInternalPath(route.query.redirect, fallback)
+}
+
 if (import.meta.client && loggedIn.value) {
-  await navigateTo(localePath('/panel'))
+  await navigateTo(destinationForSession())
 }
 
 async function onSubmit() {
@@ -34,7 +44,7 @@ async function onSubmit() {
       }
     })
     await refreshSession()
-    await navigateTo(localePath('/panel'))
+    await navigateTo(destinationForSession())
   } catch (e: unknown) {
     const err = e as { data?: { message?: string }, statusMessage?: string }
     error.value = err?.data?.message || err?.statusMessage || t('common.error')
