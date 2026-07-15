@@ -3,7 +3,7 @@ const { t } = useI18n()
 
 useSeoMeta({
   title: () => t('footer.refund'),
-  description: 'Kebijakan pengembalian dana MugiewDev — ringkas dan transparan.'
+  description: 'Kebijakan pengembalian dana MugiewDev - ringkas dan transparan.'
 })
 </script>
 

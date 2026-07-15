@@ -18,25 +18,25 @@ const stats = computed(() => {
   return [
     {
       label: t('panel.statActiveSites'),
-      value: d?.activeSites ?? '—',
+      value: d?.activeSites ?? '-',
       icon: 'i-lucide-globe',
       to: localePath('/panel/sites')
     },
     {
       label: t('panel.statOrders'),
-      value: d?.orders ?? '—',
+      value: d?.orders ?? '-',
       icon: 'i-lucide-receipt',
       to: localePath('/panel/orders')
     },
     {
       label: t('panel.statNewInquiries'),
-      value: d?.newInquiries ?? '—',
+      value: d?.newInquiries ?? '-',
       icon: 'i-lucide-inbox',
       to: localePath('/panel/inquiries')
     },
     {
       label: t('panel.statAcademy'),
-      value: d?.academyCompleted ?? '—',
+      value: d?.academyCompleted ?? '-',
       icon: 'i-lucide-graduation-cap',
       to: localePath('/panel/academy')
     }

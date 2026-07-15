@@ -23,7 +23,7 @@ export default defineEventHandler(async (event) => {
     })
     return { data: rows }
   } catch {
-    // DB not migrated yet — empty catalog
+    // DB not migrated yet - empty catalog
     return { data: [] }
   }
 })

@@ -92,7 +92,7 @@ export default defineEventHandler(async (event) => {
 
   // better-sqlite3: payment + order + promo + site in one transaction
   db.transaction((tx) => {
-    // Re-read payment inside tx — skip if already paid (concurrent webhook)
+    // Re-read payment inside tx - skip if already paid (concurrent webhook)
     const freshPayment = tx.select().from(payments).where(eq(payments.id, paymentId)).get()
     if (!freshPayment || freshPayment.status === 'paid') return
 
@@ -149,7 +149,7 @@ export default defineEventHandler(async (event) => {
         }).run()
       }
     } else if (!userId) {
-      const note = 'Paid but no userId — guest order, site not provisioned until account linked'
+      const note = 'Paid but no userId - guest order, site not provisioned until account linked'
       orderPatch.notes = freshOrder.notes
         ? `${freshOrder.notes}\n${note}`
         : note

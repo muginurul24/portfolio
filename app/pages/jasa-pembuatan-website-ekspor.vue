@@ -25,7 +25,7 @@ const features = [
   {
     icon: 'i-lucide-globe',
     title: 'Domain + email bisnis',
-    description: 'Domain resmi dan email profesional — kredibel di mata buyer global.'
+    description: 'Domain resmi dan email profesional - kredibel di mata buyer global.'
   },
   {
     icon: 'i-lucide-search',
@@ -40,12 +40,12 @@ const features = [
   {
     icon: 'i-lucide-file-badge',
     title: 'Sertifikasi & legal',
-    description: 'NIB, HACCP, Halal, Organic, Fair Trade — showcase di satu halaman.'
+    description: 'NIB, HACCP, Halal, Organic, Fair Trade - showcase di satu halaman.'
   },
   {
     icon: 'i-lucide-package',
     title: 'Katalog ekspor',
-    description: 'HS code, MOQ, packaging, sample request — data yang buyer cari.'
+    description: 'HS code, MOQ, packaging, sample request - data yang buyer cari.'
   },
   {
     icon: 'i-lucide-inbox',
@@ -57,7 +57,7 @@ const features = [
 const steps = [
   { title: 'Pilih template ekspor', description: 'Ratusan design industri: agro, craft, seafood, furniture, dan lainnya.' },
   { title: 'Domain & paket', description: '.com / .id / .co.id + hosting + SSL + email bisnis.' },
-  { title: 'Bayar & aktif', description: 'Xendit: VA, QRIS, e-wallet, kartu. Live max 2×24 jam kerja.' }
+  { title: 'Bayar & aktif', description: 'Xendit: VA, QRIS, e-wallet, kartu. Live max 2x24 jam kerja.' }
 ]
 
 const waHref = computed(() => link(t('whatsapp.consultExport')))

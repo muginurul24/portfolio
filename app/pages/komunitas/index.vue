@@ -4,7 +4,7 @@ const localePath = useLocalePath()
 
 useSeoMeta({
   title: () => t('nav.community'),
-  description: 'Komunitas UMKM & eksportir — grup diskusi, kelas gratis, promo member, dana talangan.'
+  description: 'Komunitas UMKM & eksportir - grup diskusi, kelas gratis, promo member, dana talangan.'
 })
 </script>
 

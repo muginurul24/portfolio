@@ -12,7 +12,7 @@ const cases = [
     name: 'Nusantara Craft Export',
     sector: 'Kerajinan',
     summary: 'Katalog produk anyaman + form inquiry multibahasa untuk buyer ASEAN.',
-    outcome: 'Inquiry naik 3× dalam 2 bulan.',
+    outcome: 'Inquiry naik 3x dalam 2 bulan.',
     icon: 'i-lucide-palette'
   },
   {

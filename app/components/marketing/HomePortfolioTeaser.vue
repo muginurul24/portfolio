@@ -1,5 +1,5 @@
 <script setup lang="ts">
-/** Static v1 teaser — full list lives on /portofolio. */
+/** Static v1 teaser - full list lives on /portofolio. */
 const { t } = useI18n()
 const localePath = useLocalePath()
 

@@ -25,7 +25,7 @@ const features = [
   {
     icon: 'i-lucide-store',
     title: 'UMKM lokal',
-    description: 'Terlihat profesional di Google & sosmed — profil, katalog, kontak jelas.'
+    description: 'Terlihat profesional di Google & sosmed - profil, katalog, kontak jelas.'
   },
   {
     icon: 'i-lucide-map-pin',
@@ -40,7 +40,7 @@ const features = [
   {
     icon: 'i-lucide-shield-check',
     title: 'Legalitas',
-    description: 'Halaman NIB, NPWP, Halal, PIRT, BPOM — bangun kepercayaan pembeli.'
+    description: 'Halaman NIB, NPWP, Halal, PIRT, BPOM - bangun kepercayaan pembeli.'
   },
   {
     icon: 'i-lucide-image',
@@ -57,7 +57,7 @@ const features = [
 const steps = [
   { title: 'Pilih template UMKM', description: 'Design siap pakai untuk toko, jasa, F&B, dan kerajinan.' },
   { title: 'Domain + paket', description: 'Domain .com / .id + hosting + SSL dalam satu tagihan.' },
-  { title: 'Bayar & live', description: 'Xendit VA/QRIS/e-wallet. Situs aktif max 2×24 jam kerja.' }
+  { title: 'Bayar & live', description: 'Xendit VA/QRIS/e-wallet. Situs aktif max 2x24 jam kerja.' }
 ]
 
 const waHref = computed(() => link(t('whatsapp.consultUmkm')))

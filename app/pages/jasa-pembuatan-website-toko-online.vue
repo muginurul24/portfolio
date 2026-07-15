@@ -29,7 +29,7 @@ const features = [
   {
     icon: 'i-lucide-credit-card',
     title: 'Payment gateway',
-    description: 'VA, QRIS, e-wallet, kartu — terintegrasi gateway Indonesia.'
+    description: 'VA, QRIS, e-wallet, kartu - terintegrasi gateway Indonesia.'
   },
   {
     icon: 'i-lucide-truck',

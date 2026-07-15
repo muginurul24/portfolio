@@ -32,7 +32,7 @@ const benefits = computed(() => [
   }
 ])
 
-/** Decorative initials only — not real member photos. */
+/** Decorative initials only - not real member photos. */
 const avatars = [
   { initials: 'HI', tone: 'bg-sky-600/15 text-sky-700 dark:text-sky-300' },
   { initials: 'QF', tone: 'bg-emerald-600/15 text-emerald-700 dark:text-emerald-300' },

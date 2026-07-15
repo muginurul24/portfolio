@@ -24,7 +24,7 @@ const features = [
   {
     icon: 'i-lucide-blocks',
     title: 'Sistem bisnis',
-    description: 'ERP ringan, CRM, inventory, booking — sesuai proses internal Anda.'
+    description: 'ERP ringan, CRM, inventory, booking - sesuai proses internal Anda.'
   },
   {
     icon: 'i-lucide-bot',

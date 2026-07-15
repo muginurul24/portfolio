@@ -3,7 +3,7 @@ const { t } = useI18n()
 
 useSeoMeta({
   title: () => t('footer.privacy'),
-  description: 'Kebijakan privasi MugiewDev — cara kami mengumpulkan dan melindungi data Anda.'
+  description: 'Kebijakan privasi MugiewDev - cara kami mengumpulkan dan melindungi data Anda.'
 })
 </script>
 

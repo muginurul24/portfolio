@@ -91,7 +91,7 @@ useSeoMeta({
           7. Batasan tanggung jawab
         </h2>
         <p>
-          Layanan disediakan “sebagaimana adanya”. Kami berupaya menjaga
+          Layanan disediakan "sebagaimana adanya". Kami berupaya menjaga
           uptime wajar, namun tidak menjamin bebas gangguan. Tanggung jawab
           kami terbatas pada nilai biaya layanan yang Anda bayar untuk
           periode terkait, sejauh diizinkan hukum.

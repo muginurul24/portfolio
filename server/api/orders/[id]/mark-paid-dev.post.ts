@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
   if (!order) throw createError({ statusCode: 404, statusMessage: 'Not found' })
 
   if (order.status === 'cancelled' || order.status === 'expired') {
-    throw createError({ statusCode: 400, statusMessage: 'Order terminal — tidak bisa mark paid' })
+    throw createError({ statusCode: 400, statusMessage: 'Order terminal - tidak bisa mark paid' })
   }
 
   const isStaff = user.role === 'admin' || user.role === 'cs'

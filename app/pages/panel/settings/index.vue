@@ -24,10 +24,10 @@ const profile = computed(() => {
       ? 'panel.roleCustomer'
       : null
   return {
-    name: u?.name || '—',
-    email: u?.email || '—',
-    phone: u?.phone || '—',
-    role: roleKey ? t(roleKey) : (u?.role || '—')
+    name: u?.name || '-',
+    email: u?.email || '-',
+    phone: u?.phone || '-',
+    role: roleKey ? t(roleKey) : (u?.role || '-')
   }
 })
 </script>

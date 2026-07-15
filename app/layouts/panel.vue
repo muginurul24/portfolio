@@ -22,7 +22,7 @@ async function logout() {
   await navigateTo(localePath('/login'))
 }
 
-// Auth guard — redirect if not logged in
+// Auth guard - redirect if not logged in
 watchEffect(() => {
   if (import.meta.client && !loggedIn.value) {
     navigateTo(localePath('/login'))

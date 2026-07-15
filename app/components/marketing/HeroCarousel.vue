@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * Enterprise hero carousel — Embla via Nuxt UI UCarousel
+ * Enterprise hero carousel - Embla via Nuxt UI UCarousel
  *
  * Hydration: UCarousel mutates arrow `disabled` after Embla init on client,
  * which mismatches SSR. Mount interactive carousel with <ClientOnly> and
@@ -73,7 +73,7 @@ const firstSlide = computed(() => slides.value[0]!)
 const motionQuery = useMediaQuery('(prefers-reduced-motion: reduce)')
 const activeIndex = ref(0)
 const isPaused = ref(false)
-/** Enable autoplay only after client mount — avoids SSR/client media-query drift */
+/** Enable autoplay only after client mount - avoids SSR/client media-query drift */
 const mounted = ref(false)
 onMounted(() => {
   mounted.value = true
@@ -89,7 +89,7 @@ const autoplay = computed(() => {
   }
 })
 
-/** Perfect circle nav — fixed square box + centered icon */
+/** Perfect circle nav - fixed square box + centered icon */
 const navBtn = {
   size: 'md' as const,
   color: 'neutral' as const,
@@ -119,7 +119,7 @@ const carouselUi = {
   item: 'basis-full min-w-0 shrink-0 grow-0 ps-0',
   // full stage overlay for absolute arrow centering
   controls: 'absolute inset-0 z-20 pointer-events-none',
-  // don't use contents — keep positioning context on each arrow slot
+  // don't use contents - keep positioning context on each arrow slot
   arrows: 'absolute inset-0 pointer-events-none',
   // exact vertical center of carousel stage (override theme sm:-start-12 etc.)
   prev: [

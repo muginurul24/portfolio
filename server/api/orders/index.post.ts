@@ -99,7 +99,7 @@ export default defineEventHandler(async (event) => {
   // Free orders skip payment gateway
   const isFree = totals.totalIdr <= 0
 
-  // better-sqlite3: sync transaction — order + payment atomic
+  // better-sqlite3: sync transaction - order + payment atomic
   db.transaction((tx) => {
     tx.insert(orders).values({
       id: orderId,
@@ -151,7 +151,7 @@ export default defineEventHandler(async (event) => {
     externalId: orderNumber,
     amount: totals.totalIdr,
     email: customerEmail,
-    description: `MugiewDev ${orderNumber} — ${domainName}.${tld}`,
+    description: `MugiewDev ${orderNumber} - ${domainName}.${tld}`,
     successRedirectUrl: `${siteUrl}/order/success?order=${orderId}`,
     failureRedirectUrl: `${siteUrl}/order/checkout?failed=1`
   }).catch((err) => {

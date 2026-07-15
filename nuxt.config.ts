@@ -56,7 +56,7 @@ export default defineNuxtConfig({
     defaultLocale: 'id'
   },
 
-  // Soft Glass Trust — light default; full dark via class `dark` + UColorModeButton
+  // Soft Glass Trust - light default; full dark via class `dark` + UColorModeButton
   colorMode: {
     preference: 'light',
     fallback: 'light',
@@ -69,7 +69,7 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
-    // Server-only secrets — override with NUXT_* env vars
+    // Server-only secrets - override with NUXT_* env vars
     session: {
       maxAge: 60 * 60 * 24 * 7, // 7 days
       password: process.env.NUXT_SESSION_PASSWORD || ''
@@ -89,7 +89,7 @@ export default defineNuxtConfig({
   },
 
   routeRules: {
-    // Marketing — prerender / SWR for speed + SEO
+    // Marketing - prerender / SWR for speed + SEO
     '/': { prerender: true },
     '/templates': { swr: 3600 },
     '/templates/**': { swr: 3600 },
@@ -101,7 +101,7 @@ export default defineNuxtConfig({
     '/faq': { swr: 3600 },
     '/blog': { swr: 600 },
     '/blog/**': { swr: 600 },
-    // Order flow — dynamic
+    // Order flow - dynamic
     '/order/**': { ssr: true },
     // Auth + panel
     '/login': { ssr: true },
@@ -149,7 +149,7 @@ export default defineNuxtConfig({
       { name: 'Fraunces', provider: 'google', weights: [500, 600, 700], styles: ['normal', 'italic'] },
       // Editorial serif (blog, quotes support, long-form)
       { name: 'Source Serif 4', provider: 'google', weights: [400, 500, 600, 700], styles: ['normal', 'italic'] },
-      // Soft hand accent (testimonial quotes only — restrained)
+      // Soft hand accent (testimonial quotes only - restrained)
       { name: 'Caveat', provider: 'google', weights: [500, 600, 700] },
       // Domain, order numbers, code-ish UI
       { name: 'IBM Plex Mono', provider: 'google', weights: [400, 500, 600] }
@@ -186,7 +186,7 @@ export default defineNuxtConfig({
     }
   },
 
-  // Nuxt 4 srcDir is `app/` — pinia resolves storesDirs from layer.app
+  // Nuxt 4 srcDir is `app/` - pinia resolves storesDirs from layer.app
   pinia: {
     storesDirs: ['./stores']
   },

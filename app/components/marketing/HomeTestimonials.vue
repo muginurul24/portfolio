@@ -1,5 +1,5 @@
 <script setup lang="ts">
-/** Static v1 — swap to testimonials API when available. */
+/** Static v1 - swap to testimonials API when available. */
 const { t } = useI18n()
 
 const stats = computed(() => [
@@ -114,7 +114,7 @@ const reviews = computed(() => [
           <UIcon name="i-lucide-quote" class="size-7 text-primary/25 mb-3" aria-hidden="true" />
 
           <blockquote class="quote-hand text-xl md:text-2xl text-highlighted flex-1">
-            “{{ review.quote }}”
+            "{{ review.quote }}"
           </blockquote>
 
           <p

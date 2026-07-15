@@ -47,7 +47,7 @@ if (orderId.value) {
       orderNumber.value = data.value.data.orderNumber || data.value.data.id
     }
   } else {
-    // Unauthenticated: never claim paid — neutral pending confirmation only
+    // Unauthenticated: never claim paid - neutral pending confirmation only
     orderStatus.value = null
   }
 }

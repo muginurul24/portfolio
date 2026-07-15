@@ -107,7 +107,7 @@ const termItems = computed(() => [
 
 const packageItems = computed(() =>
   packages.value.map(p => ({
-    label: `${p.name} — ${formatIdr(p.priceYearlyIdr)}${t('order.perYearShort')}`,
+    label: `${p.name} - ${formatIdr(p.priceYearlyIdr)}${t('order.perYearShort')}`,
     value: p.id
   }))
 )

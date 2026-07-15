@@ -7,7 +7,7 @@ const { number: waNumber, link } = useWhatsApp()
 const supportEmail = computed(() => String(config.public.supportEmail || 'support@mugiewdev.com'))
 
 function formatWaDisplay(raw: unknown) {
-  // runtimeConfig / env can be non-string under HMR — coerce first
+  // runtimeConfig / env can be non-string under HMR - coerce first
   const s = String(raw ?? '').trim()
   if (!s) return ''
   const digits = s.replace(/\D/g, '')
