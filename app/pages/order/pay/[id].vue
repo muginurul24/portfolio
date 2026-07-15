@@ -8,6 +8,10 @@ const localePath = useLocalePath()
 const toast = useToast()
 
 const orderId = computed(() => String(route.params.id || ''))
+const payToken = computed(() => {
+  const q = route.query.token
+  return typeof q === 'string' ? q : Array.isArray(q) ? String(q[0] || '') : ''
+})
 
 useSeoMeta({ title: () => t('order.payTitle') })
 
@@ -18,8 +22,9 @@ let pollTimer: ReturnType<typeof setInterval> | null = null
 const { data, status, error, refresh } = await useFetch(
   () => `/api/orders/${orderId.value}/payment`,
   {
-    key: () => `order-pay-${orderId.value}`,
-    watch: [orderId]
+    key: () => `order-pay-${orderId.value}-${payToken.value}`,
+    query: computed(() => (payToken.value ? { token: payToken.value } : {})),
+    watch: [orderId, payToken]
   }
 )
 
@@ -53,7 +58,9 @@ async function checkStatus(navigateOnPaid = true) {
   try {
     const res = await $fetch<{
       data: { paid?: boolean, orderStatus?: string, paymentStatus?: string, remoteError?: string }
-    }>(`/api/orders/${orderId.value}/payment-status`)
+    }>(`/api/orders/${orderId.value}/payment-status`, {
+      query: payToken.value ? { token: payToken.value } : {}
+    })
     if (res.data.paid) {
       stopPoll()
       if (navigateOnPaid) {

@@ -230,9 +230,11 @@ async function submit() {
       return
     }
 
-    // QRIS pay page (internal)
+    // QRIS pay page (internal; payPath includes ?token=)
     if (payPath) {
-      await navigateTo(localePath(payPath))
+      const [pathPart, qs] = payPath.split('?')
+      const query = Object.fromEntries(new URLSearchParams(qs || ''))
+      await navigateTo({ path: localePath(pathPart || payPath), query })
       return
     }
 

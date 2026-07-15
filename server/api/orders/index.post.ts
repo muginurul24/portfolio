@@ -9,6 +9,7 @@ import {
   sanitizeCustomRef,
   sanitizeQrisUsername
 } from '../../utils/qrisvip'
+import { signPayToken } from '../../utils/pay-token'
 
 const bodySchema = z.object({
   packageId: z.string().min(1),
@@ -147,8 +148,6 @@ export default defineEventHandler(async (event) => {
     }).run()
   })
 
-  const payPath = `/order/pay/${orderId}`
-
   if (isFree) {
     return {
       data: {
@@ -161,10 +160,19 @@ export default defineEventHandler(async (event) => {
         paymentId,
         paymentUrl: null,
         payPath: `/order/success?order=${orderId}`,
+        payToken: null,
         qrisReady: false
       }
     }
   }
+
+  const config = useRuntimeConfig()
+  const secret = String(config.payTokenSecret || config.session?.password || '')
+  if (secret.length < 32) {
+    throw createError({ statusCode: 500, statusMessage: 'Pay token secret not configured' })
+  }
+  const payToken = signPayToken(orderId, secret)
+  const payPath = `/order/pay/${orderId}?token=${encodeURIComponent(payToken)}`
 
   const generated = await qrisvipGenerate({
     // API rejects email (@); use sanitized local-part
@@ -175,7 +183,7 @@ export default defineEventHandler(async (event) => {
 
   if (generated.ok) {
     const expireSec = generated.expiredAtSeconds
-      ?? Number(useRuntimeConfig().qrisvipExpireSeconds || 1200)
+      ?? Number(config.qrisvipExpireSeconds || 1200)
     const expiresAt = new Date(Date.now() + expireSec * 1000)
     await db.update(payments).set({
       providerRef: generated.trxId,
@@ -203,6 +211,7 @@ export default defineEventHandler(async (event) => {
       paymentId,
       paymentUrl: null,
       payPath,
+      payToken,
       qrisReady: generated.ok,
       qrisError: generated.ok ? undefined : generated.error
     }

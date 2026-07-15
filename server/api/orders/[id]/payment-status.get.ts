@@ -2,6 +2,7 @@ import { eq } from 'drizzle-orm'
 import { orders, payments } from '../../../database/schema'
 import { qrisvipCheckStatus } from '../../../utils/qrisvip'
 import { fulfillPaidOrder } from '../../../utils/order-fulfillment'
+import { assertPayAccess } from '../../../utils/pay-token'
 
 /**
  * Poll endpoint for pay page.
@@ -15,6 +16,12 @@ export default defineEventHandler(async (event) => {
   const db = useDb()
   const order = await db.query.orders.findFirst({ where: eq(orders.id, id) })
   if (!order) throw createError({ statusCode: 404, statusMessage: 'Pesanan tidak ditemukan' })
+
+  await assertPayAccess(event, {
+    id: order.id,
+    userId: order.userId,
+    customerEmail: order.customerEmail
+  })
 
   const payment = await db.query.payments.findFirst({
     where: eq(payments.orderId, id)

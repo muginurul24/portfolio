@@ -74,6 +74,8 @@ export default defineNuxtConfig({
       maxAge: 60 * 60 * 24 * 7, // 7 days
       password: process.env.NUXT_SESSION_PASSWORD || ''
     },
+    // HMAC secret for pay-page tokens (falls back to session password)
+    payTokenSecret: process.env.NUXT_PAY_TOKEN_SECRET || process.env.NUXT_SESSION_PASSWORD || '',
     databaseUrl: process.env.NUXT_DATABASE_URL || 'file:./.data/mugiew.sqlite',
     resendApiKey: process.env.NUXT_RESEND_API_KEY || '',
     whatsappNumber: process.env.NUXT_WHATSAPP_NUMBER || '6281280080275',
