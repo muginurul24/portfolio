@@ -118,14 +118,25 @@ export default defineEventHandler(async (event) => {
 
   const config = useRuntimeConfig()
   const siteUrl = config.public.siteUrl as string
-  const invoice = await createXenditInvoice({
-    externalId: orderNumber,
-    amount: totals.totalIdr,
-    email: body.customerEmail.toLowerCase().trim(),
-    description: `MugiewDev ${orderNumber} — ${domainName}.${tld}`,
-    successRedirectUrl: `${siteUrl}/order/success?order=${orderId}`,
-    failureRedirectUrl: `${siteUrl}/order/checkout?failed=1`
-  })
+  let invoice: { id: string, invoiceUrl: string } | null = null
+  try {
+    invoice = await createXenditInvoice({
+      externalId: orderNumber,
+      amount: totals.totalIdr,
+      email: body.customerEmail.toLowerCase().trim(),
+      description: `MugiewDev ${orderNumber} — ${domainName}.${tld}`,
+      successRedirectUrl: `${siteUrl}/order/success?order=${orderId}`,
+      failureRedirectUrl: `${siteUrl}/order/checkout?failed=1`
+    })
+  } catch (err) {
+    // Order already committed; keep pending and return without payment URL.
+    console.error('[orders] createXenditInvoice failed', {
+      orderId,
+      orderNumber,
+      error: err instanceof Error ? err.message : err
+    })
+    invoice = null
+  }
 
   if (invoice?.id) {
     await db.update(payments).set({
