@@ -10,8 +10,9 @@ const contentPath = computed(() => {
 })
 
 const { data: page } = await useAsyncData(
-  `tutorial-${contentPath.value}`,
-  () => queryCollection('tutorial').path(contentPath.value).first()
+  () => `tutorial-${contentPath.value}`,
+  () => queryCollection('tutorial').path(contentPath.value).first(),
+  { watch: [contentPath] }
 )
 
 if (!page.value) {

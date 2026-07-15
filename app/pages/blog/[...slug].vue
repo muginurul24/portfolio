@@ -10,8 +10,9 @@ const contentPath = computed(() => {
 })
 
 const { data: post } = await useAsyncData(
-  `blog-${contentPath.value}`,
-  () => queryCollection('blog').path(contentPath.value).first()
+  () => `blog-${contentPath.value}`,
+  () => queryCollection('blog').path(contentPath.value).first(),
+  { watch: [contentPath] }
 )
 
 if (!post.value) {
