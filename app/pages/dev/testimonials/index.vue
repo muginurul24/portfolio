@@ -257,15 +257,7 @@ async function doDelete() {
             <h2 class="font-semibold text-highlighted">
               {{ editing ? t('dev.content.editTestimonial') : t('dev.content.addTestimonial') }}
             </h2>
-          
-  <DevConfirmModal
-    v-model:open="confirmOpen"
-    :title="t('dev.content.confirmDeleteTestimonial', { name: pendingDelete?.label || '' })"
-    color="error"
-    :loading="!!deletingId"
-    @confirm="doDelete"
-  />
-</template>
+          </template>
           <form class="space-y-4 max-h-[70vh] overflow-y-auto" @submit.prevent="save">
             <UFormField :label="t('auth.name')" required>
               <UInput v-model="form.name" class="w-full" required />
@@ -312,5 +304,15 @@ async function doDelete() {
             </div>
           </form>
         </UCard>
-      
-  
+      </template>
+    </UModal>
+  <DevConfirmModal
+    v-model:open="confirmOpen"
+    :title="t('dev.content.confirmDeleteTestimonial', { name: pendingDelete?.label || '' })"
+    color="error"
+    :loading="!!deletingId"
+    @confirm="doDelete"
+  />
+
+  </div>
+</template>

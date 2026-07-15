@@ -271,16 +271,7 @@ function statusColor(s: string) {
               {{ t('dev.commerce.editOrder') }}
               <span v-if="editing" class="font-mono text-sm text-muted ml-2">{{ editing.orderNumber }}</span>
             </h2>
-          
-  <DevConfirmModal
-    v-model:open="confirmOpen"
-    :title="t('dev.commerce.confirmMarkPaid', { number: pendingMarkPaid?.orderNumber || '' })"
-    color="warning"
-    :loading="markingPaid"
-    :confirm-label="t('dev.commerce.markPaidDev')"
-    @confirm="doMarkPaid"
-  />
-</template>
+          </template>
           <form class="space-y-4" @submit.prevent="save">
             <UFormField :label="t('dev.catalog.status')" required>
               <USelect v-model="form.status" :items="statusItems" class="w-full" />
@@ -298,5 +289,16 @@ function statusColor(s: string) {
             </div>
           </form>
         </UCard>
-      
-  
+      </template>
+    </UModal>
+  <DevConfirmModal
+    v-model:open="confirmOpen"
+    :title="t('dev.commerce.confirmMarkPaid', { number: pendingMarkPaid?.orderNumber || '' })"
+    color="warning"
+    :loading="markingPaid"
+    :confirm-label="t('dev.commerce.markPaidDev')"
+    @confirm="doMarkPaid"
+  />
+
+  </div>
+</template>

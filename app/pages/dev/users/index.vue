@@ -315,15 +315,7 @@ function formatDate(value: string | Date | null) {
             <h2 class="font-semibold text-highlighted">
               {{ editing ? t('dev.users.edit') : t('dev.users.add') }}
             </h2>
-          
-  <DevConfirmModal
-    v-model:open="confirmOpen"
-    :title="t('dev.users.confirmDelete', { email: pendingDelete?.label || '' })"
-    color="error"
-    :loading="!!deletingId"
-    @confirm="doDelete"
-  />
-</template>
+          </template>
 
           <form class="space-y-4" @submit.prevent="save">
             <UFormField :label="t('auth.name')" required>
@@ -361,5 +353,15 @@ function formatDate(value: string | Date | null) {
             </div>
           </form>
         </UCard>
-      
-  
+      </template>
+    </UModal>
+  <DevConfirmModal
+    v-model:open="confirmOpen"
+    :title="t('dev.users.confirmDelete', { email: pendingDelete?.label || '' })"
+    color="error"
+    :loading="!!deletingId"
+    @confirm="doDelete"
+  />
+
+  </div>
+</template>

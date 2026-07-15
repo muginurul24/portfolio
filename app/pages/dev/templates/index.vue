@@ -280,15 +280,7 @@ async function doDelete() {
             <h2 class="font-semibold text-highlighted">
               {{ editing ? t('dev.catalog.editTemplate') : t('dev.catalog.addTemplate') }}
             </h2>
-          
-  <DevConfirmModal
-    v-model:open="confirmOpen"
-    :title="t('dev.catalog.confirmDeleteTemplate', { name: pendingDelete?.label || '' })"
-    color="error"
-    :loading="!!deletingId"
-    @confirm="doDelete"
-  />
-</template>
+          </template>
 
           <form class="space-y-4 max-h-[70vh] overflow-y-auto" @submit.prevent="save">
             <UFormField :label="t('dev.catalog.name')" required>
@@ -339,5 +331,15 @@ async function doDelete() {
             </div>
           </form>
         </UCard>
-      
-  
+      </template>
+    </UModal>
+  <DevConfirmModal
+    v-model:open="confirmOpen"
+    :title="t('dev.catalog.confirmDeleteTemplate', { name: pendingDelete?.label || '' })"
+    color="error"
+    :loading="!!deletingId"
+    @confirm="doDelete"
+  />
+
+  </div>
+</template>

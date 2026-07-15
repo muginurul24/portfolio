@@ -370,17 +370,7 @@ function askDeleteModule(mod: DevModule) {
             <h2 class="font-semibold text-highlighted">
               {{ editing ? t('dev.content.editCourse') : t('dev.content.addCourse') }}
             </h2>
-          
-  <DevConfirmModal
-    v-model:open="confirmOpen"
-    :title="pendingDelete?.kind === 'module'
-      ? t('dev.content.confirmDeleteModule', { title: pendingDelete?.label || '' })
-      : t('dev.content.confirmDeleteCourse', { title: pendingDelete?.label || '' })"
-    color="error"
-    :loading="!!deletingId"
-    @confirm="doDelete"
-  />
-</template>
+          </template>
           <form class="space-y-4" @submit.prevent="save">
             <UFormField :label="t('dev.content.courseTitle')" required>
               <UInput v-model="form.title" class="w-full" required />
@@ -411,5 +401,108 @@ function askDeleteModule(mod: DevModule) {
             </div>
           </form>
         </UCard>
-      
-  
+      </template>
+    </UModal>
+
+    <UModal v-model:open="modulesOpen">
+      <template #content>
+        <UCard>
+          <template #header>
+            <div class="flex items-center justify-between gap-3">
+              <h2 class="font-semibold text-highlighted">
+                {{ t('dev.content.modules') }}
+                <span v-if="activeCourse" class="text-sm text-muted font-normal ml-2">{{ activeCourse.title }}</span>
+              </h2>
+              <UButton size="sm" color="primary" icon="i-lucide-plus" @click="openCreateModule">
+                {{ t('dev.content.addModule') }}
+              </UButton>
+            </div>
+          </template>
+
+          <div v-if="modulesLoading" class="py-8 text-center text-muted">
+            {{ t('common.loading') }}
+          </div>
+          <ul v-else class="divide-y divide-default">
+            <li
+              v-for="mod in modules"
+              :key="mod.id"
+              class="py-3 flex items-start justify-between gap-3"
+            >
+              <div>
+                <div class="font-medium text-highlighted">
+                  {{ mod.title }}
+                </div>
+                <div class="text-xs text-muted font-mono">
+                  {{ mod.slug }} · order {{ mod.sortOrder }}
+                </div>
+              </div>
+              <div class="space-x-1 shrink-0">
+                <UButton size="xs" color="neutral" variant="ghost" icon="i-lucide-pencil" @click="openEditModule(mod)" />
+                <UButton size="xs" color="error" variant="ghost" icon="i-lucide-trash-2" @click="askDeleteModule(mod)" />
+              </div>
+            </li>
+            <li v-if="!modules.length" class="py-8 text-center text-muted">
+              {{ t('common.empty') }}
+            </li>
+          </ul>
+        </UCard>
+      </template>
+    </UModal>
+
+    <UModal v-model:open="moduleOpen">
+      <template #content>
+        <UCard>
+          <template #header>
+            <h2 class="font-semibold text-highlighted">
+              {{ editingModule ? t('dev.content.editModule') : t('dev.content.addModule') }}
+            </h2>
+          </template>
+          <form class="space-y-4 max-h-[70vh] overflow-y-auto" @submit.prevent="saveModule">
+            <UFormField :label="t('dev.content.courseTitle')" required>
+              <UInput v-model="moduleForm.title" class="w-full" required />
+            </UFormField>
+            <UFormField :label="t('dev.catalog.slug')" required>
+              <UInput v-model="moduleForm.slug" class="w-full font-mono" required />
+            </UFormField>
+            <UFormField label="Markdown">
+              <UTextarea v-model="moduleForm.contentMd" class="w-full font-mono text-xs" :rows="6" />
+            </UFormField>
+            <UFormField label="Video URL">
+              <UInput v-model="moduleForm.videoUrl" class="w-full" />
+            </UFormField>
+            <div class="grid grid-cols-2 gap-4">
+              <UFormField :label="t('dev.catalog.sortOrder')">
+                <UInput v-model.number="moduleForm.sortOrder" type="number" class="w-full" />
+              </UFormField>
+              <UFormField label="Duration (min)">
+                <UInput v-model.number="moduleForm.durationMinutes" type="number" min="0" class="w-full" />
+              </UFormField>
+            </div>
+            <label class="inline-flex items-center gap-2 text-sm cursor-pointer">
+              <input v-model="moduleForm.hasQuiz" type="checkbox" class="rounded border-default">
+              Quiz
+            </label>
+            <div class="flex justify-end gap-2 pt-2">
+              <UButton color="neutral" variant="ghost" type="button" @click="moduleOpen = false">
+                {{ t('common.cancel') }}
+              </UButton>
+              <UButton color="primary" type="submit" :loading="moduleSaving">
+                {{ t('common.save') }}
+              </UButton>
+            </div>
+          </form>
+        </UCard>
+      </template>
+    </UModal>
+  <DevConfirmModal
+    v-model:open="confirmOpen"
+    :title="pendingDelete?.kind === 'module'
+      ? t('dev.content.confirmDeleteModule', { title: pendingDelete?.label || '' })
+      : t('dev.content.confirmDeleteCourse', { title: pendingDelete?.label || '' })"
+    color="error"
+    :loading="!!deletingId"
+    @confirm="doDelete"
+  />
+
+  </div>
+</template>

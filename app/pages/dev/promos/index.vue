@@ -274,15 +274,7 @@ function discountLabel(row: DevPromo) {
             <h2 class="font-semibold text-highlighted">
               {{ editing ? t('dev.commerce.editPromo') : t('dev.commerce.addPromo') }}
             </h2>
-          
-  <DevConfirmModal
-    v-model:open="confirmOpen"
-    :title="t('dev.commerce.confirmDeletePromo', { code: pendingDelete?.label || '' })"
-    color="error"
-    :loading="!!deletingId"
-    @confirm="doDelete"
-  />
-</template>
+          </template>
           <form class="space-y-4" @submit.prevent="save">
             <UFormField :label="t('dev.commerce.code')" required>
               <UInput v-model="form.code" class="w-full font-mono uppercase" required />
@@ -320,5 +312,15 @@ function discountLabel(row: DevPromo) {
             </div>
           </form>
         </UCard>
-      
-  
+      </template>
+    </UModal>
+  <DevConfirmModal
+    v-model:open="confirmOpen"
+    :title="t('dev.commerce.confirmDeletePromo', { code: pendingDelete?.label || '' })"
+    color="error"
+    :loading="!!deletingId"
+    @confirm="doDelete"
+  />
+
+  </div>
+</template>
