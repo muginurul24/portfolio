@@ -16,6 +16,16 @@ export default defineNuxtConfig({
     'nuxt-charts'
   ],
 
+  // Nested dirs (marketing/, order/) must not force Marketing* / Order* prefixes
+  // so tags like <HeroDomainSearch> and <SectionHeading> resolve.
+  // https://nuxt.com/docs/4.x/directory-structure/app/components#component-names
+  components: [
+    {
+      path: '~/components',
+      pathPrefix: false
+    }
+  ],
+
   devtools: {
     enabled: true
   },
@@ -38,16 +48,6 @@ export default defineNuxtConfig({
   },
 
   css: ['~/assets/css/main.css'],
-
-  // Nested dirs (marketing/, order/) must not force Marketing* / Order* prefixes
-  // so tags like <HeroDomainSearch> and <SectionHeading> resolve.
-  // https://nuxt.com/docs/4.x/directory-structure/app/components#component-names
-  components: [
-    {
-      path: '~/components',
-      pathPrefix: false
-    }
-  ],
 
   site: {
     url: process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000',
