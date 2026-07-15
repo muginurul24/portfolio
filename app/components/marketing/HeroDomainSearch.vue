@@ -50,20 +50,27 @@ async function check() {
   <div class="w-full max-w-xl mx-auto">
     <div class="glass-panel shadow-soft-xl rounded-2xl p-2 sm:p-3">
       <form class="flex flex-col sm:flex-row gap-2" @submit.prevent="check">
+        <label
+          for="hero-domain-name"
+          class="sr-only"
+        >{{ t('order.domainNameLabel') }}</label>
         <UInput
+          id="hero-domain-name"
           v-model="name"
           size="xl"
           :placeholder="t('order.domainPlaceholder')"
           class="flex-1"
           :ui="{ base: 'font-mono' }"
           autocomplete="off"
-          :aria-label="t('order.chooseDomain')"
+          :aria-label="t('order.domainNameLabel')"
+          aria-describedby="hero-domain-hint"
         />
         <USelect
           v-model="selectedTld"
           :items="tlds.map(x => ({ label: `.${x.tld}`, value: x.tld }))"
           size="xl"
           class="sm:w-32"
+          :aria-label="t('order.domainLabel')"
         />
         <UButton
           type="submit"
@@ -84,7 +91,10 @@ async function check() {
     <p v-else-if="available === false" class="mt-2 text-sm text-error text-center">
       {{ t('order.domainUnavailable') }}
     </p>
-    <p class="mt-3 text-center text-xs text-muted">
+    <p
+      id="hero-domain-hint"
+      class="mt-3 text-center text-xs text-muted"
+    >
       {{ t('order.domainSearchHint') }}
     </p>
   </div>

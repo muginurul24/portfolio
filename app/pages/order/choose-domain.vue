@@ -140,21 +140,30 @@ function continueOrder() {
         class="glass-panel"
         :ui="{ root: 'shadow-soft-md ring-1 ring-default/60' }"
       >
-        <div class="flex flex-col sm:flex-row gap-3">
-          <UInput
-            v-model="name"
-            size="lg"
-            :placeholder="t('order.domainPlaceholder')"
+        <div class="flex flex-col sm:flex-row sm:items-end gap-3">
+          <UFormField
+            :label="t('order.domainNameLabel')"
+            name="domain"
+            required
             class="flex-1"
-            :ui="{ base: 'font-mono' }"
-            @keyup.enter="checkDomain"
-          />
+          >
+            <UInput
+              v-model="name"
+              size="lg"
+              :placeholder="t('order.domainPlaceholder')"
+              class="w-full"
+              :ui="{ base: 'font-mono' }"
+              autocomplete="off"
+              @keyup.enter="checkDomain"
+            />
+          </UFormField>
           <USelect
             v-model="selectedTld"
             :items="tlds.map(x => ({ label: `.${x.tld}`, value: x.tld }))"
             :loading="tldsStatus === 'pending'"
             size="lg"
             class="sm:w-36"
+            :aria-label="t('order.domainLabel')"
           />
           <UButton
             color="primary"

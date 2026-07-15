@@ -277,6 +277,19 @@
     "forbiddenHome": "Go home",
     "forbiddenPanel": "Open panel"
   },
+  "error": {
+    "defaultTitle": "Something went wrong",
+    "defaultDesc": "An error occurred. Retry, go home, or contact support.",
+    "notFoundTitle": "Page not found",
+    "notFoundDesc": "This URL does not exist or moved. Check the link, browse templates, or chat support.",
+    "forbiddenTitle": "Access denied",
+    "forbiddenDesc": "You do not have permission to open this page. Go home or to an allowed area.",
+    "serverTitle": "Server error",
+    "serverDesc": "We are fixing this. Try again shortly or contact support on WhatsApp.",
+    "goHome": "Go home",
+    "goTemplates": "Browse templates",
+    "contactWa": "Chat WhatsApp"
+  },
   "dev": {
     "consoleTitle": "Developer Console",
     "consoleComing": "Dev console coming soon. Full management modules follow.",
@@ -488,6 +501,7 @@
     "stepDomain": "Domain",
     "stepCheckout": "Checkout",
     "stepDone": "Done",
+    "domainNameLabel": "Domain name",
     "domainPlaceholder": "yourbrand",
     "domainTooShort": "Domain name must be at least 3 characters",
     "domainAvailable": "{domain} is available",

@@ -277,6 +277,19 @@
     "forbiddenHome": "Ke beranda",
     "forbiddenPanel": "Buka panel"
   },
+  "error": {
+    "defaultTitle": "Halaman bermasalah",
+    "defaultDesc": "Terjadi kesalahan. Coba lagi, kembali ke beranda, atau hubungi CS.",
+    "notFoundTitle": "Halaman tidak ditemukan",
+    "notFoundDesc": "URL ini tidak ada atau sudah dipindah. Cek link, lihat template, atau chat CS.",
+    "forbiddenTitle": "Akses ditolak",
+    "forbiddenDesc": "Anda tidak punya izin membuka halaman ini. Kembali ke beranda atau area yang diizinkan.",
+    "serverTitle": "Server bermasalah",
+    "serverDesc": "Kami sedang perbaiki. Coba beberapa saat lagi atau hubungi CS lewat WhatsApp.",
+    "goHome": "Ke beranda",
+    "goTemplates": "Lihat template",
+    "contactWa": "Chat WhatsApp"
+  },
   "dev": {
     "consoleTitle": "Konsol Developer",
     "consoleComing": "Konsol dev sedang disiapkan. Modul manajemen penuh menyusul.",
@@ -488,6 +501,7 @@
     "stepDomain": "Domain",
     "stepCheckout": "Checkout",
     "stepDone": "Selesai",
+    "domainNameLabel": "Nama domain",
     "domainPlaceholder": "namabisnis",
     "domainTooShort": "Nama domain minimal 3 karakter",
     "domainAvailable": "{domain} tersedia",
