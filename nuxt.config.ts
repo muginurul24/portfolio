@@ -104,7 +104,11 @@ export default defineNuxtConfig({
     '/': { prerender: true },
     '/templates': { swr: 3600 },
     '/templates/**': { swr: 3600 },
-    '/jasa-pembuatan-website-**': { swr: 3600 },
+    // Explicit paths — glob ** after hyphen is unreliable for single-segment slugs
+    '/jasa-pembuatan-website-ekspor': { swr: 3600 },
+    '/jasa-pembuatan-website-umkm': { swr: 3600 },
+    '/jasa-pembuatan-website-toko-online': { swr: 3600 },
+    '/jasa-pembuatan-website-custom': { swr: 3600 },
     '/academy': { swr: 3600 },
     '/komunitas': { swr: 3600 },
     '/portofolio': { swr: 3600 },
@@ -121,7 +125,10 @@ export default defineNuxtConfig({
 
   experimental: {
     viewTransition: true,
-    payloadExtraction: true,
+    // Keep false with appManifest:false — otherwise SPA nav requests
+    // /page/_payload.json that only exist after generate/prerender and
+    // Vue Router warns "No match found" (seen on /templates → service links).
+    payloadExtraction: false,
     // Avoid Vite "#app-manifest" resolve failures after HMR / partial .nuxt rebuilds.
     // Route rules still apply server-side; client manifest not required for this app.
     appManifest: false
