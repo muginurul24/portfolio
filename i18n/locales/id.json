@@ -107,7 +107,19 @@
     "readPost": "Baca",
     "viewAllBlog": "Semua artikel",
     "ctaTitle": "Saatnya bisnismu capai pasar global.",
-    "ctaDesc": "Balas cepat · SEO siap pakai · Tanpa komitmen. Pakai kode promo {code} potong {discount}."
+    "ctaDesc": "Balas cepat · SEO siap pakai · Tanpa komitmen. Pakai kode promo {code} potong {discount}.",
+    "carousel": {
+      "label": "Sorotan layanan website",
+      "exportBadge": "Website Ekspor",
+      "exportTitle": "Tampil di Google. Dapat inquiry buyer global.",
+      "exportDesc": "Profil ekspor multi-bahasa: HS code, MOQ, sertifikasi, form inquiry. Domain, hosting, SSL satu paket.",
+      "umkmBadge": "Website UMKM",
+      "umkmTitle": "Website UMKM yang siap dapat order.",
+      "umkmDesc": "SEO lokal, form WhatsApp, admin mudah diganti. Harga transparan — live dalam 2×24 jam kerja.",
+      "ecomBadge": "Toko Online",
+      "ecomTitle": "Jualan online dengan checkout lengkap.",
+      "ecomDesc": "Katalog, keranjang, VA/QRIS/e-wallet. Domain & hosting tahun pertama termasuk."
+    }
   },
   "serviceLanding": {
     "proofTitle": "Dipercaya UMKM & eksportir",

@@ -107,7 +107,19 @@
     "readPost": "Read",
     "viewAllBlog": "All articles",
     "ctaTitle": "Time for your business to reach global markets.",
-    "ctaDesc": "Fast replies · SEO-ready · No lock-in. Use promo code {code} for {discount} off."
+    "ctaDesc": "Fast replies · SEO-ready · No lock-in. Use promo code {code} for {discount} off.",
+    "carousel": {
+      "label": "Website service highlights",
+      "exportBadge": "Export Website",
+      "exportTitle": "Show up on Google. Get global buyer inquiries.",
+      "exportDesc": "Multi-language export profile: HS code, MOQ, certifications, inquiry form. Domain, hosting, SSL in one package.",
+      "umkmBadge": "SME Website",
+      "umkmTitle": "An SME site ready for orders.",
+      "umkmDesc": "Local SEO, WhatsApp forms, easy admin edits. Transparent pricing — live within 2×24 business hours.",
+      "ecomBadge": "Online Store",
+      "ecomTitle": "Sell online with full checkout.",
+      "ecomDesc": "Catalog, cart, VA/QRIS/e-wallet. Year-one domain & hosting included."
+    }
   },
   "serviceLanding": {
     "proofTitle": "Trusted by SMEs & exporters",
