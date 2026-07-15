@@ -6,13 +6,13 @@ definePageMeta({
   middleware: ['auth', 'staff']
 })
 
-useSeoMeta({ title: () => t('dev.nav.orders') })
+useSeoMeta({ title: () => t('dev.nav.system') })
 </script>
 
 <template>
   <div>
     <h1 class="text-2xl font-semibold text-highlighted tracking-tight">
-      {{ t('dev.nav.orders') }}
+      {{ t('dev.nav.system') }}
     </h1>
     <p class="mt-2 text-muted">
       {{ t('dev.comingSoon') }}
