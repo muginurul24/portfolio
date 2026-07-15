@@ -8,7 +8,7 @@ export const users = sqliteTable('users', {
   passwordHash: text('password_hash'),
   name: text('name').notNull(),
   phone: text('phone'),
-  role: text('role', { enum: ['customer', 'admin', 'cs'] }).notNull().default('customer'),
+  role: text('role', { enum: ['customer', 'admin', 'cs', 'dev'] }).notNull().default('customer'),
   emailVerifiedAt: integer('email_verified_at', { mode: 'timestamp' }),
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
   updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`)

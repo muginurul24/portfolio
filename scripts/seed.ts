@@ -55,7 +55,7 @@ async function main() {
       id: 'user_admin',
       email: 'mugiew@nuxt.dev',
       name: 'Admin Mugiew',
-      role: 'admin',
+      role: 'dev',
       passwordHash: adminHash,
       phone: '6281280080275'
     },
