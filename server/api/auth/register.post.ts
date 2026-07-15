@@ -25,14 +25,29 @@ export default defineEventHandler(async (event) => {
   const passwordHash = await hashPassword(body.password)
   const id = createId('user')
 
-  await db.insert(users).values({
-    id,
-    email,
-    passwordHash,
-    name: body.name.trim(),
-    phone: body.phone?.trim() || null,
-    role: 'customer'
-  })
+  try {
+    await db.insert(users).values({
+      id,
+      email,
+      passwordHash,
+      name: body.name.trim(),
+      phone: body.phone?.trim() || null,
+      role: 'customer'
+    })
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err)
+    const code = typeof err === 'object' && err && 'code' in err
+      ? String((err as { code: unknown }).code)
+      : ''
+    // Race: concurrent register can pass findFirst then hit unique email.
+    if (
+      code.startsWith('SQLITE_CONSTRAINT')
+      || message.includes('UNIQUE constraint failed')
+    ) {
+      throw createError({ statusCode: 409, statusMessage: 'Email sudah terdaftar' })
+    }
+    throw err
+  }
 
   await setUserSession(event, {
     user: { id, email, name: body.name.trim(), role: 'customer' }
