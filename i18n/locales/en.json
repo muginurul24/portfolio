@@ -556,7 +556,8 @@
       "cancelled": "Cancelled",
       "expired": "Expired",
       "suspended": "Suspended"
-    }
+    },
+    "checkoutErrorHint": "Fix the form fields, then try paying again. Need help? message support on WhatsApp."
   },
   "auth": {
     "login": "Log in",

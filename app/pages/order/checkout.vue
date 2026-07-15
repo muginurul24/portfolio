@@ -81,6 +81,7 @@ const promoAppliedCode = ref('')
 const loading = ref(false)
 const promoLoading = ref(false)
 const error = ref('')
+const promoHydrated = ref(false)
 
 const termYearsNum = computed(() => {
   const n = Number(form.termYears)
@@ -112,15 +113,42 @@ const packageItems = computed(() =>
   }))
 )
 
-watch(() => form.termYears, () => {
-  // percent promo recalculates via computed; fixed IDR stays
-})
+function resolvePackageId(list: PackageRow[]): string | null {
+  const qPkg = String(route.query.package || route.query.pkg || '').trim()
+  if (qPkg) {
+    const byIdOrSlug = list.find(p => p.id === qPkg || p.slug === qPkg)
+    if (byIdOrSlug) return byIdOrSlug.id
+  }
+
+  const service = String(route.query.service || '').trim().toLowerCase()
+  if (service) {
+    const byService = list.find(
+      p => p.serviceType === service || p.slug.includes(service)
+    )
+    if (byService) return byService.id
+  }
+
+  if (orderStore.packageId && list.some(p => p.id === orderStore.packageId)) {
+    return orderStore.packageId
+  }
+
+  return null
+}
+
+watch(packages, (list) => {
+  if (!list.length) return
+  const resolved = resolvePackageId(list)
+  if (resolved) {
+    form.packageId = resolved
+    orderStore.setPackage(resolved)
+  }
+}, { immediate: true })
 
 watch(() => form.packageId, (id) => {
   if (id) orderStore.setPackage(id)
 })
 
-onMounted(() => {
+onMounted(async () => {
   if (route.query.failed === '1') {
     error.value = t('order.paymentFailed')
   }
@@ -129,6 +157,14 @@ onMounted(() => {
     orderStore.setDomain(domainParts.value.name, domainParts.value.tld)
   }
   if (template.value) orderStore.setTemplate(template.value)
+
+  // auto-apply promo if store / form already has code
+  if (!promoHydrated.value && form.promoCode.trim()) {
+    promoHydrated.value = true
+    await applyPromo()
+  } else {
+    promoHydrated.value = true
+  }
 })
 
 async function applyPromo() {
@@ -253,7 +289,7 @@ const waHref = computed(() => link(t('whatsapp.orderHelp')))
 
 <template>
   <div class="bg-mesh-hero min-h-[60vh]">
-    <UContainer class="py-10 md:py-16 max-w-3xl">
+    <UContainer class="py-10 md:py-16 max-w-5xl pb-28 lg:pb-16">
       <OrderStepper :step="2" />
 
       <div class="mb-8">
@@ -262,7 +298,7 @@ const waHref = computed(() => link(t('whatsapp.orderHelp')))
         </h1>
       </div>
 
-      <div class="grid gap-6 lg:grid-cols-5">
+      <div class="grid gap-6 lg:grid-cols-5 lg:items-start">
         <UCard
           class="lg:col-span-3"
           :ui="{ root: 'shadow-soft-md ring-1 ring-default/60' }"
@@ -293,7 +329,14 @@ const waHref = computed(() => link(t('whatsapp.orderHelp')))
 
           <form class="space-y-4" @submit.prevent="submit">
             <UFormField :label="t('auth.name')" required>
-              <UInput v-model="form.name" size="lg" class="w-full" required autocomplete="name" />
+              <UInput
+                v-model="form.name"
+                size="lg"
+                class="w-full"
+                required
+                autocomplete="name"
+                name="name"
+              />
             </UFormField>
             <UFormField :label="t('auth.email')" required>
               <UInput
@@ -303,6 +346,8 @@ const waHref = computed(() => link(t('whatsapp.orderHelp')))
                 class="w-full"
                 required
                 autocomplete="email"
+                name="email"
+                inputmode="email"
               />
             </UFormField>
             <UFormField :label="t('auth.phone')" required>
@@ -313,6 +358,8 @@ const waHref = computed(() => link(t('whatsapp.orderHelp')))
                 class="w-full"
                 required
                 autocomplete="tel"
+                name="phone"
+                inputmode="tel"
               />
             </UFormField>
 
@@ -334,34 +381,47 @@ const waHref = computed(() => link(t('whatsapp.orderHelp')))
               />
             </UFormField>
 
-            <div class="flex gap-2">
-              <UInput
-                v-model="form.promoCode"
-                :placeholder="t('order.promoPlaceholder')"
-                size="lg"
-                class="flex-1"
-              />
-              <UButton
-                color="neutral"
-                variant="outline"
-                size="lg"
-                type="button"
-                :loading="promoLoading"
-                @click="applyPromo"
-              >
-                {{ t('order.applyPromo') }}
-              </UButton>
-            </div>
+            <UFormField :label="t('order.promoPlaceholder')">
+              <div class="flex gap-2">
+                <UInput
+                  v-model="form.promoCode"
+                  :placeholder="t('order.promoPlaceholder')"
+                  size="lg"
+                  class="flex-1"
+                  autocomplete="off"
+                  @keyup.enter.prevent="applyPromo"
+                />
+                <UButton
+                  color="neutral"
+                  variant="outline"
+                  size="lg"
+                  type="button"
+                  :loading="promoLoading"
+                  :disabled="promoLoading || loading"
+                  @click="applyPromo"
+                >
+                  {{ t('order.applyPromo') }}
+                </UButton>
+              </div>
+            </UFormField>
 
-            <UAlert v-if="error" color="error" variant="subtle" :title="error" icon="i-lucide-alert-circle" />
+            <UAlert
+              v-if="error"
+              color="error"
+              variant="subtle"
+              :title="error"
+              :description="t('order.checkoutErrorHint')"
+              icon="i-lucide-alert-circle"
+            />
 
             <UButton
               type="submit"
               color="primary"
               size="lg"
               block
+              class="hidden lg:inline-flex"
               :loading="loading"
-              :disabled="loading"
+              :disabled="loading || promoLoading"
               icon="i-lucide-credit-card"
             >
               {{ t('order.pay') }}
@@ -369,8 +429,8 @@ const waHref = computed(() => link(t('whatsapp.orderHelp')))
           </form>
         </UCard>
 
-        <div
-          class="lg:col-span-2 h-fit glass-panel rounded-xl shadow-soft-md ring-1 ring-default/60 p-5 sm:p-6"
+        <aside
+          class="hidden lg:block lg:col-span-2 lg:sticky lg:top-24 h-fit glass-panel rounded-xl shadow-soft-md ring-1 ring-default/60 p-5 sm:p-6"
         >
           <h2 class="font-semibold mb-4">
             {{ t('order.summary') }}
@@ -402,7 +462,10 @@ const waHref = computed(() => link(t('whatsapp.orderHelp')))
               <dt class="text-muted">
                 {{ t('order.subtotal') }}
               </dt>
-              <dd class="tabular-nums">
+              <dd
+                class="tabular-nums"
+                :class="effectivePromoDiscount ? 'line-through text-muted' : ''"
+              >
                 {{ formatIdr(subtotal) }}
               </dd>
             </div>
@@ -454,8 +517,44 @@ const waHref = computed(() => link(t('whatsapp.orderHelp')))
           >
             {{ t('order.contactSupport') }}
           </UButton>
-        </div>
+        </aside>
       </div>
     </UContainer>
+
+    <!-- Mobile sticky summary + pay -->
+    <div
+      class="lg:hidden fixed inset-x-0 bottom-0 z-40 glass-panel border-t border-default/80 shadow-soft-xl px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]"
+    >
+      <div class="mx-auto max-w-5xl flex items-center gap-3">
+        <div class="min-w-0 flex-1">
+          <p class="text-xs text-muted truncate">
+            {{ selectedPackage?.name || t('order.summary') }}
+            <span v-if="domainFromQuery" class="font-mono"> · {{ domainFromQuery }}</span>
+          </p>
+          <div class="flex items-baseline gap-2">
+            <span
+              v-if="effectivePromoDiscount"
+              class="text-xs text-muted line-through tabular-nums"
+            >
+              {{ formatIdr(subtotal) }}
+            </span>
+            <span class="text-base font-semibold tabular-nums text-primary">
+              {{ formatIdr(total) }}
+            </span>
+          </div>
+        </div>
+        <UButton
+          color="primary"
+          size="lg"
+          class="shrink-0"
+          :loading="loading"
+          :disabled="loading || promoLoading"
+          icon="i-lucide-credit-card"
+          @click="submit"
+        >
+          {{ t('order.pay') }}
+        </UButton>
+      </div>
+    </div>
   </div>
 </template>

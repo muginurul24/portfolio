@@ -556,7 +556,8 @@
       "cancelled": "Dibatalkan",
       "expired": "Kedaluwarsa",
       "suspended": "Ditangguhkan"
-    }
+    },
+    "checkoutErrorHint": "Perbaiki data di form, lalu coba bayar lagi. Butuh bantuan? chat CS WhatsApp."
   },
   "auth": {
     "login": "Masuk",
