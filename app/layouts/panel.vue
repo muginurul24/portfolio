@@ -4,7 +4,12 @@ const localePath = useLocalePath()
 const { loggedIn, user, clear } = useUserSession()
 
 const items = computed(() => [
-  { label: t('panel.dashboard'), to: localePath('/panel'), icon: 'i-lucide-layout-dashboard' },
+  {
+    label: t('panel.dashboard'),
+    to: localePath('/panel'),
+    icon: 'i-lucide-layout-dashboard',
+    exact: true
+  },
   { label: t('panel.sites'), to: localePath('/panel/sites'), icon: 'i-lucide-globe' },
   { label: t('panel.orders'), to: localePath('/panel/orders'), icon: 'i-lucide-receipt' },
   { label: t('panel.academy'), to: localePath('/panel/academy'), icon: 'i-lucide-graduation-cap' },
@@ -27,17 +32,23 @@ watchEffect(() => {
 
 <template>
   <div class="min-h-dvh flex bg-muted/40">
-    <aside class="hidden md:flex w-64 flex-col border-r border-default bg-default">
+    <aside class="hidden md:flex w-64 flex-col border-r border-default bg-default shadow-soft-sm">
       <div class="p-4 border-b border-default">
         <NuxtLink :to="localePath('/')" class="flex items-center gap-2 cursor-pointer">
           <AppLogo class="h-6 w-auto" />
-          <span class="font-semibold">MugiewDev</span>
+          <span class="font-semibold tracking-tight text-highlighted">MugiewDev</span>
         </NuxtLink>
       </div>
       <UNavigationMenu
         :items="items"
         orientation="vertical"
+        highlight
+        highlight-color="primary"
         class="flex-1 p-3"
+        :ui="{
+          link: 'rounded-lg',
+          linkLeadingIcon: 'size-4'
+        }"
       />
       <div class="p-3 border-t border-default space-y-2">
         <p v-if="user" class="text-sm text-muted truncate px-2">
@@ -56,7 +67,7 @@ watchEffect(() => {
     </aside>
 
     <div class="flex-1 flex flex-col min-w-0">
-      <header class="md:hidden flex items-center justify-between p-4 border-b border-default bg-default">
+      <header class="md:hidden flex items-center justify-between p-4 border-b border-default glass-panel">
         <AppLogo class="h-6 w-auto" />
         <UButton icon="i-lucide-menu" color="neutral" variant="ghost" aria-label="Menu" />
       </header>

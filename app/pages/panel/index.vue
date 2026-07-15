@@ -98,8 +98,8 @@ const stats = computed(() => {
         class="block"
       >
         <UCard
-          class="h-full transition-shadow duration-200 hover:shadow-soft-md"
-          :ui="{ root: 'shadow-soft-sm' }"
+          class="card-lift h-full"
+          :ui="{ root: 'shadow-soft-sm ring-1 ring-default/50' }"
         >
           <div class="flex items-center gap-3">
             <div class="flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
@@ -112,7 +112,7 @@ const stats = computed(() => {
               <p class="text-sm text-muted">
                 {{ s.label }}
               </p>
-              <p class="text-xl font-semibold tabular-nums">
+              <p class="text-xl font-semibold tabular-nums text-highlighted">
                 {{ s.value }}
               </p>
             </div>

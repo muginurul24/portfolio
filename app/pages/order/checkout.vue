@@ -246,204 +246,210 @@ const waHref = computed(() => link(t('whatsapp.orderHelp')))
 </script>
 
 <template>
-  <UContainer class="py-10 md:py-16 max-w-3xl">
-    <div class="mb-8">
-      <UBadge color="primary" variant="subtle" class="mb-3">
-        {{ t('order.stepOf', { step: '2–3', total: 3 }) }}
-      </UBadge>
-      <h1 class="text-3xl font-semibold text-highlighted tracking-tight">
-        {{ t('order.checkout') }}
-      </h1>
-    </div>
+  <div class="bg-mesh-hero min-h-[60vh]">
+    <UContainer class="py-10 md:py-16 max-w-3xl">
+      <OrderStepper :step="2" />
 
-    <div class="grid gap-6 lg:grid-cols-5">
-      <UCard class="lg:col-span-3 shadow-soft-md">
-        <h2 class="font-semibold mb-4">
-          {{ t('order.personalData') }}
-        </h2>
-        <UAlert
-          v-if="!loggedIn"
-          color="warning"
-          variant="subtle"
-          class="mb-4"
-          icon="i-lucide-user-round"
-          :title="t('order.loginRecommendedTitle')"
-          :description="t('order.loginRecommendedDesc')"
+      <div class="mb-8">
+        <h1 class="text-3xl font-semibold text-highlighted tracking-tight">
+          {{ t('order.checkout') }}
+        </h1>
+      </div>
+
+      <div class="grid gap-6 lg:grid-cols-5">
+        <UCard
+          class="lg:col-span-3"
+          :ui="{ root: 'shadow-soft-md ring-1 ring-default/60' }"
         >
-          <template #actions>
-            <UButton
-              :to="localePath({ path: '/login', query: { redirect: route.fullPath } })"
-              color="warning"
-              variant="soft"
-              size="sm"
-            >
-              {{ t('auth.login') }}
-            </UButton>
-          </template>
-        </UAlert>
-
-        <form class="space-y-4" @submit.prevent="submit">
-          <UFormField :label="t('auth.name')" required>
-            <UInput v-model="form.name" size="lg" class="w-full" required autocomplete="name" />
-          </UFormField>
-          <UFormField :label="t('auth.email')" required>
-            <UInput
-              v-model="form.email"
-              type="email"
-              size="lg"
-              class="w-full"
-              required
-              autocomplete="email"
-            />
-          </UFormField>
-          <UFormField :label="t('auth.phone')" required>
-            <UInput
-              v-model="form.phone"
-              type="tel"
-              size="lg"
-              class="w-full"
-              required
-              autocomplete="tel"
-            />
-          </UFormField>
-
-          <UFormField v-if="packageItems.length" :label="t('order.choosePackage')">
-            <USelect
-              v-model="form.packageId"
-              :items="packageItems"
-              size="lg"
-              class="w-full"
-            />
-          </UFormField>
-
-          <UFormField :label="t('order.duration')">
-            <USelect
-              v-model="form.termYears"
-              :items="termItems"
-              size="lg"
-              class="w-full"
-            />
-          </UFormField>
-
-          <div class="flex gap-2">
-            <UInput
-              v-model="form.promoCode"
-              :placeholder="t('order.promoPlaceholder')"
-              size="lg"
-              class="flex-1"
-            />
-            <UButton
-              color="neutral"
-              variant="outline"
-              size="lg"
-              type="button"
-              :loading="promoLoading"
-              @click="applyPromo"
-            >
-              {{ t('order.applyPromo') }}
-            </UButton>
-          </div>
-
-          <UAlert v-if="error" color="error" variant="subtle" :title="error" icon="i-lucide-alert-circle" />
-
-          <UButton
-            type="submit"
-            color="primary"
-            size="lg"
-            block
-            :loading="loading"
-            :disabled="loading"
-            icon="i-lucide-credit-card"
+          <h2 class="font-semibold mb-4">
+            {{ t('order.personalData') }}
+          </h2>
+          <UAlert
+            v-if="!loggedIn"
+            color="warning"
+            variant="subtle"
+            class="mb-4"
+            icon="i-lucide-user-round"
+            :title="t('order.loginRecommendedTitle')"
+            :description="t('order.loginRecommendedDesc')"
           >
-            {{ t('order.pay') }}
-          </UButton>
-        </form>
-      </UCard>
+            <template #actions>
+              <UButton
+                :to="localePath({ path: '/login', query: { redirect: route.fullPath } })"
+                color="warning"
+                variant="soft"
+                size="sm"
+              >
+                {{ t('auth.login') }}
+              </UButton>
+            </template>
+          </UAlert>
 
-      <UCard class="lg:col-span-2 shadow-soft-md h-fit">
-        <h2 class="font-semibold mb-4">
-          {{ t('order.summary') }}
-        </h2>
-        <dl class="space-y-3 text-sm">
-          <div class="flex justify-between gap-4">
-            <dt class="text-muted">
-              {{ t('order.domainLabel') }}
-            </dt>
-            <dd class="font-mono font-medium">
-              {{ domainFromQuery || '—' }}
-            </dd>
-          </div>
-          <div v-if="template" class="flex justify-between gap-4">
-            <dt class="text-muted">
-              {{ t('order.templateLabel') }}
-            </dt>
-            <dd>{{ template }}</dd>
-          </div>
-          <div v-if="selectedPackage" class="flex justify-between gap-4">
-            <dt class="text-muted">
-              {{ t('order.packageLabel') }}
-            </dt>
-            <dd class="text-right">
-              {{ selectedPackage.name }}
-            </dd>
-          </div>
-          <div class="flex justify-between gap-4">
-            <dt class="text-muted">
-              {{ t('order.subtotal') }}
-            </dt>
-            <dd class="tabular-nums">
-              {{ formatIdr(subtotal) }}
-            </dd>
-          </div>
-          <div v-if="effectivePromoDiscount" class="flex justify-between gap-4 text-success">
-            <dt>
-              {{ t('order.discount') }}
-              <span v-if="promoAppliedCode" class="text-muted font-normal">
-                ({{ promoAppliedCode }})
-              </span>
-            </dt>
-            <dd class="tabular-nums">
-              −{{ formatIdr(effectivePromoDiscount) }}
-            </dd>
-          </div>
-          <USeparator />
-          <div class="flex justify-between gap-4 text-base font-semibold">
-            <dt>{{ t('order.total') }}</dt>
-            <dd class="tabular-nums">
-              {{ formatIdr(total) }}
-            </dd>
-          </div>
-        </dl>
-        <p class="mt-3 text-xs text-muted">
-          {{ t('order.serverRecomputeNote') }}
-        </p>
-        <UButton
-          :to="localePath({
-            path: '/order/choose-domain',
-            query: template ? { template } : {}
-          })"
-          color="neutral"
-          variant="ghost"
-          size="sm"
-          class="mt-4"
-          icon="i-lucide-arrow-left"
+          <form class="space-y-4" @submit.prevent="submit">
+            <UFormField :label="t('auth.name')" required>
+              <UInput v-model="form.name" size="lg" class="w-full" required autocomplete="name" />
+            </UFormField>
+            <UFormField :label="t('auth.email')" required>
+              <UInput
+                v-model="form.email"
+                type="email"
+                size="lg"
+                class="w-full"
+                required
+                autocomplete="email"
+              />
+            </UFormField>
+            <UFormField :label="t('auth.phone')" required>
+              <UInput
+                v-model="form.phone"
+                type="tel"
+                size="lg"
+                class="w-full"
+                required
+                autocomplete="tel"
+              />
+            </UFormField>
+
+            <UFormField v-if="packageItems.length" :label="t('order.choosePackage')">
+              <USelect
+                v-model="form.packageId"
+                :items="packageItems"
+                size="lg"
+                class="w-full"
+              />
+            </UFormField>
+
+            <UFormField :label="t('order.duration')">
+              <USelect
+                v-model="form.termYears"
+                :items="termItems"
+                size="lg"
+                class="w-full"
+              />
+            </UFormField>
+
+            <div class="flex gap-2">
+              <UInput
+                v-model="form.promoCode"
+                :placeholder="t('order.promoPlaceholder')"
+                size="lg"
+                class="flex-1"
+              />
+              <UButton
+                color="neutral"
+                variant="outline"
+                size="lg"
+                type="button"
+                :loading="promoLoading"
+                @click="applyPromo"
+              >
+                {{ t('order.applyPromo') }}
+              </UButton>
+            </div>
+
+            <UAlert v-if="error" color="error" variant="subtle" :title="error" icon="i-lucide-alert-circle" />
+
+            <UButton
+              type="submit"
+              color="primary"
+              size="lg"
+              block
+              :loading="loading"
+              :disabled="loading"
+              icon="i-lucide-credit-card"
+            >
+              {{ t('order.pay') }}
+            </UButton>
+          </form>
+        </UCard>
+
+        <div
+          class="lg:col-span-2 h-fit glass-panel rounded-xl shadow-soft-md ring-1 ring-default/60 p-5 sm:p-6"
         >
-          {{ t('common.back') }}
-        </UButton>
-        <UButton
-          :to="waHref"
-          target="_blank"
-          rel="noopener"
-          color="neutral"
-          variant="link"
-          size="sm"
-          class="mt-1"
-          icon="i-lucide-message-circle"
-          external
-        >
-          {{ t('order.contactSupport') }}
-        </UButton>
-      </UCard>
-    </div>
-  </UContainer>
+          <h2 class="font-semibold mb-4">
+            {{ t('order.summary') }}
+          </h2>
+          <dl class="space-y-3 text-sm">
+            <div class="flex justify-between gap-4">
+              <dt class="text-muted">
+                {{ t('order.domainLabel') }}
+              </dt>
+              <dd class="font-mono font-medium">
+                {{ domainFromQuery || '—' }}
+              </dd>
+            </div>
+            <div v-if="template" class="flex justify-between gap-4">
+              <dt class="text-muted">
+                {{ t('order.templateLabel') }}
+              </dt>
+              <dd>{{ template }}</dd>
+            </div>
+            <div v-if="selectedPackage" class="flex justify-between gap-4">
+              <dt class="text-muted">
+                {{ t('order.packageLabel') }}
+              </dt>
+              <dd class="text-right">
+                {{ selectedPackage.name }}
+              </dd>
+            </div>
+            <div class="flex justify-between gap-4">
+              <dt class="text-muted">
+                {{ t('order.subtotal') }}
+              </dt>
+              <dd class="tabular-nums">
+                {{ formatIdr(subtotal) }}
+              </dd>
+            </div>
+            <div v-if="effectivePromoDiscount" class="flex justify-between gap-4 text-success">
+              <dt>
+                {{ t('order.discount') }}
+                <span v-if="promoAppliedCode" class="text-muted font-normal">
+                  ({{ promoAppliedCode }})
+                </span>
+              </dt>
+              <dd class="tabular-nums">
+                −{{ formatIdr(effectivePromoDiscount) }}
+              </dd>
+            </div>
+            <USeparator />
+            <div class="flex justify-between gap-4 text-base font-semibold">
+              <dt>{{ t('order.total') }}</dt>
+              <dd class="tabular-nums text-primary">
+                {{ formatIdr(total) }}
+              </dd>
+            </div>
+          </dl>
+          <p class="mt-3 text-xs text-muted">
+            {{ t('order.serverRecomputeNote') }}
+          </p>
+          <UButton
+            :to="localePath({
+              path: '/order/choose-domain',
+              query: template ? { template } : {}
+            })"
+            color="neutral"
+            variant="ghost"
+            size="sm"
+            class="mt-4"
+            icon="i-lucide-arrow-left"
+          >
+            {{ t('common.back') }}
+          </UButton>
+          <UButton
+            :to="waHref"
+            target="_blank"
+            rel="noopener"
+            color="neutral"
+            variant="link"
+            size="sm"
+            class="mt-1"
+            icon="i-lucide-message-circle"
+            external
+          >
+            {{ t('order.contactSupport') }}
+          </UButton>
+        </div>
+      </div>
+    </UContainer>
+  </div>
 </template>
