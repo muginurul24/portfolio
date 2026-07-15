@@ -47,7 +47,8 @@
     "consultEcommerce": "Halo MugiewDev, saya ingin toko online dengan checkout lengkap.",
     "consultCustom": "Halo MugiewDev, saya butuh website/app custom sesuai brief.",
     "orderHelp": "Halo MugiewDev, saya butuh bantuan terkait pesanan saya.",
-    "orderHelpWithId": "Halo MugiewDev, saya butuh bantuan pesanan {orderId}."
+    "orderHelpWithId": "Halo MugiewDev, saya butuh bantuan pesanan {orderId}.",
+    "floatingLabel": "Konsultasi via WhatsApp"
   },
   "home": {
     "templatesEyebrow": "Koleksi design",

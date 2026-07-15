@@ -47,7 +47,8 @@
     "consultEcommerce": "Hi MugiewDev, I want an online store with full checkout.",
     "consultCustom": "Hi MugiewDev, I need a custom website/app based on my brief.",
     "orderHelp": "Hi MugiewDev, I need help with my order.",
-    "orderHelpWithId": "Hi MugiewDev, I need help with order {orderId}."
+    "orderHelpWithId": "Hi MugiewDev, I need help with order {orderId}.",
+    "floatingLabel": "Consult via WhatsApp"
   },
   "home": {
     "templatesEyebrow": "Design collection",

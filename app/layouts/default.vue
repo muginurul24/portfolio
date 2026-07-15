@@ -299,15 +299,6 @@ const waHref = computed(() => link())
       </template>
     </UFooter>
 
-    <!-- Floating WA -->
-    <UButton
-      :to="waHref"
-      target="_blank"
-      icon="i-simple-icons-whatsapp"
-      color="success"
-      size="xl"
-      class="fixed bottom-6 right-6 z-50 shadow-soft-xl rounded-full cursor-pointer"
-      :aria-label="t('nav.contact')"
-    />
+    <FloatingWhatsApp />
   </div>
 </template>

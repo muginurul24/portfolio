@@ -82,6 +82,7 @@ const waHref = computed(() => link(t('whatsapp.consultDefault')))
     <HomeServicesBento />
     <HomeSteps />
     <HomeDomainPackages />
+    <HomePricingStrip />
     <HomeTestimonials />
     <HomeCommunity />
     <HomePortfolioTeaser />
