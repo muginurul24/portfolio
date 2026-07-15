@@ -28,7 +28,7 @@ Human/agent conventions: `CLAUDE.md`
 | Utils | `@vueuse/nuxt`, `date-fns`, `zod` |
 | Auth | `nuxt-auth-utils` (session cookies) |
 | DB | Drizzle ORM + better-sqlite3 (dev); Postgres-ready later |
-| Payments | `xendit-node` |
+| Payments | QrisVIP QRIS (`ofetch` + `qrcode`) |
 | Email | `resend` |
 | Charts | `nuxt-charts` (panel analytics) |
 | Test | Vitest + `@nuxt/test-utils` |
@@ -90,7 +90,7 @@ Follow `docs/research/webekspor-analysis.md` backlog:
 
 1. Seed DB (templates, packages, domain TLDs, promo WEBSITEJUARA)
 2. Public service landings + templates detail
-3. Order wizard + Xendit + webhook
+3. Order wizard + QrisVIP QRIS + status poll/webhook
 4. Panel CRUD (sites, orders, inquiries)
 5. Academy modules + progress
 6. Content pages polish + SEO meta per route
