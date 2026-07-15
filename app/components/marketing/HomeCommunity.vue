@@ -1,41 +1,76 @@
 <script setup lang="ts">
 const { t } = useI18n()
 const localePath = useLocalePath()
-const { link } = useWhatsApp()
 
-const waHref = computed(() => link(t('whatsapp.consultDefault')))
+const benefits = computed(() => [
+  {
+    key: 'group',
+    icon: 'i-lucide-messages-square',
+    title: t('home.communityBenefit1Title'),
+    description: t('home.communityBenefit1Desc')
+  },
+  {
+    key: 'class',
+    icon: 'i-lucide-graduation-cap',
+    title: t('home.communityBenefit2Title'),
+    description: t('home.communityBenefit2Desc')
+  },
+  {
+    key: 'promo',
+    icon: 'i-lucide-badge-percent',
+    title: t('home.communityBenefit3Title'),
+    description: t('home.communityBenefit3Desc')
+  },
+  {
+    key: 'funding',
+    icon: 'i-lucide-hand-coins',
+    title: t('home.communityBenefit4Title'),
+    description: t('home.communityBenefit4Desc')
+  }
+])
+
+/** Decorative initials only — not real member photos. */
+const avatars = [
+  { initials: 'HI', tone: 'bg-sky-600/15 text-sky-700 dark:text-sky-300' },
+  { initials: 'QF', tone: 'bg-emerald-600/15 text-emerald-700 dark:text-emerald-300' },
+  { initials: 'SW', tone: 'bg-indigo-600/15 text-indigo-700 dark:text-indigo-300' },
+  { initials: 'AR', tone: 'bg-amber-600/15 text-amber-800 dark:text-amber-300' },
+  { initials: 'DN', tone: 'bg-rose-600/15 text-rose-700 dark:text-rose-300' },
+  { initials: 'MK', tone: 'bg-violet-600/15 text-violet-700 dark:text-violet-300' },
+  { initials: 'RL', tone: 'bg-teal-600/15 text-teal-700 dark:text-teal-300' },
+  { initials: 'BS', tone: 'bg-primary/15 text-primary' }
+]
 </script>
 
 <template>
   <section id="komunitas" class="section-y bg-primary/5">
     <UContainer>
-      <div class="max-w-3xl mx-auto text-center">
-        <p class="text-sm font-semibold tracking-wide text-primary uppercase mb-2">
-          {{ t('home.communityEyebrow') }}
-        </p>
-        <h2 class="text-display text-3xl md:text-4xl text-highlighted">
-          {{ t('home.communityTitle') }}
-        </h2>
-        <p class="mt-3 text-muted text-base md:text-lg leading-relaxed">
-          {{ t('home.communityDesc') }}
-        </p>
+      <div class="grid gap-10 lg:grid-cols-2 lg:gap-14 lg:items-center">
+        <div>
+          <SectionHeading
+            index="05"
+            align="left"
+            :eyebrow="t('home.communityEyebrow')"
+            :title="t('home.communityTitle')"
+            :description="t('home.communityDesc')"
+          />
 
-        <ul class="mt-8 grid gap-3 sm:grid-cols-3 text-left max-w-2xl mx-auto">
-          <li class="flex gap-2 text-sm text-highlighted">
-            <UIcon name="i-lucide-messages-square" class="size-5 text-primary shrink-0 mt-0.5" />
-            <span>{{ t('home.communityBenefit1') }}</span>
-          </li>
-          <li class="flex gap-2 text-sm text-highlighted">
-            <UIcon name="i-lucide-book-open" class="size-5 text-primary shrink-0 mt-0.5" />
-            <span>{{ t('home.communityBenefit2') }}</span>
-          </li>
-          <li class="flex gap-2 text-sm text-highlighted">
-            <UIcon name="i-lucide-badge-percent" class="size-5 text-primary shrink-0 mt-0.5" />
-            <span>{{ t('home.communityBenefit3') }}</span>
-          </li>
-        </ul>
+          <div class="flex flex-wrap items-center gap-3 mb-8" aria-hidden="true">
+            <div class="flex -space-x-2">
+              <span
+                v-for="(avatar, i) in avatars"
+                :key="i"
+                class="inline-flex size-10 items-center justify-center rounded-full text-xs font-semibold ring-2 ring-default shadow-soft-sm"
+                :class="avatar.tone"
+              >
+                {{ avatar.initials }}
+              </span>
+            </div>
+            <p class="text-sm text-muted">
+              {{ t('home.communityAvatarCaption') }}
+            </p>
+          </div>
 
-        <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3">
           <UButton
             :to="localePath('/komunitas')"
             color="primary"
@@ -45,18 +80,28 @@ const waHref = computed(() => link(t('whatsapp.consultDefault')))
           >
             {{ t('home.communityCta') }}
           </UButton>
-          <UButton
-            :to="waHref"
-            target="_blank"
-            rel="noopener noreferrer"
-            color="neutral"
-            variant="outline"
-            size="xl"
-            icon="i-simple-icons-whatsapp"
-            class="cursor-pointer"
+        </div>
+
+        <div class="grid gap-4 sm:grid-cols-2">
+          <UCard
+            v-for="benefit in benefits"
+            :key="benefit.key"
+            class="card-lift h-full"
+            :ui="{
+              root: 'bg-default/80 dark:bg-elevated/60 ring-default shadow-soft-md border-0 backdrop-blur-sm',
+              body: 'p-5 md:p-6'
+            }"
           >
-            {{ t('home.communityWa') }}
-          </UButton>
+            <div class="flex size-11 items-center justify-center rounded-xl bg-primary/10 text-primary mb-4">
+              <UIcon :name="benefit.icon" class="size-5" />
+            </div>
+            <h3 class="text-base font-semibold text-highlighted">
+              {{ benefit.title }}
+            </h3>
+            <p class="mt-1.5 text-sm text-muted leading-relaxed">
+              {{ benefit.description }}
+            </p>
+          </UCard>
         </div>
       </div>
     </UContainer>
