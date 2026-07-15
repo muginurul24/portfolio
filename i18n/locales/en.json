@@ -1,0 +1,87 @@
+{
+  "brand": {
+    "name": "MugiewDev",
+    "tagline": "Build Your Website · No Hassle"
+  },
+  "nav": {
+    "templates": "Browse Designs",
+    "services": "Services",
+    "academy": "Academy",
+    "portfolio": "Portfolio",
+    "community": "Community",
+    "tutorial": "Tutorials",
+    "faq": "FAQ",
+    "blog": "Blog",
+    "login": "Log in",
+    "order": "Build Website",
+    "contact": "Contact Us"
+  },
+  "services": {
+    "export": "Export Website",
+    "umkm": "SME Website",
+    "ecommerce": "Online Store",
+    "custom": "Custom Build"
+  },
+  "hero": {
+    "title": "Build Your Website · No Hassle",
+    "subtitle": "Grow your SME & export business with a ready-to-use professional website. Domain, hosting, SSL, business email — one package.",
+    "ctaPrimary": "Search Domain",
+    "ctaSecondary": "Free Consultation",
+    "priceFrom": "From Rp{price}/year"
+  },
+  "stats": {
+    "members": "12,000+ SMEs",
+    "rating": "4.9/5 rating",
+    "salesUp": "89% sales growth"
+  },
+  "cta": {
+    "buildNow": "Build Website Now",
+    "consult": "Free Consultation",
+    "viewTemplates": "View Templates",
+    "learnMore": "Learn More"
+  },
+  "footer": {
+    "products": "Products",
+    "resources": "Resources",
+    "legal": "Legal",
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "refund": "Refund Policy",
+    "copyright": "© {year} MugiewDev. All rights reserved."
+  },
+  "common": {
+    "loading": "Loading…",
+    "error": "Something went wrong",
+    "retry": "Retry",
+    "save": "Save",
+    "cancel": "Cancel",
+    "continue": "Continue",
+    "back": "Back",
+    "search": "Search",
+    "empty": "No data yet"
+  },
+  "order": {
+    "chooseDomain": "Choose Domain",
+    "choosePackage": "Choose Package",
+    "chooseTemplate": "Choose Template",
+    "checkout": "Checkout",
+    "pay": "Pay Now",
+    "promoPlaceholder": "Promo code",
+    "applyPromo": "Apply"
+  },
+  "auth": {
+    "login": "Log in",
+    "logout": "Log out",
+    "email": "Email",
+    "password": "Password",
+    "forgotPassword": "Forgot password?"
+  },
+  "panel": {
+    "dashboard": "Dashboard",
+    "sites": "My Websites",
+    "orders": "Orders",
+    "academy": "Academy",
+    "inquiries": "Inquiries",
+    "settings": "Settings"
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "skill_name": "nuxt-4-best-practices",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "In a Nuxt 4 app, rewrite this page so initial data is SSR-safe and does not double-fetch. Also fix any hydration risks you see.\n\n```vue\n<script setup lang=\"ts\">\nconst id = useRoute().params.id as string\nconst product = await $fetch(`/api/products/${id}`)\nconst theme = localStorage.getItem('theme') || 'light'\nconst viewedAt = new Date().toLocaleString()\n\nasync function addToCart() {\n  await $fetch('/api/cart', { method: 'POST', body: { productId: id } })\n}\n</script>\n\n<template>\n  <div :data-theme=\"theme\">\n    <h1>{{ product.title }}</h1>\n    <p>Viewed: {{ viewedAt }}</p>\n    <button @click=\"addToCart\">Add</button>\n  </div>\n</template>\n```\n\nReturn only the corrected Vue SFC and a short bullet list of what you fixed.",
+      "expected_output": "useFetch/useAsyncData with explicit key; theme via useCookie or ClientOnly; time via NuxtTime/ClientOnly/onMounted; $fetch kept only for addToCart; bullets naming hydration/double-fetch fixes.",
+      "files": [],
+      "assertions": [
+        "Uses useFetch or useAsyncData for product initial data (not bare $fetch in setup)",
+        "Provides an explicit cache key that includes the product id",
+        "Keeps $fetch only for the addToCart client interaction",
+        "Removes localStorage theme read from SSR setup (useCookie, ClientOnly, or equivalent)",
+        "Removes unstable Date/toLocaleString from SSR render path (NuxtTime, ClientOnly, onMounted, or useState)",
+        "Output is a complete Vue SFC plus brief fix bullets"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Review this Nuxt 4 setup for performance and plugin best practices. Propose a concrete rewrite (nuxt.config snippet + plugin file + template changes). Be specific.\n\nContext:\n- Marketing homepage at `/` can be static\n- `/panel/**` is a logged-in SPA-style app\n- Homepage has a heavy chart below the fold and a hero image\n- They added `app/plugins/analytics.ts` that awaits a remote config and then injects Google Analytics with a raw script tag in the plugin body\n- Internal links use `<a href=\"/pricing\">`\n- Hero uses `<img src=\"/hero.jpg\">` with no dimensions\n\nOutput: (1) routeRules, (2) fixed plugin approach, (3) homepage template recommendations for link/image/chart.",
+      "expected_output": "routeRules with prerender for `/` and ssr:false for panel; analytics as .client plugin and/or Nuxt Scripts with parallel; NuxtLink; NuxtImg with dimensions/priority; Lazy chart with hydrate-on-visible or similar.",
+      "files": [],
+      "assertions": [
+        "Proposes routeRules with prerender (or static-friendly rule) for `/`",
+        "Proposes ssr: false (or equivalent SPA rule) for `/panel/**`",
+        "Moves analytics to a client plugin and/or Nuxt Scripts pattern",
+        "Mentions parallel: true or otherwise avoids blocking sequential async plugin init",
+        "Replaces internal <a> with NuxtLink",
+        "Recommends NuxtImg (or image module) with dimensions and LCP-friendly priority/loading",
+        "Recommends Lazy component and/or lazy hydration for below-fold chart"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Write a reusable Nuxt 4 composable `useProduct(slug: MaybeRefOrGetter<string>)` that loads `/api/products/:slug` the right way for SSR. Include loading/error handling suitable for a page that should not block client navigations forever, and show a tiny example page using it.\n\nConstraints:\n- Must be safe inside other composables (stable cache keys)\n- Refetch when slug changes\n- Do not put cart side effects in the fetch composable",
+      "expected_output": "useAsyncData/useFetch with explicit key including slug; watch/reactive slug; lazy or documented status handling; example page; no side effects in handler.",
+      "files": [],
+      "assertions": [
+        "Implements useProduct using useAsyncData or useFetch (not bare $fetch for initial load)",
+        "Uses an explicit key that includes the slug value",
+        "Supports reactive slug (toValue/toRef/watch or computed URL) so slug changes refetch",
+        "Exposes status/error (or equivalent) for loading UI",
+        "Uses lazy pattern or documents non-blocking client navigation handling",
+        "Includes a small example page using the composable",
+        "Does not place cart/side-effect logic inside the fetch handler"
+      ]
+    }
+  ]
+}
+

@@ -1,0 +1,87 @@
+{
+  "brand": {
+    "name": "MugiewDev",
+    "tagline": "Bikin Website · Tanpa Ribet"
+  },
+  "nav": {
+    "templates": "Cari Design",
+    "services": "Layanan",
+    "academy": "Akademi",
+    "portfolio": "Portofolio",
+    "community": "Komunitas",
+    "tutorial": "Tutorial",
+    "faq": "Pertanyaan",
+    "blog": "Blog",
+    "login": "Masuk",
+    "order": "Buat Website",
+    "contact": "Hubungi Kami"
+  },
+  "services": {
+    "export": "Website Ekspor",
+    "umkm": "Website UMKM",
+    "ecommerce": "Toko Online",
+    "custom": "Pesanan Khusus"
+  },
+  "hero": {
+    "title": "Bikin Website · Tanpa Ribet",
+    "subtitle": "Tumbuhkan UMKM & bisnis ekspor lewat website profesional siap pakai. Domain, hosting, SSL, email bisnis — satu paket.",
+    "ctaPrimary": "Cari Domain",
+    "ctaSecondary": "Konsultasi Gratis",
+    "priceFrom": "Mulai dari Rp{price}/tahun"
+  },
+  "stats": {
+    "members": "12.000+ UMKM",
+    "rating": "4.9/5 rating",
+    "salesUp": "89% jual naik"
+  },
+  "cta": {
+    "buildNow": "Buat Website Sekarang",
+    "consult": "Konsultasi Gratis",
+    "viewTemplates": "Lihat Template",
+    "learnMore": "Pelajari Lebih Lanjut"
+  },
+  "footer": {
+    "products": "Produk",
+    "resources": "Sumber Daya",
+    "legal": "Legal",
+    "terms": "Syarat dan Ketentuan",
+    "privacy": "Kebijakan Privasi",
+    "refund": "Kebijakan Pengembalian",
+    "copyright": "© {year} MugiewDev. Seluruh hak cipta dilindungi."
+  },
+  "common": {
+    "loading": "Memuat…",
+    "error": "Terjadi kesalahan",
+    "retry": "Coba lagi",
+    "save": "Simpan",
+    "cancel": "Batal",
+    "continue": "Lanjutkan",
+    "back": "Kembali",
+    "search": "Cari",
+    "empty": "Belum ada data"
+  },
+  "order": {
+    "chooseDomain": "Pilih Domain",
+    "choosePackage": "Pilih Paket",
+    "chooseTemplate": "Pilih Template",
+    "checkout": "Checkout",
+    "pay": "Bayar Sekarang",
+    "promoPlaceholder": "Kode promo",
+    "applyPromo": "Terapkan"
+  },
+  "auth": {
+    "login": "Masuk",
+    "logout": "Keluar",
+    "email": "Email",
+    "password": "Kata sandi",
+    "forgotPassword": "Lupa kata sandi?"
+  },
+  "panel": {
+    "dashboard": "Dasbor",
+    "sites": "Website Saya",
+    "orders": "Pesanan",
+    "academy": "Akademi",
+    "inquiries": "Inquiry",
+    "settings": "Pengaturan"
+  }
+}
