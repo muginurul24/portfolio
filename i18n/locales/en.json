@@ -266,7 +266,9 @@
     "skipToContent": "Skip to main content",
     "switchLanguage": "Switch language",
     "detail": "Detail",
-    "resetFilter": "Reset filters"
+    "resetFilter": "Reset filters",
+    "all": "All",
+    "actions": "Actions"
   },
   "errors": {
     "forbiddenTitle": "Access denied",
@@ -305,6 +307,20 @@
       "academy": "Academy",
       "testimonials": "Testimonials",
       "system": "System"
+    },
+    "roleCs": "CS",
+    "roleDev": "Dev",
+    "users": {
+      "subtitle": "Manage accounts, roles, and staff access.",
+      "add": "Add user",
+      "edit": "Edit user",
+      "search": "Search name or email…",
+      "created": "User created",
+      "updated": "User updated",
+      "deleted": "User deleted",
+      "passwordRequired": "Password must be at least 8 characters",
+      "passwordOptional": "New password (optional)",
+      "confirmDelete": "Delete {email}? This cannot be undone."
     }
   },
   "templates": {

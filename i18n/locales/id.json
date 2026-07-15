@@ -266,7 +266,9 @@
     "skipToContent": "Loncat ke konten utama",
     "switchLanguage": "Ganti bahasa",
     "detail": "Detail",
-    "resetFilter": "Reset filter"
+    "resetFilter": "Reset filter",
+    "all": "Semua",
+    "actions": "Aksi"
   },
   "errors": {
     "forbiddenTitle": "Akses ditolak",
@@ -305,6 +307,20 @@
       "academy": "Akademi",
       "testimonials": "Testimoni",
       "system": "Sistem"
+    },
+    "roleCs": "CS",
+    "roleDev": "Dev",
+    "users": {
+      "subtitle": "Kelola akun, peran, dan akses staf.",
+      "add": "Tambah pengguna",
+      "edit": "Edit pengguna",
+      "search": "Cari nama atau email…",
+      "created": "Pengguna dibuat",
+      "updated": "Pengguna diperbarui",
+      "deleted": "Pengguna dihapus",
+      "passwordRequired": "Kata sandi minimal 8 karakter",
+      "passwordOptional": "Kata sandi baru (opsional)",
+      "confirmDelete": "Hapus {email}? Tindakan ini tidak bisa dibatalkan."
     }
   },
   "templates": {
