@@ -277,7 +277,9 @@
   "dev": {
     "consoleTitle": "Developer Console",
     "consoleComing": "Dev console coming soon. Full management modules follow.",
-    "consolePlaceholder": "Platform management dashboard. Full CRUD modules land in the next tasks."
+    "consolePlaceholder": "Platform management dashboard. Full CRUD modules land in the next tasks.",
+    "ordersTitle": "Orders (staff)",
+    "ordersPlaceholder": "Staff order list coming soon. CS/admin/dev enter via staff middleware."
   },
   "templates": {
     "eyebrow": "Templates",

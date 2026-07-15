@@ -277,7 +277,9 @@
   "dev": {
     "consoleTitle": "Konsol Developer",
     "consoleComing": "Konsol dev sedang disiapkan. Modul manajemen penuh menyusul.",
-    "consolePlaceholder": "Dasbor pengelolaan platform. Modul CRUD penuh menyusul di task berikutnya."
+    "consolePlaceholder": "Dasbor pengelolaan platform. Modul CRUD penuh menyusul di task berikutnya.",
+    "ordersTitle": "Pesanan (staf)",
+    "ordersPlaceholder": "Daftar pesanan staf menyusul. CS/admin/dev masuk lewat middleware staff."
   },
   "templates": {
     "eyebrow": "Template",

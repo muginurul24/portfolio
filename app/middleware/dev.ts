@@ -1,5 +1,6 @@
 import { isDev, type UserRole } from '~/utils/roles'
 
+/** Dev-only routes. Admin uses staff routes / canAccessDevConsole on login home. */
 export default defineNuxtRouteMiddleware(async (to) => {
   const { loggedIn, ready, user, fetch } = useUserSession()
   const localePath = useLocalePath()

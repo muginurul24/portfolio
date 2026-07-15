@@ -1,5 +1,5 @@
 import type { UserRole } from './roles'
-import { canAccessDevConsole, isDev } from './roles'
+import { canAccessDevConsole } from './roles'
 
 /** Same-origin relative path only (blocks open redirect). */
 export function safeInternalPath(raw: unknown, fallback: string): string {
@@ -10,8 +10,7 @@ export function safeInternalPath(raw: unknown, fallback: string): string {
 
 export function homeForRole(role: UserRole | undefined | null, localePath: (p: string) => string): string {
   if (!role) return localePath('/panel')
-  if (isDev(role)) return localePath('/dev')
   if (canAccessDevConsole(role)) return localePath('/dev')
-  if (role === 'cs') return localePath('/dev')
+  if (role === 'cs') return localePath('/dev/orders')
   return localePath('/panel')
 }
