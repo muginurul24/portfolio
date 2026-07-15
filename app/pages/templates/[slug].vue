@@ -1,7 +1,8 @@
 <script setup lang="ts">
 const route = useRoute()
 const localePath = useLocalePath()
-const { t } = useI18n()
+const { t, locale } = useI18n()
+const appConfig = useAppConfig()
 const slug = computed(() => String(route.params.slug))
 
 const { data, error } = await useFetch(() => `/api/templates/${slug.value}`, {
@@ -9,6 +10,28 @@ const { data, error } = await useFetch(() => `/api/templates/${slug.value}`, {
 })
 
 const tpl = computed(() => data.value?.data)
+
+const categoryTone: Record<string, string> = {
+  export: 'from-sky-600/20 to-slate-800/10',
+  agriculture: 'from-emerald-600/20 to-lime-700/10',
+  craft: 'from-amber-500/20 to-orange-800/10',
+  company: 'from-slate-500/20 to-sky-900/10',
+  automotive: 'from-red-600/15 to-slate-800/10',
+  restaurant: 'from-orange-500/20 to-rose-800/10',
+  service: 'from-violet-500/20 to-sky-800/10',
+  ecommerce: 'from-cyan-500/20 to-indigo-800/10'
+}
+
+const categoryIcon: Record<string, string> = {
+  export: 'i-lucide-ship',
+  agriculture: 'i-lucide-sprout',
+  craft: 'i-lucide-palette',
+  company: 'i-lucide-building-2',
+  automotive: 'i-lucide-car',
+  restaurant: 'i-lucide-utensils',
+  service: 'i-lucide-briefcase',
+  ecommerce: 'i-lucide-shopping-bag'
+}
 
 const categoryFeatures: Record<string, string[]> = {
   export: [
@@ -73,6 +96,23 @@ const features = computed(() => {
   return categoryFeatures[cat] || defaultFeatures
 })
 
+const previewTone = computed(() => {
+  const cat = tpl.value?.category?.toLowerCase?.() || ''
+  return categoryTone[cat] || 'from-sky-600/15 to-slate-700/10'
+})
+
+const previewIcon = computed(() => {
+  const cat = tpl.value?.category?.toLowerCase?.() || ''
+  return categoryIcon[cat] || 'i-lucide-layout-template'
+})
+
+const fromPriceLabel = computed(() => {
+  const amount = appConfig.mugiew?.startingPriceYearlyIdr
+  if (!amount) return null
+  const price = formatIdr(amount, locale.value === 'en' ? 'en-ID' : 'id-ID')
+  return t('templates.fromPrice', { price })
+})
+
 useSeoMeta({
   title: () => tpl.value?.name || t('nav.templates'),
   description: () => tpl.value?.description || undefined
@@ -97,9 +137,12 @@ useSeoMeta({
 
       <div class="grid gap-8 lg:gap-12 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] items-start">
         <div
-          class="aspect-[4/3] rounded-2xl bg-muted flex items-center justify-center shadow-soft-xl ring-1 ring-default overflow-hidden"
+          class="aspect-[4/3] rounded-2xl bg-gradient-to-br flex items-center justify-center shadow-soft-xl ring-1 ring-default overflow-hidden"
+          :class="previewTone"
         >
-          <UIcon name="i-lucide-layout-template" class="size-20 md:size-24 text-muted" />
+          <div class="size-24 md:size-28 rounded-3xl bg-default/70 backdrop-blur-sm ring-1 ring-default/60 shadow-soft-md flex items-center justify-center">
+            <UIcon :name="previewIcon" class="size-12 md:size-14 text-primary" />
+          </div>
         </div>
 
         <aside class="lg:sticky lg:top-24">
@@ -110,6 +153,9 @@ useSeoMeta({
             <h1 class="text-2xl md:text-3xl font-semibold tracking-tight text-highlighted text-display">
               {{ tpl.name }}
             </h1>
+            <p v-if="fromPriceLabel" class="mt-2 text-sm text-muted tabular-nums">
+              {{ fromPriceLabel }}
+            </p>
             <p v-if="tpl.description" class="mt-3 text-muted leading-relaxed">
               {{ tpl.description }}
             </p>
@@ -149,7 +195,7 @@ useSeoMeta({
                 external
                 icon="i-lucide-external-link"
               >
-                Preview
+                {{ t('templates.preview') }}
               </UButton>
             </div>
           </div>

@@ -462,7 +462,9 @@
     "catAutomotive": "Otomotif",
     "catRestaurant": "Restaurant",
     "catService": "Jasa",
-    "catEcommerce": "Toko Online"
+    "catEcommerce": "Toko Online",
+    "preview": "Lihat demo",
+    "fromPrice": "Mulai {price}/tahun"
   },
   "order": {
     "chooseDomain": "Pilih Domain",

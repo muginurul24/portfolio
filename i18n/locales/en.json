@@ -462,7 +462,9 @@
     "catAutomotive": "Automotive",
     "catRestaurant": "Restaurant",
     "catService": "Services",
-    "catEcommerce": "Online store"
+    "catEcommerce": "Online store",
+    "preview": "View demo",
+    "fromPrice": "From {price}/year"
   },
   "order": {
     "chooseDomain": "Choose Domain",

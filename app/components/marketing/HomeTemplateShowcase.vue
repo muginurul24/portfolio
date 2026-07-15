@@ -7,12 +7,35 @@ interface TemplateRow {
   isFeatured?: boolean
 }
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const localePath = useLocalePath()
+const appConfig = useAppConfig()
 
 const { data, status } = await useFetch<{ data: TemplateRow[] }>('/api/templates', {
   key: 'home-templates-showcase'
 })
+
+const categoryTone: Record<string, string> = {
+  export: 'from-sky-600/20 to-slate-800/10',
+  agriculture: 'from-emerald-600/20 to-lime-700/10',
+  craft: 'from-amber-500/20 to-orange-800/10',
+  company: 'from-slate-500/20 to-sky-900/10',
+  automotive: 'from-red-600/15 to-slate-800/10',
+  restaurant: 'from-orange-500/20 to-rose-800/10',
+  service: 'from-violet-500/20 to-sky-800/10',
+  ecommerce: 'from-cyan-500/20 to-indigo-800/10'
+}
+
+const categoryIcon: Record<string, string> = {
+  export: 'i-lucide-ship',
+  agriculture: 'i-lucide-sprout',
+  craft: 'i-lucide-palette',
+  company: 'i-lucide-building-2',
+  automotive: 'i-lucide-car',
+  restaurant: 'i-lucide-utensils',
+  service: 'i-lucide-briefcase',
+  ecommerce: 'i-lucide-shopping-bag'
+}
 
 const categories = computed(() => [
   { key: 'all', label: t('home.templatesCatAll') },
@@ -39,6 +62,21 @@ const filtered = computed(() => {
   if (active.value === 'all') return rows.slice(0, 8)
   return rows.filter(r => r.category === active.value).slice(0, 8)
 })
+
+const fromPriceLabel = computed(() => {
+  const amount = appConfig.mugiew?.startingPriceYearlyIdr
+  if (!amount) return null
+  const price = formatIdr(amount, locale.value === 'en' ? 'en-ID' : 'id-ID')
+  return t('templates.fromPrice', { price })
+})
+
+function previewTone(category: string) {
+  return categoryTone[category?.toLowerCase?.()] || 'from-sky-600/15 to-slate-700/10'
+}
+
+function previewIcon(category: string) {
+  return categoryIcon[category?.toLowerCase?.()] || 'i-lucide-layout-template'
+}
 </script>
 
 <template>
@@ -79,11 +117,16 @@ const filtered = computed(() => {
           class="card-lift overflow-hidden h-full flex flex-col"
           :ui="{ body: 'p-0 flex flex-col h-full', root: 'ring-default shadow-soft-md' }"
         >
-          <div class="aspect-[4/3] bg-muted flex items-center justify-center relative">
-            <UIcon
-              name="i-lucide-layout-template"
-              class="size-10 text-muted"
-            />
+          <div
+            class="aspect-[4/3] bg-gradient-to-br flex items-center justify-center relative"
+            :class="previewTone(tpl.category)"
+          >
+            <div class="size-14 rounded-2xl bg-default/70 backdrop-blur-sm ring-1 ring-default/60 shadow-soft-sm flex items-center justify-center">
+              <UIcon
+                :name="previewIcon(tpl.category)"
+                class="size-7 text-primary"
+              />
+            </div>
             <UBadge
               v-if="tpl.isFeatured"
               color="primary"
@@ -110,23 +153,28 @@ const filtered = computed(() => {
             <h3 class="font-semibold text-highlighted tracking-tight line-clamp-2">
               {{ tpl.name }}
             </h3>
-            <div class="mt-4 flex flex-wrap gap-2">
-              <UButton
-                :to="localePath(`/templates/${tpl.slug}`)"
-                size="sm"
-                color="neutral"
-                variant="outline"
-                class="flex-1 min-w-[5.5rem] cursor-pointer"
-              >
-                {{ t('home.templatesView') }}
-              </UButton>
+            <p v-if="fromPriceLabel" class="mt-1.5 text-xs text-muted tabular-nums">
+              {{ fromPriceLabel }}
+            </p>
+            <div class="mt-auto pt-4 flex flex-col gap-2">
               <UButton
                 :to="localePath({ path: '/order/choose-domain', query: { template: tpl.slug } })"
                 size="sm"
                 color="primary"
-                class="flex-1 min-w-[5.5rem] cursor-pointer"
+                block
+                class="cursor-pointer"
               >
                 {{ t('home.templatesBuild') }}
+              </UButton>
+              <UButton
+                :to="localePath(`/templates/${tpl.slug}`)"
+                size="sm"
+                color="neutral"
+                variant="ghost"
+                block
+                class="cursor-pointer"
+              >
+                {{ t('home.templatesView') }}
               </UButton>
             </div>
           </div>
